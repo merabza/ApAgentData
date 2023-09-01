@@ -32,7 +32,7 @@ public sealed class ExecuteSqlCommandStep : JobStep
             new DatabaseServerConnections(parameters.DatabaseServerConnections));
 
         if (par is not null)
-            return new ExecuteSqlCommandStepCommand(logger, useConsole, processManager, this, par);
+            return new ExecuteSqlCommandStepCommand(logger, processManager, this, par);
 
         StShared.WriteErrorLine("par does not created", useConsole, logger);
         return null;

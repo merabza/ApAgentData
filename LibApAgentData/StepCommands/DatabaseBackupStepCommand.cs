@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DbTools;
 using DbTools.Models;
+using FluentFTP.Helpers;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.Steps;
@@ -17,13 +18,15 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 {
     private readonly string _downloadTempExtension;
 
+    private readonly bool _useConsole;
     private readonly JobStep _jobStep;
     private readonly DatabaseBackupStepParameters _par;
 
-    public DatabaseBackupStepCommand(ILogger logger, bool useConsole, ProcessManager processManager, JobStep jobStep,
-        DatabaseBackupStepParameters par, string downloadTempExtension) : base(logger, useConsole, processManager,
+    public DatabaseBackupStepCommand(bool useConsole, ILogger logger, ProcessManager processManager, JobStep jobStep,
+        DatabaseBackupStepParameters par, string downloadTempExtension) : base(logger, null, null, processManager,
         "Database Backup", jobStep.ProcLineId)
     {
+        _useConsole = useConsole;
         _jobStep = jobStep;
         _par = par;
         _downloadTempExtension = downloadTempExtension;
@@ -33,11 +36,13 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
     {
         Logger.LogInformation("Checking parameters...");
 
+        var localPath = _par.LocalPath;
+
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
-        if (!Directory.Exists(_par.LocalPath))
+        if (!Directory.Exists(localPath))
         {
-            Logger.LogInformation($"Creating local folder {_par.LocalPath}");
-            Directory.CreateDirectory(_par.LocalPath);
+            Logger.LogInformation("Creating local folder {localPath}", localPath);
+            Directory.CreateDirectory(localPath);
         }
 
         //დადგინდეს არსებული ბაზების სია
@@ -66,7 +71,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
             if (missingDatabaseNames.Count > 0)
                 foreach (var databaseName in missingDatabaseNames)
-                    Logger.LogWarning($"Database with name {databaseName} is missing");
+                    Logger.LogWarning("Database with name {databaseName} is missing", databaseName);
         }
 
         var needDownload = NeedDownload();
@@ -85,15 +90,15 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             if (HaveCurrentPeriodFile(backupFileNamePrefix, _par.DbBackupParameters.DateMask, backupFileNameSuffix))
                 continue;
 
-            Logger.LogInformation($"Backup database {databaseName}...");
+            Logger.LogInformation("Backup database {databaseName}...", databaseName);
 
             var backupFileParameters =
                 _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName).Result;
 
-            //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფისირდა, ვჩერდებით.
+            //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფიქსირდა, ვჩერდებით.
             if (backupFileParameters == null)
             {
-                Logger.LogError($"Backup for database {databaseName} not created");
+                Logger.LogError("Backup for database {databaseName} not created", databaseName);
                 continue;
             }
 
@@ -101,16 +106,16 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
                 backupFileParameters.Suffix, _par.DownloadSideSmartSchema);
 
             var downloadBackupParameters =
-                DownloadBackupParameters.Create(Logger, UseConsole, _par.LocalPath, _par.DownloadFileStorageData);
+                DownloadBackupParameters.Create(Logger, _useConsole, localPath, _par.DownloadFileStorageData);
 
             if (downloadBackupParameters is null)
             {
-                StShared.WriteErrorLine("downloadBackupParameters does not created", UseConsole, Logger);
+                StShared.WriteErrorLine("downloadBackupParameters does not created", _useConsole, Logger);
                 return false;
             }
 
             //მოქაჩვის პროცესის გაშვება
-            var downloadBackupToolAction = new DownloadBackupToolAction(Logger, UseConsole,
+            var downloadBackupToolAction = new DownloadBackupToolAction(Logger, _useConsole,
                 ProcessManager, downloadBackupParameters, _par.DownloadProcLineId, backupFileParameters,
                 _downloadTempExtension, _par.CompressProcLineId, _par.LocalSmartSchema, _par.UploadFileStorageData,
                 _par.CompressParameters, _par.UploadParameters);

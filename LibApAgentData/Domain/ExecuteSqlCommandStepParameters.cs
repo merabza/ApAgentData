@@ -1,5 +1,4 @@
-﻿using DatabaseApiClients;
-using DatabaseManagementClients;
+﻿using DatabasesManagement;
 using LibApiClientParameters;
 using LibDatabaseParameters;
 using Microsoft.Extensions.Logging;
@@ -9,14 +8,14 @@ namespace LibApAgentData.Domain;
 
 public sealed class ExecuteSqlCommandStepParameters
 {
-    private ExecuteSqlCommandStepParameters(DatabaseManagementClient agentClient, string executeQueryCommand)
+    private ExecuteSqlCommandStepParameters(IDatabaseApiClient agentClient, string executeQueryCommand)
     {
         AgentClient = agentClient;
         ExecuteQueryCommand = executeQueryCommand;
         //DatabaseServerName = databaseServerName;
     }
 
-    public DatabaseManagementClient AgentClient { get; }
+    public IDatabaseApiClient AgentClient { get; }
 
     public string ExecuteQueryCommand { get; }
     //public string? DatabaseServerName { get; }
@@ -26,7 +25,7 @@ public sealed class ExecuteSqlCommandStepParameters
         DatabaseServerConnections databaseServerConnections)
     {
         var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole,
-            logger, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections);
+            logger, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null);
 
         if (agentClient is null)
         {

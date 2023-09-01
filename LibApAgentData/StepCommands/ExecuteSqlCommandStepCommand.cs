@@ -11,8 +11,8 @@ public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
 
     private readonly ExecuteSqlCommandStepParameters _par;
 
-    public ExecuteSqlCommandStepCommand(ILogger logger, bool useConsole, ProcessManager processManager,
-        ExecuteSqlCommandStep executeSqlCommandStep, ExecuteSqlCommandStepParameters par) : base(logger, useConsole,
+    public ExecuteSqlCommandStepCommand(ILogger logger, ProcessManager processManager,
+        ExecuteSqlCommandStep executeSqlCommandStep, ExecuteSqlCommandStepParameters par) : base(logger, null, null,
         processManager, "Execute Sql Command", executeSqlCommandStep.ProcLineId)
     {
         _executeSqlCommandStep = executeSqlCommandStep;

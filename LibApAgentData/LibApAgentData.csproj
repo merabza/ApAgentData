@@ -11,8 +11,7 @@
     <ProjectReference Include="..\..\ParametersManagement\LibFileParameters\LibFileParameters.csproj" />
     <ProjectReference Include="..\..\ParametersManagement\LibParameters\LibParameters.csproj" />
     <ProjectReference Include="..\..\ToolsManagement\CompressionManagement\CompressionManagement.csproj" />
-    <ProjectReference Include="..\..\ToolsManagement\DatabaseApiClients\DatabaseApiClients.csproj" />
-    <ProjectReference Include="..\..\ToolsManagement\DatabaseManagementClients\DatabaseManagementClients.csproj" />
+    <ProjectReference Include="..\..\ToolsManagement\DatabasesManagement\DatabasesManagement.csproj" />
     <ProjectReference Include="..\..\ToolsManagement\FileManagersMain\FileManagersMain.csproj" />
     <ProjectReference Include="..\..\ToolsManagement\LibToolActions\LibToolActions.csproj" />
   </ItemGroup>

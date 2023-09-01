@@ -9,12 +9,14 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class UnZipOnPlaceCommand : ProcessesToolAction
 {
+    private readonly bool _useConsole;
     private readonly string _pathWithZips;
     private readonly bool _withSubFolders;
 
     public UnZipOnPlaceCommand(ILogger logger, bool useConsole, ProcessManager processManager, string pathWithZips,
-        bool withSubFolders, int procLineId) : base(logger, useConsole, processManager, "UnZip On Place", procLineId)
+        bool withSubFolders, int procLineId) : base(logger, null, null, processManager, "UnZip On Place", procLineId)
     {
+        _useConsole = useConsole;
         _pathWithZips = pathWithZips;
         _withSubFolders = withSubFolders;
     }
@@ -49,7 +51,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
 
             var newDir =
                 Directory.CreateDirectory(Path.Combine(curDir.FullName, GetNewFolderName(zipFileName, i)));
-            var archiver = new ZipClassArchiver(Logger, UseConsole, file.Extension);
+            var archiver = new ZipClassArchiver(Logger, _useConsole, file.Extension);
 
             Console.WriteLine($"Unzip {file.FullName}");
 
@@ -62,7 +64,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
         return true;
     }
 
-    private string GetNewFolderName(string zipFileName, int i)
+    private static string GetNewFolderName(string zipFileName, int i)
     {
         return $"{zipFileName}{(i == 0 ? "" : $"({i})")}";
     }

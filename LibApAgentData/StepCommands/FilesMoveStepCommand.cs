@@ -10,12 +10,14 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class FilesMoveStepCommand : ProcessesToolAction
 {
+    private readonly bool _useConsole;
     private readonly FilesMoveStepParameters _par;
 
     public FilesMoveStepCommand(ILogger logger, bool useConsole, ProcessManager processManager, JobStep jobStep,
-        FilesMoveStepParameters filesMoveStepParameters) : base(logger, useConsole, processManager, "Files Move",
+        FilesMoveStepParameters filesMoveStepParameters) : base(logger, null, null, processManager, "Files Move",
         jobStep.ProcLineId)
     {
+        _useConsole = useConsole;
         _par = filesMoveStepParameters;
     }
 
@@ -41,7 +43,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         //და ჩავანაცვლოთ ახლოს მდგომი დასაშვები ვარიანტით
         //მაგალითად ... -> .
         //ჩანაცვლებისას აღმოჩნდება, რომ ახალი სახელით უკვე არის სხვა ფაილი იმავე ფოლდერში,
-        //მაშინ ბოლოში (გაფართოების წინ) მივაწეროთ ფრჩილებში ჩასმული 2.
+        //მაშინ ბოლოში (გაფართოების წინ) მივაწეროთ ფრჩხილებში ჩასმული 2.
         //თუ ასეთიც არის, მაშინ ავიღოთ სამი და ასე მანამ, სანამ არ ვიპოვით თავისუფალ სახელს
 
         //FTP-ს მხარეს არ აიტვირთოს ისეთი ფაილები, რომლებიც შეიცავენ მიმდევრობით 2 ან მეტ წერტილს.
@@ -61,7 +63,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         //წინასწარ დამუშავდეს ადგილზევე zip ფაილები
         if (sourceIsLocal)
         {
-            UnZipOnPlace unZipOnPlace = new(Logger, UseConsole, _par.SourceFileManager);
+            UnZipOnPlace unZipOnPlace = new(Logger, _useConsole, _par.SourceFileManager);
             if (!unZipOnPlace.Run())
                 return false;
         }
@@ -99,12 +101,12 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         if (!duplicateFilesFinder.Run())
             return false;
 
-        MultiDuplicatesFinder multiDuplicatesFinder = new(UseConsole, duplicateFilesFinder.FileList);
+        MultiDuplicatesFinder multiDuplicatesFinder = new(_useConsole, duplicateFilesFinder.FileList);
         if (!multiDuplicatesFinder.Run())
             return false;
 
         DuplicateFilesRemover duplicateFilesRemover =
-            new(UseConsole, multiDuplicatesFinder.FileList, _par.PriorityPoints);
+            new(_useConsole, multiDuplicatesFinder.FileList, _par.PriorityPoints);
 
         if (!duplicateFilesRemover.Run())
             return false;

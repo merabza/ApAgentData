@@ -4,7 +4,7 @@ using LibApAgentData.Domain;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
-using WebAgentContracts.V1.Responses;
+using WebAgentProjectsApiContracts.V1.Responses;
 
 namespace LibApAgentData.ToolActions;
 
@@ -13,8 +13,8 @@ public sealed class UploadToolAction : ProcessesToolAction
     private readonly BackupFileParameters _backupFileParameters;
     private readonly UploadParameters _par;
 
-    public UploadToolAction(ILogger logger, bool useConsole, ProcessManager? processManager, UploadParameters par,
-        BackupFileParameters backupFileParameters) : base(logger, useConsole, processManager, "Upload",
+    public UploadToolAction(ILogger logger, ProcessManager? processManager, UploadParameters par,
+        BackupFileParameters backupFileParameters) : base(logger, null, null, processManager, "Upload",
         par.UploadProcLineId)
     {
         _par = par;

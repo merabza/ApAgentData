@@ -32,6 +32,6 @@ public sealed class FilesSyncStep : JobStep
             return null;
         }
 
-        return new FilesSyncStepCommand(logger, useConsole, processManager, this, filesSyncStepParameters);
+        return new FilesSyncStepCommand(logger, processManager, this, filesSyncStepParameters);
     }
 }

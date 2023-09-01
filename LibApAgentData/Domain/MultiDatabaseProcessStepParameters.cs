@@ -1,5 +1,4 @@
-﻿using DatabaseApiClients;
-using DatabaseManagementClients;
+﻿using DatabasesManagement;
 using FileManagersMain;
 using LibApiClientParameters;
 using LibDatabaseParameters;
@@ -10,13 +9,13 @@ namespace LibApAgentData.Domain;
 
 public sealed class MultiDatabaseProcessStepParameters
 {
-    public MultiDatabaseProcessStepParameters(DatabaseManagementClient agentClient, FileManager localWorkFileManager)
+    public MultiDatabaseProcessStepParameters(IDatabaseApiClient agentClient, FileManager localWorkFileManager)
     {
         AgentClient = agentClient;
         LocalWorkFileManager = localWorkFileManager;
     }
 
-    public DatabaseManagementClient AgentClient { get; }
+    public IDatabaseApiClient AgentClient { get; }
     public FileManager LocalWorkFileManager { get; } //ლოკალური ფოლდერის მენეჯერი
 
     public static MultiDatabaseProcessStepParameters? Create(ILogger logger, bool useConsole, string? webAgentName,
@@ -24,7 +23,7 @@ public sealed class MultiDatabaseProcessStepParameters
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
         var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole,
-            logger, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections);
+            logger, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null);
 
         if (agentClient is null)
         {

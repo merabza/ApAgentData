@@ -101,7 +101,7 @@ public sealed class DatabaseBackupStep : JobStep
             parameters.GetUploadFileTempExtension());
 
         if (par is not null)
-            return new DatabaseBackupStepCommand(logger, useConsole, processManager, this, par,
+            return new DatabaseBackupStepCommand(useConsole, logger, processManager, this, par,
                 parameters.GetDownloadFileTempExtension());
 
         StShared.WriteErrorLine("par does not created", useConsole, logger);

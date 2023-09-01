@@ -9,19 +9,21 @@ using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
-using WebAgentContracts.V1.Responses;
+using WebAgentProjectsApiContracts.V1.Responses;
 
 namespace LibApAgentData.StepCommands;
 
 public sealed class FilesBackupStepCommand : ProcessesToolAction
 {
     private readonly JobStep _jobStep;
+    private readonly bool _useConsole;
     private readonly FilesBackupStepParameters _par;
 
     public FilesBackupStepCommand(ILogger logger, bool useConsole, FilesBackupStepParameters par,
-        ProcessManager processManager, JobStep jobStep) : base(logger, useConsole, processManager, "Files Backup",
+        ProcessManager processManager, JobStep jobStep) : base(logger, null, null, processManager, "Files Backup",
         jobStep.ProcLineId)
     {
+        _useConsole = useConsole;
         _par = par;
         _jobStep = jobStep;
     }
@@ -30,11 +32,13 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
     {
         Logger.LogInformation("Checking parameters...");
 
+        var localPath = _par.LocalPath;
+
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
-        if (!Directory.Exists(_par.LocalPath))
+        if (!Directory.Exists(localPath))
         {
-            Logger.LogInformation($"Creating local folder {_par.LocalPath}");
-            Directory.CreateDirectory(_par.LocalPath);
+            Logger.LogInformation("Creating local folder {localPath}", localPath);
+            Directory.CreateDirectory(localPath);
         }
 
         if (_par.BackupSeparately)
@@ -80,8 +84,8 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         var backupFileParameters = new BackupFileParameters(backupFileName, backupFileNamePrefix,
             backupFileNameSuffix, _par.DateMask);
 
-        var uploadToolAction = new UploadToolAction(Logger, UseConsole, ProcessManager, _par.UploadParameters,
-            backupFileParameters);
+        var uploadToolAction =
+            new UploadToolAction(Logger, ProcessManager, _par.UploadParameters, backupFileParameters);
 
         var nextAction =
             NeedUpload(uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
@@ -103,7 +107,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
     {
         if (uploadFileStorage.FileStoragePath is null)
         {
-            StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", UseConsole, Logger);
+            StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", _useConsole, Logger);
             return false;
         }
 

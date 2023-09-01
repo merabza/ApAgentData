@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DatabaseManagementClients;
+using DatabasesManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.Steps;
@@ -13,14 +13,16 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 {
     private readonly MultiDatabaseProcessStep _multiDatabaseProcessStep;
     private readonly MultiDatabaseProcessStepParameters _par;
+    private readonly bool _useConsole;
     private readonly string _procLogFilesFolder;
     private readonly string _stepName;
 
     protected MultiDatabaseProcessesToolAction(ILogger logger, bool useConsole, string procLogFilesFolder,
         string stepName, ProcessManager processManager, MultiDatabaseProcessStep multiDatabaseProcessStep,
-        MultiDatabaseProcessStepParameters par, string actionName, int procLineId) : base(logger, useConsole,
+        MultiDatabaseProcessStepParameters par, string actionName, int procLineId) : base(logger, null, null,
         processManager, actionName, procLineId)
     {
+        _useConsole = useConsole;
         _procLogFilesFolder = procLogFilesFolder;
         _stepName = stepName;
         _multiDatabaseProcessStep = multiDatabaseProcessStep;
@@ -59,26 +61,27 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         var all = true;
         foreach (var databaseName in databaseNames)
         {
-            ProcLogFile procLogFile = new(UseConsole, Logger, $"{_stepName}_{databaseName}_",
+            ProcLogFile procLogFile = new(_useConsole, Logger, $"{_stepName}_{databaseName}_",
                 _multiDatabaseProcessStep.PeriodType, _multiDatabaseProcessStep.StartAt,
                 _multiDatabaseProcessStep.HoleStartTime, _multiDatabaseProcessStep.HoleEndTime, _procLogFilesFolder,
                 _par.LocalWorkFileManager);
 
             if (procLogFile.HaveCurrentPeriodFile())
             {
-                Logger.LogInformation($"{databaseName} {_stepName} had executed in this period");
+                Logger.LogInformation("{databaseName} {_stepName} had executed in this period", databaseName,
+                    _stepName);
                 continue;
             }
 
             Logger.LogInformation(
-                $"{_stepName} for database {databaseName}");
+                "{_stepName} for database {databaseName}", _stepName, databaseName);
             if (!RunOneDatabaseAction(_par.AgentClient, databaseName))
             {
                 all = false;
                 break;
             }
 
-            //სამუშაო ფოლდერში შეიქმნას ფაილი, რომელიც იქნება იმის ამღნიშვნელი,
+            //სამუშაო ფოლდერში შეიქმნას ფაილი, რომელიც იქნება იმის აღმნიშვნელი,
             //რომ ეს პროცესი შესრულდა და წარმატებით დასრულდა.
             //ფაილის სახელი უნდა შედგებოდეს პროცედურის სახელისაგან თარიღისა და დროისაგან
             //(როცა პროცესი დასრულდა)
@@ -94,7 +97,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     }
 
 
-    protected virtual bool RunOneDatabaseAction(DatabaseManagementClient agentClient, string databaseName)
+    protected virtual bool RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName)
     {
         return false;
     }

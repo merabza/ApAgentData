@@ -4,7 +4,7 @@ using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
-using WebAgentContracts.V1.Responses;
+using WebAgentProjectsApiContracts.V1.Responses;
 
 namespace LibApAgentData.ToolActions;
 
@@ -12,6 +12,7 @@ public sealed class CompressToolAction : ProcessesToolAction
 {
     private readonly BackupFileParameters _backupFileParameters;
     private readonly SmartSchema _localSmartSchema;
+    private readonly bool _useConsole;
     private readonly CompressParameters? _par;
     private readonly FileStorageData _uploadFileStorage;
     private readonly UploadParameters _uploadParameters;
@@ -19,9 +20,10 @@ public sealed class CompressToolAction : ProcessesToolAction
 
     public CompressToolAction(ILogger logger, bool useConsole, ProcessManager? processManager, CompressParameters? par,
         UploadParameters uploadParameters, BackupFileParameters backupFileParameters, int compressProcLine,
-        SmartSchema localSmartSchema, FileStorageData uploadFileStorage) : base(logger, useConsole, processManager,
+        SmartSchema localSmartSchema, FileStorageData uploadFileStorage) : base(logger, null, null, processManager,
         "Compress Backup", compressProcLine)
     {
+        _useConsole = useConsole;
         _par = par;
         _uploadParameters = uploadParameters;
         _backupFileParameters = backupFileParameters;
@@ -31,8 +33,7 @@ public sealed class CompressToolAction : ProcessesToolAction
 
     public override ProcessesToolAction? GetNextAction()
     {
-        var uploadToolAction =
-            new UploadToolAction(Logger, UseConsole, ProcessManager, _uploadParameters, _backupFileParameters);
+        var uploadToolAction = new UploadToolAction(Logger, ProcessManager, _uploadParameters, _backupFileParameters);
 
         return NeedUpload(_uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
     }
@@ -41,7 +42,7 @@ public sealed class CompressToolAction : ProcessesToolAction
     {
         if (uploadFileStorage.FileStoragePath is null)
         {
-            StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", UseConsole, Logger);
+            StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", _useConsole, Logger);
             return false;
         }
 

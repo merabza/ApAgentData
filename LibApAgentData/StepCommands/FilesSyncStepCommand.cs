@@ -10,8 +10,8 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
 {
     private readonly FilesSyncStepParameters _par;
 
-    public FilesSyncStepCommand(ILogger logger, bool useConsole, ProcessManager processManager, JobStep jobStep,
-        FilesSyncStepParameters filesSyncStepParameters) : base(logger, useConsole, processManager, "Files Sync",
+    public FilesSyncStepCommand(ILogger logger, ProcessManager processManager, JobStep jobStep,
+        FilesSyncStepParameters filesSyncStepParameters) : base(logger, null, null, processManager, "Files Sync",
         jobStep.ProcLineId)
     {
         _par = filesSyncStepParameters;

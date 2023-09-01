@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using DatabaseApiClients;
-using DatabaseManagementClients;
+using DatabasesManagement;
 using DbTools;
 using FileManagersMain;
 using LibApAgentData.Models;
@@ -14,7 +13,7 @@ namespace LibApAgentData.Domain;
 
 public sealed class DatabaseBackupStepParameters
 {
-    private DatabaseBackupStepParameters(DatabaseManagementClient agentClient, string localPath,
+    private DatabaseBackupStepParameters(IDatabaseApiClient agentClient, string localPath,
         FileManager localWorkFileManager, EBackupType backupType, EDatabaseSet databaseSet, List<string> databaseNames,
         FileStorageData downloadFileStorageData, FileStorageData uploadFileStorageData,
         SmartSchema downloadSideSmartSchema, SmartSchema localSmartSchema, FileManager downloadFileManager,
@@ -39,7 +38,7 @@ public sealed class DatabaseBackupStepParameters
         UploadParameters = uploadParameters;
     }
 
-    public DatabaseManagementClient AgentClient { get; }
+    public IDatabaseApiClient AgentClient { get; }
     public string LocalPath { get; } //ლოკალური ფოლდერი ბექაპების მისაღებად
     public FileManager LocalWorkFileManager { get; } //ლოკალური ფოლდერის მენეჯერი
     public EBackupType BackupType { get; }
@@ -79,8 +78,8 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole,
-            logger, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections);
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger, webAgentName,
+            apiClients, databaseServerConnectionName, databaseServerConnections, null, null);
 
         if (agentClient is null)
         {
