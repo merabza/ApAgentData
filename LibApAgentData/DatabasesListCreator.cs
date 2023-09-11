@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DatabasesManagement;
 using DbTools;
 using DbTools.Models;
@@ -26,7 +27,7 @@ public sealed class DatabasesListCreator
 
     public List<DatabaseInfoModel> LoadDatabaseNames()
     {
-        var databaseInfos = _agentClient.GetDatabaseNames().Result;
+        var databaseInfos = _agentClient.GetDatabaseNames(CancellationToken.None).Result;
 
         var sysBaseDoesMatter = false;
         var checkSysBase = false;

@@ -1,4 +1,5 @@
-﻿using DatabasesManagement;
+﻿using System.Threading;
+using DatabasesManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Steps;
 using LibApAgentData.ToolActions;
@@ -18,6 +19,6 @@ public sealed class UpdateStatisticsStepCommand : MultiDatabaseProcessesToolActi
 
     protected override bool RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName)
     {
-        return agentClient.UpdateStatistics(databaseName).Result;
+        return agentClient.UpdateStatistics(databaseName, CancellationToken.None).Result;
     }
 }

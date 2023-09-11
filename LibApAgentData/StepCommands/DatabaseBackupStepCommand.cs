@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using DbTools;
 using DbTools.Models;
-using FluentFTP.Helpers;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.Steps;
@@ -46,7 +46,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         }
 
         //დადგინდეს არსებული ბაზების სია
-        var databaseInfos = _par.AgentClient.GetDatabaseNames().Result;
+        var databaseInfos = _par.AgentClient.GetDatabaseNames(CancellationToken.None).Result;
 
         var dbInfos = databaseInfos.Where(w =>
             w.RecoveryModel != EDatabaseRecovery.Simple || _par.BackupType != EBackupType.TrLog);
@@ -93,7 +93,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             Logger.LogInformation("Backup database {databaseName}...", databaseName);
 
             var backupFileParameters =
-                _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName).Result;
+                _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, CancellationToken.None).Result;
 
             //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფიქსირდა, ვჩერდებით.
             if (backupFileParameters == null)

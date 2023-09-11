@@ -1,4 +1,5 @@
-﻿using LibApAgentData.Domain;
+﻿using System.Threading;
+using LibApAgentData.Domain;
 using LibApAgentData.Steps;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
 
     protected override bool RunAction()
     {
-        return _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand, _executeSqlCommandStep.DatabaseName).Result;
+        return _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand, CancellationToken.None,
+            _executeSqlCommandStep.DatabaseName).Result;
     }
 }

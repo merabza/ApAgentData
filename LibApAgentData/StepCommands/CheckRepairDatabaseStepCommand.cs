@@ -1,4 +1,5 @@
-﻿using DatabasesManagement;
+﻿using System.Threading;
+using DatabasesManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Steps;
 using LibApAgentData.ToolActions;
@@ -19,6 +20,6 @@ public sealed class CheckRepairDatabaseStepCommand : MultiDatabaseProcessesToolA
 
     protected override bool RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName)
     {
-        return agentClient.CheckRepairDatabase(databaseName).Result;
+        return agentClient.CheckRepairDatabase(databaseName, CancellationToken.None).Result;
     }
 }
