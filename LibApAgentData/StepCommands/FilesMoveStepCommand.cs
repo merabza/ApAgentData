@@ -23,8 +23,8 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
 
     protected override bool RunAction()
     {
-        var sourceIsLocal = _par.SourceFileStorage.IsFileSchema();
-        var destinationIsLocal = _par.DestinationFileStorage.IsFileSchema();
+        //var sourceIsLocal = _par.SourceFileStorage.IsFileSchema();
+        //var destinationIsLocal = _par.DestinationFileStorage.IsFileSchema();
 
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
@@ -61,14 +61,14 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         //ლოკალურიდან FTP-ს მხარეს ატვირთვის დროს,
         //ან ლოკალურიდან ლოკალურში გადაადგილებისას,
         //წინასწარ დამუშავდეს ადგილზევე zip ფაილები
-        if (sourceIsLocal)
+        if (_par.SourceIsLocal)
         {
             UnZipOnPlace unZipOnPlace = new(Logger, _useConsole, _par.SourceFileManager);
             if (!unZipOnPlace.Run())
                 return false;
         }
 
-        //თუ წყაროს ფოლდერი ცარელა, გასაკეთებლი არაფერია
+        //თუ წყაროს ფოლდერი ცარიელია, გასაკეთებლი არაფერია
         if (!_par.SourceFileManager.IsFolderEmpty(null))
         {
             string? moveFolderName = null;
@@ -94,7 +94,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                 return false;
         }
 
-        if (!destinationIsLocal)
+        if (!_par.DestinationIsLocal)
             return true;
 
         DuplicateFilesFinder duplicateFilesFinder = new(_par.DestinationFileManager);
@@ -111,7 +111,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         if (!duplicateFilesRemover.Run())
             return false;
 
-        //ცარელა ფოლდერების წაშლა
+        //ცარიელი ფოლდერების წაშლა
         EmptyFoldersRemover emptyFoldersRemover = new(_par.DestinationFileManager);
         return emptyFoldersRemover.Run();
     }

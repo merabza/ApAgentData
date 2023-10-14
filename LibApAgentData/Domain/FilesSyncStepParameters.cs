@@ -89,10 +89,22 @@ public sealed class FilesSyncStepParameters
             return null;
         }
 
-
         var sourceIsLocal = sourceFileStorage.IsFileSchema();
+        if (sourceIsLocal is null)
+        {
+            StShared.WriteErrorLine("could not be determined source is File Schema or not", useConsole, logger);
+            return null;
+        }
+
+
         var destinationIsLocal = destinationFileStorage.IsFileSchema();
-        if (!sourceIsLocal && !destinationIsLocal)
+        if (destinationIsLocal is null)
+        {
+            StShared.WriteErrorLine("could not be determined destination is File Schema or not", useConsole, logger);
+            return null;
+        }
+
+        if (!sourceIsLocal.Value && !destinationIsLocal.Value)
         {
             StShared.WriteErrorLine("At Least one file storage must be a local storage", useConsole, logger);
             return null;
@@ -122,7 +134,7 @@ public sealed class FilesSyncStepParameters
 
         FileManager? sourceFileManager;
         //თუ წყარო ლოკალურია
-        if (sourceIsLocal)
+        if (sourceIsLocal.Value)
             //შევქმნათ ლოკალური გამგზავნი ფაილ მენეჯერი
             sourceFileManager =
                 FileManagersFabric.CreateFileManager(useConsole, logger, sourceFileStorage.FileStoragePath);
@@ -143,7 +155,7 @@ public sealed class FilesSyncStepParameters
 
         FileManager? destinationFileManager;
         //თუ მიზანი ლოკალურია
-        if (destinationIsLocal)
+        if (destinationIsLocal.Value)
             //შევქმნათ ლოკალური მიმღები ფაილ მენეჯერი
             destinationFileManager =
                 FileManagersFabric.CreateFileManager(useConsole, logger, destinationFileStorage.FileStoragePath);
@@ -162,10 +174,10 @@ public sealed class FilesSyncStepParameters
 
         EMoveMethod useMethod;
         //თუ წყარო მოშორებულია
-        if (!sourceIsLocal)
+        if (!sourceIsLocal.Value)
             useMethod = EMoveMethod.Download;
         else
-            useMethod = destinationIsLocal ? EMoveMethod.Local : EMoveMethod.Upload;
+            useMethod = destinationIsLocal.Value ? EMoveMethod.Local : EMoveMethod.Upload;
 
         ReplacePairsSet? replacePairsSet = null;
         if (!string.IsNullOrWhiteSpace(replacePairsSetName))

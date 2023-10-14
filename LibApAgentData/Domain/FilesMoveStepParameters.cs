@@ -11,14 +11,16 @@ namespace LibApAgentData.Domain;
 
 public sealed class FilesMoveStepParameters
 {
-    private FilesMoveStepParameters(FileStorageData sourceFileStorage, FileStorageData destinationFileStorage,
-        ExcludeSet excludeSet, ExcludeSet? deleteDestinationFilesSet, FileManager sourceFileManager,
-        FileManager destinationFileManager, EMoveMethod useMethod, ReplacePairsSet? replacePairsSet,
-        string moveFolderMask, string uploadTempExtension, string downloadTempExtension, int maxFolderCount,
-        bool createFolderWithDateTime, List<string> priorityPoints)
+    private FilesMoveStepParameters(FileStorageData sourceFileStorage, bool sourceIsLocal,
+        FileStorageData destinationFileStorage, bool destinationIsLocal, ExcludeSet excludeSet,
+        ExcludeSet? deleteDestinationFilesSet, FileManager sourceFileManager, FileManager destinationFileManager,
+        EMoveMethod useMethod, ReplacePairsSet? replacePairsSet, string moveFolderMask, string uploadTempExtension,
+        string downloadTempExtension, int maxFolderCount, bool createFolderWithDateTime, List<string> priorityPoints)
     {
         SourceFileStorage = sourceFileStorage;
+        SourceIsLocal = sourceIsLocal;
         DestinationFileStorage = destinationFileStorage;
+        DestinationIsLocal = destinationIsLocal;
         ExcludeSet = excludeSet;
         DeleteDestinationFilesSet = deleteDestinationFilesSet;
         SourceFileManager = sourceFileManager;
@@ -34,7 +36,9 @@ public sealed class FilesMoveStepParameters
     }
 
     public FileStorageData SourceFileStorage { get; }
+    public bool SourceIsLocal { get; }
     public FileStorageData DestinationFileStorage { get; }
+    public bool DestinationIsLocal { get; }
     public ExcludeSet ExcludeSet { get; }
     public ExcludeSet? DeleteDestinationFilesSet { get; }
     public FileManager SourceFileManager { get; }
@@ -103,10 +107,22 @@ public sealed class FilesMoveStepParameters
             return null;
         }
 
-
         var sourceIsLocal = sourceFileStorage.IsFileSchema();
+        if (sourceIsLocal is null)
+        {
+            StShared.WriteErrorLine("could not be determined source is File Schema or not", useConsole, logger);
+            return null;
+        }
+
+
         var destinationIsLocal = destinationFileStorage.IsFileSchema();
-        if (!sourceIsLocal && !destinationIsLocal)
+        if (destinationIsLocal is null)
+        {
+            StShared.WriteErrorLine("could not be determined destination is File Schema or not", useConsole, logger);
+            return null;
+        }
+
+        if (!sourceIsLocal.Value && !destinationIsLocal.Value)
         {
             StShared.WriteErrorLine("At Least one file storage must be a local storage", useConsole, logger);
             return null;
@@ -136,7 +152,7 @@ public sealed class FilesMoveStepParameters
 
         FileManager? sourceFileManager;
         //თუ წყარო ლოკალურია
-        if (sourceIsLocal)
+        if (sourceIsLocal.Value)
             //შევქმნათ ლოკალური გამგზავნი ფაილ მენეჯერი
             sourceFileManager =
                 FileManagersFabric.CreateFileManager(useConsole, logger, sourceFileStorage.FileStoragePath);
@@ -157,7 +173,7 @@ public sealed class FilesMoveStepParameters
 
         FileManager? destinationFileManager;
         //თუ მიზანი ლოკალურია
-        if (destinationIsLocal)
+        if (destinationIsLocal.Value)
             //შევქმნათ ლოკალური მიმღები ფაილ მენეჯერი
             destinationFileManager =
                 FileManagersFabric.CreateFileManager(useConsole, logger, destinationFileStorage.FileStoragePath);
@@ -176,19 +192,19 @@ public sealed class FilesMoveStepParameters
 
         EMoveMethod useMethod;
         //თუ წყარო მოშორებულია
-        if (!sourceIsLocal)
+        if (!sourceIsLocal.Value)
             useMethod = EMoveMethod.Download;
         else
-            useMethod = destinationIsLocal ? EMoveMethod.Local : EMoveMethod.Upload;
+            useMethod = destinationIsLocal.Value ? EMoveMethod.Local : EMoveMethod.Upload;
 
         ReplacePairsSet? replacePairsSet = null;
         if (!string.IsNullOrWhiteSpace(replacePairsSetName))
             replacePairsSet = replacePairsSets.GetReplacePairsSetByKey(replacePairsSetName);
 
 
-        return new FilesMoveStepParameters(sourceFileStorage, destinationFileStorage, excludeSet,
-            deleteDestinationFilesSet, sourceFileManager, destinationFileManager, useMethod, replacePairsSet,
-            moveFolderMask, uploadTempExtension, downloadTempExtension, maxFolderCount, createFolderWithDateTime,
-            priorityPoints);
+        return new FilesMoveStepParameters(sourceFileStorage, sourceIsLocal.Value, destinationFileStorage,
+            destinationIsLocal.Value, excludeSet, deleteDestinationFilesSet, sourceFileManager, destinationFileManager,
+            useMethod, replacePairsSet, moveFolderMask, uploadTempExtension, downloadTempExtension, maxFolderCount,
+            createFolderWithDateTime, priorityPoints);
     }
 }
