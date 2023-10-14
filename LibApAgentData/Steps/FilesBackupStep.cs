@@ -48,7 +48,7 @@ public sealed class FilesBackupStep : JobStep
     public override ProcessesToolAction? GetToolAction(ILogger logger, bool useConsole, ProcessManager processManager,
         ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var par = FilesBackupStepParameters.Create(logger, useConsole, processManager, LocalPath,
+        var par = FilesBackupStepParameters.Create(logger, useConsole, LocalPath,
             ArchiverName, ExcludeSetName, UploadFileStorageName, MaskName, DateMask, LocalSmartSchemaName,
             UploadSmartSchemaName, BackupFolderPaths, new Archivers(parameters.Archivers),
             new ExcludeSets(parameters.ExcludeSets), new FileStorages(parameters.FileStorages),

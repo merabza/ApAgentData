@@ -2,7 +2,6 @@
 using CompressionManagement;
 using FileManagersMain;
 using LibFileParameters.Models;
-using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
@@ -29,9 +28,11 @@ public sealed class FilesBackupStepParameters
         ArchivingTempExtension = archivingTempExtension;
     }
 
-    //ფოლდერი, სადაც შეინახება ფაილების ბექაპები
+    //ფოლდერი, სადაც შეინახება ფაილების მარქაფები
     public string LocalPath { get; }
-    public FileManager LocalWorkFileManager { get; } //ლოკალური ფოლდერის მენეჯერი
+
+    //ლოკალური ფოლდერის მენეჯერი
+    public FileManager LocalWorkFileManager { get; }
     public SmartSchema LocalSmartSchema { get; }
     public Archiver Archiver { get; }
     public Dictionary<string, string> BackupFolderPaths { get; }
@@ -46,12 +47,11 @@ public sealed class FilesBackupStepParameters
     //True - არჩეული გზები ცალ-ცალკე არქივებში წავიდეს. False - ყველა გზა წავიდეს ერთ ერქივში.
     public bool BackupSeparately { get; }
 
-    public static FilesBackupStepParameters? Create(ILogger logger, bool useConsole, ProcessManager? processManager,
-        string? localPath, string? archiverName, string? excludeSetName, string? uploadFileStorageName,
-        string? maskName, string? dateMask, string? localSmartSchemaName, string? uploadSmartSchemaName,
-        Dictionary<string, string> backupFolderPaths, Archivers archivers, ExcludeSets excludeSets,
-        FileStorages fileStorages, SmartSchemas smartSchemas, int uploadProcLineId, bool backupSeparately,
-        string? archivingTempExtension, string? uploadTempExtension)
+    public static FilesBackupStepParameters? Create(ILogger logger, bool useConsole, string? localPath,
+        string? archiverName, string? excludeSetName, string? uploadFileStorageName, string? maskName, string? dateMask,
+        string? localSmartSchemaName, string? uploadSmartSchemaName, Dictionary<string, string> backupFolderPaths,
+        Archivers archivers, ExcludeSets excludeSets, FileStorages fileStorages, SmartSchemas smartSchemas,
+        int uploadProcLineId, bool backupSeparately, string? archivingTempExtension, string? uploadTempExtension)
     {
         if (string.IsNullOrWhiteSpace(localPath))
         {
@@ -167,15 +167,14 @@ public sealed class FilesBackupStepParameters
         }
 
 
-        if (string.IsNullOrWhiteSpace(uploadTempExtension))
-        {
-            StShared.WriteErrorLine("uploadTempExtension does not specified", useConsole, logger);
-            return null;
-        }
+        if (!string.IsNullOrWhiteSpace(uploadTempExtension))
+            return new FilesBackupStepParameters(localPath, maskName, dateMask, archiver, backupFolderPaths,
+                localWorkFileManager, excludeSet, uploadFileStorage, localSmartSchema, backupSeparately,
+                uploadParameters, archivingTempExtension);
+
+        StShared.WriteErrorLine("uploadTempExtension does not specified", useConsole, logger);
+        return null;
 
 
-        return new FilesBackupStepParameters(localPath, maskName, dateMask, archiver, backupFolderPaths,
-            localWorkFileManager, excludeSet, uploadFileStorage, localSmartSchema, backupSeparately, uploadParameters,
-            archivingTempExtension);
     }
 }

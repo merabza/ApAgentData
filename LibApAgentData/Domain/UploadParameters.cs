@@ -39,7 +39,6 @@ public sealed class UploadParameters
             return null;
         }
 
-
         var workFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, localPath);
 
         if (workFileManager is null)
@@ -49,14 +48,13 @@ public sealed class UploadParameters
         }
 
 
-        if (string.IsNullOrWhiteSpace(uploadTempExtension))
-        {
-            StShared.WriteErrorLine("uploadTempExtension does not specified", useConsole, logger);
-            return null;
-        }
+        if (!string.IsNullOrWhiteSpace(uploadTempExtension))
+
+            return new UploadParameters(uploadFileManager, workFileManager, uploadSmartSchema, uploadTempExtension.AddNeedLeadPart("."), uploadProcLine, localPath);
+
+        StShared.WriteErrorLine("uploadTempExtension does not specified", useConsole, logger);
+        return null;
 
 
-        return new UploadParameters(uploadFileManager, workFileManager, uploadSmartSchema,
-            uploadTempExtension.AddNeedLeadPart("."), uploadProcLine, localPath);
     }
 }

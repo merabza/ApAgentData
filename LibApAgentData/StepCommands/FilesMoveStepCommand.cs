@@ -23,9 +23,6 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
 
     protected override bool RunAction()
     {
-        //var sourceIsLocal = _par.SourceFileStorage.IsFileSchema();
-        //var destinationIsLocal = _par.DestinationFileStorage.IsFileSchema();
-
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
         {

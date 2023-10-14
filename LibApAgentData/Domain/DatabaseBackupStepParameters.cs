@@ -219,16 +219,15 @@ public sealed class DatabaseBackupStepParameters
         var uploadParameters = UploadParameters.Create(logger, useConsole, localPath,
             uploadFileStorageData, uploadSmartSchema, uploadTempExtension, uploadProcLineId);
 
-        if (uploadParameters is null)
-        {
-            StShared.WriteErrorLine("uploadParameters does not created", useConsole, logger);
-            return null;
-        }
+        if (uploadParameters is not null)
+            return new DatabaseBackupStepParameters(agentClient, localPath, localWorkFileManager,
+                databaseBackupParameters.BackupType, databaseSet, databaseNames, downloadFileStorageData,
+                uploadFileStorageData, downloadSideSmartSchema, localSmartSchema, downloadFileManager,
+                dbBackupParameters, downloadProcLineId, compressProcLineId, compressParameters, uploadParameters);
+
+        StShared.WriteErrorLine("uploadParameters does not created", useConsole, logger);
+        return null;
 
 
-        return new DatabaseBackupStepParameters(agentClient, localPath, localWorkFileManager,
-            databaseBackupParameters.BackupType, databaseSet, databaseNames, downloadFileStorageData,
-            uploadFileStorageData, downloadSideSmartSchema, localSmartSchema, downloadFileManager, dbBackupParameters,
-            downloadProcLineId, compressProcLineId, compressParameters, uploadParameters);
     }
 }
