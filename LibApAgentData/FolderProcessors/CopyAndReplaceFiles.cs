@@ -22,11 +22,10 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
     private readonly string _tempExtension;
     private readonly EMoveMethod _useMethod;
 
-    public CopyAndReplaceFiles(ILogger logger, FileManager sourceFileManager,
-        FileManager destinationFileManager, EMoveMethod useMethod, string uploadTempExtension,
-        string downloadTempExtension, ExcludeSet excludeSet, int destinationFileMaxLength) : base(
-        "Copy And Replace files", "Copy And Replace files from one place to another", sourceFileManager, null, true,
-        null, excludeSet)
+    public CopyAndReplaceFiles(ILogger logger, FileManager sourceFileManager, FileManager destinationFileManager,
+        EMoveMethod useMethod, string uploadTempExtension, string downloadTempExtension, ExcludeSet excludeSet,
+        int destinationFileMaxLength) : base("Copy And Replace files",
+        "Copy And Replace files from one place to another", sourceFileManager, null, true, excludeSet)
     {
         _destinationFileManager = destinationFileManager;
         _logger = logger;
@@ -41,8 +40,7 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
         _fileMaxLength = destinationFileMaxLength - _tempExtension.Length;
     }
 
-    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file,
-        RecursiveParameters? recursiveParameters = null)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         var dirNames = afterRootPath is null
             ? new List<string>()

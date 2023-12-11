@@ -2,6 +2,7 @@
 using ConnectTools;
 using FileManagersMain;
 using LibFileParameters.Models;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.FolderProcessors;
 
@@ -11,13 +12,12 @@ public sealed class DeleteRedundantFiles : FolderProcessor
 
     public DeleteRedundantFiles(FileManager sourceFileManager, FileManager destinationFileManager,
         ExcludeSet excludeSet) : base("Delete redundant files", "Delete redundant files after compare two places",
-        destinationFileManager, null, true, null, excludeSet)
+        destinationFileManager, null, true, excludeSet)
     {
         _sourceFileManager = sourceFileManager;
     }
 
-    protected override (bool, bool) ProcessOneFolder(string? afterRootPath, string folderName,
-        RecursiveParameters? recursiveParameters = null)
+    protected override (bool, bool) ProcessOneFolder(string? afterRootPath, string folderName)
     {
         //დავადგინოთ ასეთი ფოლდერი გვაქვს თუ არა წყაროში და თუ არ გვაქვს წავშალოთ მიზნის მხარესაც
 
@@ -29,8 +29,7 @@ public sealed class DeleteRedundantFiles : FolderProcessor
         return deleted ? (true, true) : (false, false);
     }
 
-    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file,
-        RecursiveParameters? recursiveParameters = null)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         var myFileInfos = _sourceFileManager.GetFilesWithInfo(afterRootPath, null);
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ConnectTools;
 using FileManagersMain;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.FolderProcessors;
 
@@ -12,8 +13,7 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
     private readonly Dictionary<string, string> _replaceSet;
 
     public ChangeFilesWithRestrictPatterns(FileManager destinationFileManager, Dictionary<string, string> replaceSet) :
-        base("Restrict Patterns", "Change Files With Restrict Patterns", destinationFileManager, null, false, null,
-            null)
+        base("Restrict Patterns", "Change Files With Restrict Patterns", destinationFileManager, null, false, null)
     {
         _replaceSet = replaceSet;
     }
@@ -26,8 +26,7 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
         return false;
     }
 
-    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file,
-        RecursiveParameters? recursiveParameters = null)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         var haveReplace = true;
         var newFileName = file.FileName;

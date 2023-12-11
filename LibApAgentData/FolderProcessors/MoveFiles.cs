@@ -24,7 +24,7 @@ public sealed class MoveFiles : FolderProcessor
     public MoveFiles(ILogger logger, FileManager sourceFileManager, FileManager destinationFileManager,
         string? moveFolderName, EMoveMethod useMethod, string uploadTempExtension, string downloadTempExtension,
         ExcludeSet excludeSet, int maxFolderCount, int destinationFileMaxLength) : base("Move files",
-        "Move files from one place to another", sourceFileManager, null, true, null, excludeSet)
+        "Move files from one place to another", sourceFileManager, null, true, excludeSet)
     {
         _destinationFileManager = destinationFileManager;
         _moveFolderName = moveFolderName?.Trim();
@@ -41,8 +41,7 @@ public sealed class MoveFiles : FolderProcessor
         _fileMaxLength = destinationFileMaxLength - _tempExtension.Length;
     }
 
-    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file,
-        RecursiveParameters? recursiveParameters = null)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         var dirNames = afterRootPath == null
             ? new List<string>()

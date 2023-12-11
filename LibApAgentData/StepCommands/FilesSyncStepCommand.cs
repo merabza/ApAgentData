@@ -3,6 +3,7 @@ using LibApAgentData.FolderProcessors;
 using LibApAgentData.Steps;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.StepCommands;
 

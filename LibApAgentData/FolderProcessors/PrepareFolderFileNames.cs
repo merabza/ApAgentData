@@ -12,7 +12,7 @@ public sealed class PrepareFolderFileNames : FolderProcessor
 
     public PrepareFolderFileNames(FileManager sourceFileManager, EMoveMethod useMethod, string uploadTempExtension,
         string downloadTempExtension, ExcludeSet excludeSet, int destinationFileMaxLength) : base("Prepare Names",
-        "Prepare Folder and File Names", sourceFileManager, null, false, null, excludeSet)
+        "Prepare Folder and File Names", sourceFileManager, null, false, excludeSet)
     {
         var tempExtension = useMethod switch
         {
@@ -24,8 +24,7 @@ public sealed class PrepareFolderFileNames : FolderProcessor
         _fileMaxLength = destinationFileMaxLength - tempExtension.Length;
     }
 
-    protected override (bool, bool) ProcessOneFolder(string? afterRootPath, string folderName,
-        RecursiveParameters? recursiveParameters = null)
+    protected override (bool, bool) ProcessOneFolder(string? afterRootPath, string folderName)
     {
         var preparedFolderName = folderName.Trim();
         return preparedFolderName != folderName
@@ -33,8 +32,7 @@ public sealed class PrepareFolderFileNames : FolderProcessor
             : (true, false);
     }
 
-    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file,
-        RecursiveParameters? recursiveParameters = null)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         var preparedFileName = file.FileName.PreparedFileNameConsideringLength(_fileMaxLength);
         return preparedFileName == file.FileName ||

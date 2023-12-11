@@ -6,6 +6,7 @@ using ConnectTools;
 using FileManagersMain;
 using LibApAgentData.Models;
 using SystemToolsShared;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.FolderProcessors;
 
@@ -16,7 +17,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
     private readonly SHA256 _sha256 = SHA256.Create();
 
     public DuplicateFilesFinder(FileManager fileManager) : base("DuplicatesRemover", "Find and remove duplicate files",
-        fileManager, null, false, null, null)
+        fileManager, null, false, null)
     {
     }
 
@@ -35,8 +36,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
     {
     }
 
-    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file,
-        RecursiveParameters? recursiveParameters = null)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         if (FileManager is not DiskFileManager dFileManager)
             return false;

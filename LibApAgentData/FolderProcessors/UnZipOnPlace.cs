@@ -4,6 +4,7 @@ using CompressionManagement;
 using ConnectTools;
 using FileManagersMain;
 using Microsoft.Extensions.Logging;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.FolderProcessors;
 
@@ -12,8 +13,7 @@ public sealed class UnZipOnPlace : FolderProcessor
     private readonly ILogger _logger;
     private readonly bool _useConsole;
 
-    public UnZipOnPlace(ILogger logger, bool useConsole, FileManager fileManager) : base("Unzip",
-        "UnZip Zip Files on Place", fileManager, "*.zip", false, null, null)
+    public UnZipOnPlace(ILogger logger, bool useConsole, FileManager fileManager) : base("Unzip", "UnZip Zip Files on Place", fileManager, "*.zip", false, null)
     {
         _logger = logger;
         _useConsole = useConsole;
@@ -24,8 +24,7 @@ public sealed class UnZipOnPlace : FolderProcessor
         return FileManager is DiskFileManager;
     }
 
-    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file,
-        RecursiveParameters? recursiveParameters = null)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         var zipFileName = Path.GetFileNameWithoutExtension(file.FileName);
         var i = 0;
