@@ -127,4 +127,5 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
 
         return afterRootPath;
     }
+
 }

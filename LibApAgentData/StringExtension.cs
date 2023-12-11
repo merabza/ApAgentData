@@ -22,7 +22,6 @@ public static class StringExtension
         return preparedFileName;
     }
 
-
     public static string GetNewFileName(this string fileNameWithoutExtension, int i, string fileExtension)
     {
         return $"{fileNameWithoutExtension}{(i == 0 ? "" : $"({i})")}{fileExtension}";
@@ -40,9 +39,4 @@ public static class StringExtension
         return oneTry;
     }
 
-
-    public static List<string> PrepareAfterRootPath(this string afterRootPath, char directorySeparatorChar)
-    {
-        return afterRootPath.Split(directorySeparatorChar).Select(s => s.Trim()).ToList();
-    }
 }
