@@ -148,7 +148,8 @@ public sealed class FilesMoveStepParameters
         if (!string.IsNullOrWhiteSpace(deleteDestinationFilesSetName))
             deleteDestinationFilesSet = excludeSets.GetExcludeSetByKey(deleteDestinationFilesSetName);
 
-        StShared.ConsoleWriteInformationLine($"Source is From {sourceFileStorage.FileStoragePath}", useConsole, logger);
+        var fileStoragePath = sourceFileStorage.FileStoragePath;
+        StShared.ConsoleWriteInformationLine(logger, useConsole,"Source is From {fileStoragePath}", fileStoragePath);
 
         FileManager? sourceFileManager;
         //თუ წყარო ლოკალურია

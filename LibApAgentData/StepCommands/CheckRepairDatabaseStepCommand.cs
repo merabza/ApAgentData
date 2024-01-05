@@ -1,15 +1,18 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using DatabasesManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Steps;
 using LibApAgentData.ToolActions;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+using SystemToolsShared;
 
 namespace LibApAgentData.StepCommands;
 
 public sealed class CheckRepairDatabaseStepCommand : MultiDatabaseProcessesToolAction
 {
+    // ReSharper disable once ConvertToPrimaryConstructor
     public CheckRepairDatabaseStepCommand(ILogger logger, bool useConsole, string procLogFilesFolder,
         ProcessManager processManager, MultiDatabaseProcessStep multiDatabaseProcessStep,
         MultiDatabaseProcessStepParameters par, int procLineId) : base(logger, useConsole, procLogFilesFolder,
@@ -18,8 +21,14 @@ public sealed class CheckRepairDatabaseStepCommand : MultiDatabaseProcessesToolA
     }
 
 
-    protected override bool RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName)
+    protected override async Task<bool> RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName,
+        CancellationToken cancellationToken)
     {
-        return agentClient.CheckRepairDatabase(databaseName, CancellationToken.None).Result;
+        var checkRepairDatabaseResult = await agentClient.CheckRepairDatabase(databaseName, cancellationToken);
+        if (!checkRepairDatabaseResult.IsSome)
+            return true;
+
+        Err.PrintErrorsOnConsole((Err[])checkRepairDatabaseResult);
+        return false;
     }
 }

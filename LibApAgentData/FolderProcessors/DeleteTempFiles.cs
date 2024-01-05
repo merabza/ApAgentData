@@ -9,7 +9,8 @@ public sealed class DeleteTempFiles : FolderProcessor
 {
     private readonly string[] _patterns;
 
-    public DeleteTempFiles(FileManager destinationFileManager, string[] patterns) : base("Temp files", "Delete Temp files", destinationFileManager, null, true, null)
+    public DeleteTempFiles(FileManager destinationFileManager, string[] patterns) : base("Temp files",
+        "Delete Temp files", destinationFileManager, null, true, null, true, true)
     {
         _patterns = patterns;
     }

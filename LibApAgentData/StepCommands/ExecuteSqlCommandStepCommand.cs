@@ -1,8 +1,10 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using LibApAgentData.Domain;
 using LibApAgentData.Steps;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+using SystemToolsShared;
 
 namespace LibApAgentData.StepCommands;
 
@@ -12,6 +14,7 @@ public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
 
     private readonly ExecuteSqlCommandStepParameters _par;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public ExecuteSqlCommandStepCommand(ILogger logger, ProcessManager processManager,
         ExecuteSqlCommandStep executeSqlCommandStep, ExecuteSqlCommandStepParameters par) : base(logger, null, null,
         processManager, "Execute Sql Command", executeSqlCommandStep.ProcLineId)
@@ -20,9 +23,12 @@ public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
         _par = par;
     }
 
-    protected override bool RunAction()
+    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
     {
-        return _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand, CancellationToken.None,
-            _executeSqlCommandStep.DatabaseName).Result;
+        var executeCommandResult = await _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand, cancellationToken,
+            _executeSqlCommandStep.DatabaseName);
+        if (executeCommandResult.IsSome)
+            Err.PrintErrorsOnConsole((Err[])executeCommandResult);
+        return true;
     }
 }

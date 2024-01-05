@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 using CompressionManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Steps;
@@ -19,6 +21,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
     private readonly bool _useConsole;
     private readonly FilesBackupStepParameters _par;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public FilesBackupStepCommand(ILogger logger, bool useConsole, FilesBackupStepParameters par,
         ProcessManager processManager, JobStep jobStep) : base(logger, null, null, processManager, "Files Backup",
         jobStep.ProcLineId)
@@ -28,7 +31,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         _jobStep = jobStep;
     }
 
-    protected override bool RunAction()
+    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
     {
         Logger.LogInformation("Checking parameters...");
 
@@ -41,17 +44,23 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
             Directory.CreateDirectory(localPath);
         }
 
-        if (_par.BackupSeparately)
-            return _par.BackupFolderPaths.All(kvpBackupFolderPath =>
-                ExecuteBackup(_par.MaskName + kvpBackupFolderPath.Key, new[] { kvpBackupFolderPath.Value },
-                    _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage));
+        if (!_par.BackupSeparately)
+            return await ExecuteBackup(_par.MaskName, _par.BackupFolderPaths.Select(s => s.Value).ToArray(),
+                _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken);
 
-        return ExecuteBackup(_par.MaskName, _par.BackupFolderPaths.Select(s => s.Value).ToArray(), _par.Archiver,
-            _par.ExcludeSet, _par.UploadFileStorage);
+        foreach (var kvpBackupFolderPath in _par.BackupFolderPaths)
+        {
+            if (!await ExecuteBackup(_par.MaskName + kvpBackupFolderPath.Key, [kvpBackupFolderPath.Value],
+                    _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken))
+                return false;
+        }
+
+        return true;
+
     }
 
-    private bool ExecuteBackup(string maskName, string[] sources, Archiver archiver, ExcludeSet excludeSet,
-        FileStorageData uploadFileStorage)
+    private async Task<bool> ExecuteBackup(string maskName, string[] sources, Archiver archiver, ExcludeSet excludeSet,
+        FileStorageData uploadFileStorage, CancellationToken cancellationToken)
     {
         if (ProcessManager is not null && ProcessManager.CheckCancellation())
             return false;
@@ -69,7 +78,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
 
         var tempFileName = backupFileFullName + _par.ArchivingTempExtension.AddNeedLeadPart(".");
 
-        if (!archiver.SourcesToArchive(sources, tempFileName, excludeSet.FolderFileMasks.ToArray()))
+        if (!archiver.SourcesToArchive(sources, tempFileName, [.. excludeSet.FolderFileMasks]))
         {
             File.Delete(tempFileName);
             return false;
@@ -89,7 +98,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
 
         var nextAction =
             NeedUpload(uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
-        RunNextAction(nextAction);
+        await RunNextAction(nextAction, cancellationToken);
 
 
         return true;

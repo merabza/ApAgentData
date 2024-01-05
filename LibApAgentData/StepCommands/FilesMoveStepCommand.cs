@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Threading;
 using LibApAgentData.Domain;
 using LibApAgentData.FolderProcessors;
 using LibApAgentData.Steps;
@@ -13,6 +15,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
     private readonly bool _useConsole;
     private readonly FilesMoveStepParameters _par;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public FilesMoveStepCommand(ILogger logger, bool useConsole, ProcessManager processManager, JobStep jobStep,
         FilesMoveStepParameters filesMoveStepParameters) : base(logger, null, null, processManager, "Files Move",
         jobStep.ProcLineId)
@@ -21,16 +24,15 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         _par = filesMoveStepParameters;
     }
 
-    protected override bool RunAction()
+    protected override Task<bool> RunAction(CancellationToken cancellationToken)
     {
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
         {
-            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager,
-                _par.DeleteDestinationFilesSet.FolderFileMasks.ToArray());
+            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager, [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         //თუ მიზანი მოშორებულია და FTP-ა, 
@@ -52,7 +54,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
             ChangeFilesWithRestrictPatterns changeFilesWithManyDots =
                 new(_par.SourceFileManager, _par.ReplacePairsSet.PairsDict);
             if (!changeFilesWithManyDots.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         //ლოკალურიდან FTP-ს მხარეს ატვირთვის დროს,
@@ -62,7 +64,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         {
             UnZipOnPlace unZipOnPlace = new(Logger, _useConsole, _par.SourceFileManager);
             if (!unZipOnPlace.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         //თუ წყაროს ფოლდერი ცარიელია, გასაკეთებლი არაფერია
@@ -77,7 +79,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                 //შევამოწმოთ ასატვირთ ფოლდერში თუ არსებობს სესიის შესაბამისი ფოლდერი.
                 //თუ არ არსებობს, ვქმნით. //თუ ფოლდერი ვერ შეიქმნა, ვჩერდებით
                 if (!_par.DestinationFileManager.CareCreateDirectory(moveFolderName))
-                    return false;
+                    return Task.FromResult(false);
             }
 
             MoveFiles moveFiles = new(Logger, _par.SourceFileManager, _par.DestinationFileManager, moveFolderName,
@@ -88,28 +90,28 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                     : _par.DestinationFileStorage.FileNameMaxLength);
 
             if (!moveFiles.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         if (!_par.DestinationIsLocal)
-            return true;
+            return Task.FromResult(true);
 
         DuplicateFilesFinder duplicateFilesFinder = new(_par.DestinationFileManager);
         if (!duplicateFilesFinder.Run())
-            return false;
+            return Task.FromResult(false);
 
         MultiDuplicatesFinder multiDuplicatesFinder = new(_useConsole, duplicateFilesFinder.FileList);
         if (!multiDuplicatesFinder.Run())
-            return false;
+            return Task.FromResult(false);
 
         DuplicateFilesRemover duplicateFilesRemover =
             new(_useConsole, multiDuplicatesFinder.FileList, _par.PriorityPoints);
 
         if (!duplicateFilesRemover.Run())
-            return false;
+            return Task.FromResult(false);
 
         //ცარიელი ფოლდერების წაშლა
         EmptyFoldersRemover emptyFoldersRemover = new(_par.DestinationFileManager);
-        return emptyFoldersRemover.Run();
+        return Task.FromResult(emptyFoldersRemover.Run());
     }
 }

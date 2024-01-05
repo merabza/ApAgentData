@@ -1,4 +1,5 @@
-﻿using DatabasesManagement;
+﻿using System.Threading;
+using DatabasesManagement;
 using FileManagersMain;
 using LibApiClientParameters;
 using LibDatabaseParameters;
@@ -9,7 +10,8 @@ namespace LibApAgentData.Domain;
 
 public sealed class MultiDatabaseProcessStepParameters
 {
-    public MultiDatabaseProcessStepParameters(IDatabaseApiClient agentClient, FileManager localWorkFileManager)
+    // ReSharper disable once ConvertToPrimaryConstructor
+    private MultiDatabaseProcessStepParameters(IDatabaseApiClient agentClient, FileManager localWorkFileManager)
     {
         AgentClient = agentClient;
         LocalWorkFileManager = localWorkFileManager;
@@ -22,8 +24,9 @@ public sealed class MultiDatabaseProcessStepParameters
         ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole,
-            logger, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null);
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger, webAgentName,
+                apiClients, databaseServerConnectionName, databaseServerConnections, null, null, CancellationToken.None)
+            .Result;
 
         if (agentClient is null)
         {
@@ -35,14 +38,13 @@ public sealed class MultiDatabaseProcessStepParameters
         var localWorkFileManager =
             FileManagersFabric.CreateFileManager(useConsole, logger, procLogFilesFolder);
 
-        if (localWorkFileManager == null)
-        {
-            logger.LogError("workFileManager for procLogFilesFolder does not created");
-            return null;
-        }
+        if (localWorkFileManager != null)
+            return new MultiDatabaseProcessStepParameters(agentClient, localWorkFileManager);
+
+        logger.LogError("workFileManager for procLogFilesFolder does not created");
+        return null;
 
 
-        return new MultiDatabaseProcessStepParameters(agentClient, localWorkFileManager);
     }
 
     //public DatabaseProcessesParameters GetDatabaseProcessesParameters()

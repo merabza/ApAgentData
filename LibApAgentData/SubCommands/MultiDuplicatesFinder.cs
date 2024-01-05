@@ -8,6 +8,7 @@ public sealed class MultiDuplicatesFinder
 {
     private readonly bool _useConsole;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public MultiDuplicatesFinder(bool useConsole, FileListModel fileList)
     {
         _useConsole = useConsole;
@@ -22,7 +23,7 @@ public sealed class MultiDuplicatesFinder
 
         foreach (var kvp in FileList.DuplicateFilesStorage) kvp.Value.CountMultiDuplicates();
 
-        StShared.ConsoleWriteInformationLine("Finish", _useConsole);
+        StShared.ConsoleWriteInformationLine(null, _useConsole, "Finish");
 
         return true;
     }

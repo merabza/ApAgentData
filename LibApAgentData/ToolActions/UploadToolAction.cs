@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 using LibApAgentData.Domain;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
@@ -13,6 +15,7 @@ public sealed class UploadToolAction : ProcessesToolAction
     private readonly BackupFileParameters _backupFileParameters;
     private readonly UploadParameters _par;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public UploadToolAction(ILogger logger, ProcessManager? processManager, UploadParameters par,
         BackupFileParameters backupFileParameters) : base(logger, null, null, processManager, "Upload",
         par.UploadProcLineId)
@@ -21,7 +24,7 @@ public sealed class UploadToolAction : ProcessesToolAction
         _backupFileParameters = backupFileParameters;
     }
 
-    protected override bool RunAction()
+    protected override Task<bool> RunAction(CancellationToken cancellationToken)
     {
         var filesForUpload = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
@@ -39,10 +42,10 @@ public sealed class UploadToolAction : ProcessesToolAction
             .Where(fileInfo => !_par.UploadFileManager.ContainsFile(fileInfo.FileName) &&
                                preserveFileDates.Contains(fileInfo.FileDateTime)).Any(fileInfo =>
                 !_par.UploadFileManager.UploadFile(fileInfo.FileName, _par.UploadTempExtension)))
-            return false;
+            return Task.FromResult(false);
 
         _par.UploadFileManager.RemoveRedundantFiles(_backupFileParameters.Prefix, _backupFileParameters.DateMask,
             _backupFileParameters.Suffix, _par.UploadSmartSchema);
-        return true;
+        return Task.FromResult(true);
     }
 }

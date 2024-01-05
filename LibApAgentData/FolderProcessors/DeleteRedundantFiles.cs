@@ -12,21 +12,22 @@ public sealed class DeleteRedundantFiles : FolderProcessor
 
     public DeleteRedundantFiles(FileManager sourceFileManager, FileManager destinationFileManager,
         ExcludeSet excludeSet) : base("Delete redundant files", "Delete redundant files after compare two places",
-        destinationFileManager, null, true, excludeSet)
+        destinationFileManager, null, true, excludeSet, true, true)
     {
         _sourceFileManager = sourceFileManager;
     }
 
-    protected override (bool, bool) ProcessOneFolder(string? afterRootPath, string folderName)
+    //success, folderNameChanged, continueWithThisFolder
+    protected override (bool, bool, bool) ProcessOneFolder(string? afterRootPath, string folderName)
     {
         //დავადგინოთ ასეთი ფოლდერი გვაქვს თუ არა წყაროში და თუ არ გვაქვს წავშალოთ მიზნის მხარესაც
 
         var folders = _sourceFileManager.GetFolderNames(afterRootPath, null);
 
         if (folders.Contains(folderName))
-            return (true, false);
+            return (true, false, false);
         var deleted = FileManager.DeleteDirectory(afterRootPath, folderName, true);
-        return deleted ? (true, true) : (false, false);
+        return deleted ? (true, true, true) : (false, false, false);
     }
 
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)

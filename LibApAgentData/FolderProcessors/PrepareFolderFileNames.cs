@@ -12,7 +12,7 @@ public sealed class PrepareFolderFileNames : FolderProcessor
 
     public PrepareFolderFileNames(FileManager sourceFileManager, EMoveMethod useMethod, string uploadTempExtension,
         string downloadTempExtension, ExcludeSet excludeSet, int destinationFileMaxLength) : base("Prepare Names",
-        "Prepare Folder and File Names", sourceFileManager, null, false, excludeSet)
+        "Prepare Folder and File Names", sourceFileManager, null, false, excludeSet, true, true)
     {
         var tempExtension = useMethod switch
         {
@@ -24,12 +24,13 @@ public sealed class PrepareFolderFileNames : FolderProcessor
         _fileMaxLength = destinationFileMaxLength - tempExtension.Length;
     }
 
-    protected override (bool, bool) ProcessOneFolder(string? afterRootPath, string folderName)
+    //success, folderNameChanged, continueWithThisFolder
+    protected override (bool, bool, bool) ProcessOneFolder(string? afterRootPath, string folderName)
     {
         var preparedFolderName = folderName.Trim();
         return preparedFolderName != folderName
-            ? (FileManager.RenameFolder(afterRootPath, folderName, preparedFolderName), true)
-            : (true, false);
+            ? (FileManager.RenameFolder(afterRootPath, folderName, preparedFolderName), true, true)
+            : (true, false, false);
     }
 
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)

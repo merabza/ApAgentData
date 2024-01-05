@@ -12,10 +12,10 @@ namespace LibApAgentData.FolderProcessors;
 
 public sealed class CopyAndReplaceFiles : FolderProcessor
 {
-    private readonly Dictionary<string, List<MyFileInfo>> _checkedFolderFiles = new();
+    private readonly Dictionary<string, List<MyFileInfo>> _checkedFolderFiles = [];
 
 
-    private readonly List<string> _checkedFolders = new();
+    private readonly List<string> _checkedFolders = [];
     private readonly FileManager _destinationFileManager;
     private readonly int _fileMaxLength;
     private readonly ILogger _logger;
@@ -25,7 +25,7 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
     public CopyAndReplaceFiles(ILogger logger, FileManager sourceFileManager, FileManager destinationFileManager,
         EMoveMethod useMethod, string uploadTempExtension, string downloadTempExtension, ExcludeSet excludeSet,
         int destinationFileMaxLength) : base("Copy And Replace files",
-        "Copy And Replace files from one place to another", sourceFileManager, null, true, excludeSet)
+        "Copy And Replace files from one place to another", sourceFileManager, null, true, excludeSet, true, true)
     {
         _destinationFileManager = destinationFileManager;
         _logger = logger;
@@ -43,7 +43,7 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         var dirNames = afterRootPath is null
-            ? new List<string>()
+            ? []
             : afterRootPath.PrepareAfterRootPath(FileManager.DirectorySeparatorChar);
         var preparedDestinationAfterRootPath = CheckDestinationDirs(dirNames);
 
@@ -127,5 +127,4 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
 
         return afterRootPath;
     }
-
 }

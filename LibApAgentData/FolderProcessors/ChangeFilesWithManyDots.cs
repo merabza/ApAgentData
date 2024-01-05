@@ -13,7 +13,8 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
     private readonly Dictionary<string, string> _replaceSet;
 
     public ChangeFilesWithRestrictPatterns(FileManager destinationFileManager, Dictionary<string, string> replaceSet) :
-        base("Restrict Patterns", "Change Files With Restrict Patterns", destinationFileManager, null, false, null)
+        base("Restrict Patterns", "Change Files With Restrict Patterns", destinationFileManager, null, false, null,
+            true, true)
     {
         _replaceSet = replaceSet;
     }

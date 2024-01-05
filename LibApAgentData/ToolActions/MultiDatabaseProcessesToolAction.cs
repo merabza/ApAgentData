@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 using DatabasesManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
@@ -49,7 +51,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     }
 
 
-    protected override bool RunAction()
+    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(_procLogFilesFolder))
         {
@@ -75,7 +77,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 
             Logger.LogInformation(
                 "{_stepName} for database {databaseName}", _stepName, databaseName);
-            if (!RunOneDatabaseAction(_par.AgentClient, databaseName))
+            if (!await RunOneDatabaseAction(_par.AgentClient, databaseName, cancellationToken))
             {
                 all = false;
                 break;
@@ -97,8 +99,9 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     }
 
 
-    protected virtual bool RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName)
+    protected virtual Task<bool> RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName,
+        CancellationToken cancellationToken)
     {
-        return false;
+        return Task.FromResult(false);
     }
 }

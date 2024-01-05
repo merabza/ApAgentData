@@ -2,6 +2,8 @@
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using System.Threading;
 using WebAgentProjectsApiContracts.V1.Responses;
 
 namespace LibApAgentData.ToolActions;
@@ -19,6 +21,7 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
     private readonly UploadParameters _uploadParameters;
 
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public DownloadBackupToolAction(ILogger logger, bool useConsole, ProcessManager? processManager,
         DownloadBackupParameters downloadBackupParameters, int downloadProcLineId,
         BackupFileParameters backupFileParameters, string downloadTempExtension, int compressProcLine,
@@ -48,13 +51,13 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
         return compressToolAction.GetNextAction();
     }
 
-    protected override bool RunAction()
+    protected override Task<bool> RunAction(CancellationToken cancellationToken)
     {
         var success = _par.DownloadFileManager.DownloadFile(_backupFileParameters.Name, _downloadTempExtension);
 
         _par.LocalFileManager.RemoveRedundantFiles(_backupFileParameters.Prefix, _backupFileParameters.DateMask,
             _backupFileParameters.Suffix, _localSmartSchema);
 
-        return success;
+        return Task.FromResult(success);
     }
 }

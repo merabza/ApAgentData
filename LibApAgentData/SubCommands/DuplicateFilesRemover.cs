@@ -12,6 +12,7 @@ public sealed class DuplicateFilesRemover
     private readonly List<string> _priorityList;
     private readonly bool _useConsole;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public DuplicateFilesRemover(bool useConsole, FileListModel fileList, List<string> priorityList)
     {
         _useConsole = useConsole;
@@ -23,10 +24,10 @@ public sealed class DuplicateFilesRemover
     {
         Console.WriteLine("Delete duplicate Files");
 
-        StShared.ConsoleWriteInformationLine("Remove Duplicate Files", _useConsole);
+        StShared.ConsoleWriteInformationLine(null, _useConsole, "Remove Duplicate Files");
         foreach (var kvp in _fileList.DuplicateFilesStorage) kvp.Value.RemoveDuplicates(_priorityList);
 
-        StShared.ConsoleWriteInformationLine("Finish", _useConsole);
+        StShared.ConsoleWriteInformationLine(null, _useConsole, "Finish");
 
         return true;
     }

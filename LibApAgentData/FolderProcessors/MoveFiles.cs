@@ -12,7 +12,7 @@ namespace LibApAgentData.FolderProcessors;
 
 public sealed class MoveFiles : FolderProcessor
 {
-    private readonly List<string> _checkedFolders = new();
+    private readonly List<string> _checkedFolders = [];
     private readonly FileManager _destinationFileManager;
     private readonly int _fileMaxLength;
     private readonly ILogger _logger;
@@ -24,7 +24,7 @@ public sealed class MoveFiles : FolderProcessor
     public MoveFiles(ILogger logger, FileManager sourceFileManager, FileManager destinationFileManager,
         string? moveFolderName, EMoveMethod useMethod, string uploadTempExtension, string downloadTempExtension,
         ExcludeSet excludeSet, int maxFolderCount, int destinationFileMaxLength) : base("Move files",
-        "Move files from one place to another", sourceFileManager, null, true, excludeSet)
+        "Move files from one place to another", sourceFileManager, null, true, excludeSet, true, true)
     {
         _destinationFileManager = destinationFileManager;
         _moveFolderName = moveFolderName?.Trim();

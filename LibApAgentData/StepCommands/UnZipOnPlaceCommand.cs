@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 using CompressionManagement;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
@@ -13,6 +15,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
     private readonly string _pathWithZips;
     private readonly bool _withSubFolders;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public UnZipOnPlaceCommand(ILogger logger, bool useConsole, ProcessManager processManager, string pathWithZips,
         bool withSubFolders, int procLineId) : base(logger, null, null, processManager, "UnZip On Place", procLineId)
     {
@@ -21,7 +24,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
         _withSubFolders = withSubFolders;
     }
 
-    protected override bool RunAction()
+    protected override Task<bool> RunAction(CancellationToken cancellationToken)
     {
         Logger.LogInformation("Checking parameters...");
 
@@ -29,7 +32,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
         //თუ არ არსებობს ვჩერდებით
 
         var curDir = new DirectoryInfo(_pathWithZips);
-        return ProcessFolder(curDir, _withSubFolders);
+        return Task.FromResult(ProcessFolder(curDir, _withSubFolders));
     }
 
     private bool ProcessFolder(DirectoryInfo curDir, bool useSubFolders = true)
@@ -42,7 +45,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
 
         foreach (var file in curDir.GetFiles())
         {
-            if (file.Extension.ToLower() != ".zip")
+            if (!file.Extension.Equals(".zip", StringComparison.CurrentCultureIgnoreCase))
                 continue;
             var zipFileName = Path.GetFileNameWithoutExtension(file.Name);
             var i = 0;

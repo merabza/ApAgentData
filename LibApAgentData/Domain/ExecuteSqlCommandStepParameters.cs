@@ -1,4 +1,5 @@
-﻿using DatabasesManagement;
+﻿using System.Threading;
+using DatabasesManagement;
 using LibApiClientParameters;
 using LibDatabaseParameters;
 using Microsoft.Extensions.Logging;
@@ -12,20 +13,19 @@ public sealed class ExecuteSqlCommandStepParameters
     {
         AgentClient = agentClient;
         ExecuteQueryCommand = executeQueryCommand;
-        //DatabaseServerName = databaseServerName;
     }
 
     public IDatabaseApiClient AgentClient { get; }
 
     public string ExecuteQueryCommand { get; }
-    //public string? DatabaseServerName { get; }
 
     public static ExecuteSqlCommandStepParameters? Create(ILogger logger, bool useConsole, string? executeQueryCommand,
         string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole,
-            logger, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null);
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger, webAgentName,
+                apiClients, databaseServerConnectionName, databaseServerConnections, null, null, CancellationToken.None)
+            .Result;
 
         if (agentClient is null)
         {
@@ -34,12 +34,11 @@ public sealed class ExecuteSqlCommandStepParameters
             return null;
         }
 
-        if (string.IsNullOrWhiteSpace(executeQueryCommand))
-        {
-            StShared.WriteErrorLine("executeQueryCommand does not Specified", useConsole, logger);
-            return null;
-        }
+        if (!string.IsNullOrWhiteSpace(executeQueryCommand))
+            return new ExecuteSqlCommandStepParameters(agentClient, executeQueryCommand);
 
-        return new ExecuteSqlCommandStepParameters(agentClient, executeQueryCommand);
+        StShared.WriteErrorLine("executeQueryCommand does not Specified", useConsole, logger);
+        return null;
+
     }
 }

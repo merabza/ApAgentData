@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using DatabasesManagement;
@@ -17,6 +18,7 @@ public sealed class DatabasesListCreator
     private readonly EDatabaseSet _databaseSet;
 
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public DatabasesListCreator(EDatabaseSet databaseSet, IDatabaseApiClient agentClient,
         EBackupType? backupType = null)
     {
@@ -27,7 +29,8 @@ public sealed class DatabasesListCreator
 
     public List<DatabaseInfoModel> LoadDatabaseNames()
     {
-        var databaseInfos = _agentClient.GetDatabaseNames(CancellationToken.None).Result;
+        var getDatabaseNamesResult = _agentClient.GetDatabaseNames(CancellationToken.None).Result;
+        var databaseInfos = getDatabaseNamesResult.AsT0;
 
         var sysBaseDoesMatter = false;
         var checkSysBase = false;
@@ -40,6 +43,12 @@ public sealed class DatabasesListCreator
             case EDatabaseSet.AllUserDatabases:
                 sysBaseDoesMatter = true;
                 break;
+            case EDatabaseSet.AllDatabases:
+                break;
+            case EDatabaseSet.DatabasesBySelection:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
         return databaseInfos.Where(w =>

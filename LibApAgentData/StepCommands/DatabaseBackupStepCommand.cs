@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using DbTools;
 using DbTools.Models;
 using LibApAgentData.Domain;
@@ -22,6 +23,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
     private readonly JobStep _jobStep;
     private readonly DatabaseBackupStepParameters _par;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public DatabaseBackupStepCommand(bool useConsole, ILogger logger, ProcessManager processManager, JobStep jobStep,
         DatabaseBackupStepParameters par, string downloadTempExtension) : base(logger, null, null, processManager,
         "Database Backup", jobStep.ProcLineId)
@@ -32,7 +34,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         _downloadTempExtension = downloadTempExtension;
     }
 
-    protected override bool RunAction()
+    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
     {
         Logger.LogInformation("Checking parameters...");
 
@@ -46,7 +48,13 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         }
 
         //დადგინდეს არსებული ბაზების სია
-        var databaseInfos = _par.AgentClient.GetDatabaseNames(CancellationToken.None).Result;
+        var getDatabaseNamesResult = await _par.AgentClient.GetDatabaseNames(cancellationToken);
+        if ( getDatabaseNamesResult.IsT1)
+        {
+            Err.PrintErrorsOnConsole(getDatabaseNamesResult.AsT1);
+            return false;
+        }   
+        var databaseInfos = getDatabaseNamesResult.AsT0;
 
         var dbInfos = databaseInfos.Where(w =>
             w.RecoveryModel != EDatabaseRecovery.Simple || _par.BackupType != EBackupType.TrLog);
@@ -92,8 +100,13 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
             Logger.LogInformation("Backup database {databaseName}...", databaseName);
 
-            var backupFileParameters =
-                _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, CancellationToken.None).Result;
+            var createBackupResult = await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, cancellationToken);
+            if (createBackupResult.IsT1)
+            {
+                Err.PrintErrorsOnConsole(createBackupResult.AsT1);
+                continue;
+            }
+            var backupFileParameters = createBackupResult.AsT0;
 
             //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფიქსირდა, ვჩერდებით.
             if (backupFileParameters == null)
@@ -125,7 +138,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             //აქ შემდეგი მოქმედების გამოძახება ხდება, იმიტომ რომ თითოეული ბაზისათვის ცალკე მოქმედებების ჯაჭვის აგება ხდება
             var nextAction =
                 needDownload ? downloadBackupToolAction : downloadBackupToolAction.GetNextAction();
-            RunNextAction(nextAction);
+            await RunNextAction(nextAction, cancellationToken);
         }
 
         return true;

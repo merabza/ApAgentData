@@ -13,7 +13,8 @@ public sealed class UnZipOnPlace : FolderProcessor
     private readonly ILogger _logger;
     private readonly bool _useConsole;
 
-    public UnZipOnPlace(ILogger logger, bool useConsole, FileManager fileManager) : base("Unzip", "UnZip Zip Files on Place", fileManager, "*.zip", false, null)
+    public UnZipOnPlace(ILogger logger, bool useConsole, FileManager fileManager) : base("Unzip",
+        "UnZip Zip Files on Place", fileManager, "*.zip", false, null, true, true)
     {
         _logger = logger;
         _useConsole = useConsole;

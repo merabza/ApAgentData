@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using DatabasesManagement;
 using DbTools;
 using FileManagersMain;
@@ -79,7 +80,8 @@ public sealed class DatabaseBackupStepParameters
         }
 
         var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger, webAgentName,
-            apiClients, databaseServerConnectionName, databaseServerConnections, null, null);
+                apiClients, databaseServerConnectionName, databaseServerConnections, null, null, CancellationToken.None)
+            .Result;
 
         if (agentClient is null)
         {

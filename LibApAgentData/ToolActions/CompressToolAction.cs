@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
+using System.Threading;
 using LibApAgentData.Domain;
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
@@ -18,6 +20,7 @@ public sealed class CompressToolAction : ProcessesToolAction
     private readonly UploadParameters _uploadParameters;
 
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public CompressToolAction(ILogger logger, bool useConsole, ProcessManager? processManager, CompressParameters? par,
         UploadParameters uploadParameters, BackupFileParameters backupFileParameters, int compressProcLine,
         SmartSchema localSmartSchema, FileStorageData uploadFileStorage) : base(logger, null, null, processManager,
@@ -58,10 +61,10 @@ public sealed class CompressToolAction : ProcessesToolAction
                FileStat.NormalizePath(uploadFileStorage.FileStoragePath);
     }
 
-    protected override bool RunAction()
+    protected override Task<bool> RunAction(CancellationToken cancellationToken)
     {
         if (_par is null)
-            return true;
+            return Task.FromResult(true);
 
         var filesForCompress = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
@@ -74,7 +77,7 @@ public sealed class CompressToolAction : ProcessesToolAction
             if (!_par.Archiver.PathToArchive(sourceFileName, tempFileName))
             {
                 File.Delete(tempFileName);
-                return false;
+                return Task.FromResult(false);
             }
 
             File.Delete(destinationFileFullName);
@@ -90,6 +93,6 @@ public sealed class CompressToolAction : ProcessesToolAction
         _backupFileParameters.Suffix += _par.Archiver.FileExtension;
 
 
-        return true;
+        return Task.FromResult(true);
     }
 }

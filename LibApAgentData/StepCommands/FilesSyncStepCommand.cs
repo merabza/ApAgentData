@@ -3,6 +3,8 @@ using LibApAgentData.FolderProcessors;
 using LibApAgentData.Steps;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using System.Threading;
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.StepCommands;
@@ -18,16 +20,15 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
         _par = filesSyncStepParameters;
     }
 
-    protected override bool RunAction()
+    protected override Task<bool> RunAction(CancellationToken cancellationToken)
     {
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ძველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
         {
-            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager,
-                _par.DeleteDestinationFilesSet.FolderFileMasks.ToArray());
+            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager, [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         //თუ მიზანი მოშორებულია და FTP-ა, 
@@ -49,7 +50,7 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
             ChangeFilesWithRestrictPatterns changeFilesWithManyDots =
                 new(_par.SourceFileManager, _par.ReplacePairsSet.PairsDict);
             if (!changeFilesWithManyDots.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         var destinationFileMaxLength = _par.DestinationFileStorage.FileNameMaxLength == 0
@@ -63,7 +64,7 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
                 _par.UploadTempExtension, _par.DownloadTempExtension, _par.ExcludeSet, destinationFileMaxLength);
 
             if (!prepareFolderFileNames.Run())
-                return false;
+                return Task.FromResult(false);
 
 
             CopyAndReplaceFiles copyAndReplaceFiles = new(Logger, _par.SourceFileManager, _par.DestinationFileManager,
@@ -71,7 +72,7 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
                 destinationFileMaxLength);
 
             if (!copyAndReplaceFiles.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         //თუ მიზნის ფოლდერი ცარელაა, გასაკეთებლი არაფერია
@@ -81,11 +82,11 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
                 new(_par.SourceFileManager, _par.DestinationFileManager, _par.ExcludeSet);
 
             if (!deleteRedundantFiles.Run())
-                return false;
+                return Task.FromResult(false);
         }
 
         //ცარელა ფოლდერების წაშლა
         EmptyFoldersRemover emptyFoldersRemover = new(_par.DestinationFileManager);
-        return emptyFoldersRemover.Run();
+        return Task.FromResult(emptyFoldersRemover.Run());
     }
 }

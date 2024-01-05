@@ -1,15 +1,18 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using DatabasesManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Steps;
 using LibApAgentData.ToolActions;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+using SystemToolsShared;
 
 namespace LibApAgentData.StepCommands;
 
 public sealed class RecompileProceduresStepCommand : MultiDatabaseProcessesToolAction
 {
+    // ReSharper disable once ConvertToPrimaryConstructor
     public RecompileProceduresStepCommand(ILogger logger, bool useConsole, string procLogFilesFolder,
         ProcessManager processManager, MultiDatabaseProcessStep multiDatabaseProcessStep,
         MultiDatabaseProcessStepParameters par, int procLineId) : base(logger, useConsole, procLogFilesFolder,
@@ -17,8 +20,14 @@ public sealed class RecompileProceduresStepCommand : MultiDatabaseProcessesToolA
     {
     }
 
-    protected override bool RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName)
+    protected override async Task<bool> RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName,
+        CancellationToken cancellationToken)
     {
-        return agentClient.RecompileProcedures(databaseName, CancellationToken.None).Result;
+        var recompileProceduresResult = await agentClient.RecompileProcedures(databaseName, cancellationToken);
+        if (!recompileProceduresResult.IsSome)
+            return true;
+
+        Err.PrintErrorsOnConsole((Err[])recompileProceduresResult);
+        return false;
     }
 }
