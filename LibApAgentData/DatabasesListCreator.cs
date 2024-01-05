@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using DatabasesManagement;
 using DbTools;
 using DbTools.Models;
@@ -27,9 +28,9 @@ public sealed class DatabasesListCreator
         _backupType = backupType;
     }
 
-    public List<DatabaseInfoModel> LoadDatabaseNames()
+    public async Task<List<DatabaseInfoModel>> LoadDatabaseNames(CancellationToken cancellationToken)
     {
-        var getDatabaseNamesResult = _agentClient.GetDatabaseNames(CancellationToken.None).Result;
+        var getDatabaseNamesResult = await _agentClient.GetDatabaseNames(cancellationToken);
         var databaseInfos = getDatabaseNamesResult.AsT0;
 
         var sysBaseDoesMatter = false;

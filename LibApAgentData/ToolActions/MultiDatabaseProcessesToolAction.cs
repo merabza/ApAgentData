@@ -32,7 +32,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     }
 
 
-    private List<string> GetDatabaseNames()
+    private async Task<List<string>> GetDatabaseNames(CancellationToken cancellationToken)
     {
         List<string> databaseNames;
         if (_multiDatabaseProcessStep.DatabaseSet == EDatabaseSet.DatabasesBySelection)
@@ -43,7 +43,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         {
             DatabasesListCreator databasesListCreator = new(_multiDatabaseProcessStep.DatabaseSet, _par.AgentClient);
 
-            var dbList = databasesListCreator.LoadDatabaseNames();
+            var dbList = await databasesListCreator.LoadDatabaseNames(cancellationToken);
             databaseNames = dbList.Select(s => s.Name).ToList();
         }
 
@@ -59,7 +59,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
             return false;
         }
 
-        var databaseNames = GetDatabaseNames();
+        var databaseNames = await GetDatabaseNames(cancellationToken);
         var all = true;
         foreach (var databaseName in databaseNames)
         {
