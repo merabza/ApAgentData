@@ -68,7 +68,8 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
                         preparedFileName, _tempExtension))
                 {
                     //თუ ვერ აიტვირთა, გადავდივართ შემდეგზე
-                    _logger.LogWarning($"Folder with name {file.FileName} cannot Upload");
+                    var fileName = file.FileName;
+                    _logger.LogWarning("Folder with name {fileName} cannot Upload", fileName);
                     return true;
                 }
 
@@ -79,7 +80,8 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
                         _tempExtension))
                 {
                     //თუ ვერ აიტვირთა, გადავდივართ შემდეგზე
-                    _logger.LogWarning($"File with name {file.FileName} cannot Download");
+                    var fileName = file.FileName;
+                    _logger.LogWarning("File with name {fileName} cannot Download",fileName);
                     return true;
                 }
 
@@ -100,12 +102,13 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
         return GetFileInfos(afterRootPath).SingleOrDefault(x => x.FileName == fileName);
     }
 
-    private List<MyFileInfo> GetFileInfos(string? afterRootPath)
+    private IEnumerable<MyFileInfo> GetFileInfos(string? afterRootPath)
     {
         if (afterRootPath is null)
             return _destinationFileManager.GetFilesWithInfo(null, null);
         if (!_checkedFolderFiles.ContainsKey(afterRootPath))
-            _checkedFolderFiles.Add(afterRootPath, _destinationFileManager.GetFilesWithInfo(afterRootPath, null));
+            _checkedFolderFiles.Add(afterRootPath,
+                _destinationFileManager.GetFilesWithInfo(afterRootPath, null).ToList());
         return _checkedFolderFiles[afterRootPath];
     }
 
