@@ -81,7 +81,7 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
                 {
                     //თუ ვერ აიტვირთა, გადავდივართ შემდეგზე
                     var fileName = file.FileName;
-                    _logger.LogWarning("File with name {fileName} cannot Download",fileName);
+                    _logger.LogWarning("File with name {fileName} cannot Download", fileName);
                     return true;
                 }
 

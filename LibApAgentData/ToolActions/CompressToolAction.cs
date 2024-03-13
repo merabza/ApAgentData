@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using LibApAgentData.Domain;
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
@@ -14,10 +14,10 @@ public sealed class CompressToolAction : ProcessesToolAction
 {
     private readonly BackupFileParameters _backupFileParameters;
     private readonly SmartSchema _localSmartSchema;
-    private readonly bool _useConsole;
     private readonly CompressParameters? _par;
     private readonly FileStorageData _uploadFileStorage;
     private readonly UploadParameters _uploadParameters;
+    private readonly bool _useConsole;
 
 
     // ReSharper disable once ConvertToPrimaryConstructor

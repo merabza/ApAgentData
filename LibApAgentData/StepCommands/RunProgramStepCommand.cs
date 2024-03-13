@@ -1,16 +1,16 @@
-﻿using LibApAgentData.Domain;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using LibApAgentData.Domain;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using System.Threading;
 using SystemToolsShared;
 
 namespace LibApAgentData.StepCommands;
 
 public sealed class RunProgramStepCommand : ProcessesToolAction
 {
-    private readonly bool _useConsole;
     private readonly RunProgramStepParameters _par;
+    private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public RunProgramStepCommand(ILogger logger, bool useConsole, int procLineId, RunProgramStepParameters par) : base(

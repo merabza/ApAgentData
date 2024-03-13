@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using CompressionManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Steps;
@@ -18,8 +18,8 @@ namespace LibApAgentData.StepCommands;
 public sealed class FilesBackupStepCommand : ProcessesToolAction
 {
     private readonly JobStep _jobStep;
-    private readonly bool _useConsole;
     private readonly FilesBackupStepParameters _par;
+    private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public FilesBackupStepCommand(ILogger logger, bool useConsole, FilesBackupStepParameters par,
@@ -49,14 +49,11 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
                 _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken);
 
         foreach (var kvpBackupFolderPath in _par.BackupFolderPaths)
-        {
             if (!await ExecuteBackup(_par.MaskName + kvpBackupFolderPath.Key, [kvpBackupFolderPath.Value],
                     _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken))
                 return false;
-        }
 
         return true;
-
     }
 
     private async Task<bool> ExecuteBackup(string maskName, string[] sources, Archiver archiver, ExcludeSet excludeSet,

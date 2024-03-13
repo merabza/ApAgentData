@@ -229,7 +229,5 @@ public sealed class DatabaseBackupStepParameters
 
         StShared.WriteErrorLine("uploadParameters does not created", useConsole, logger);
         return null;
-
-
     }
 }

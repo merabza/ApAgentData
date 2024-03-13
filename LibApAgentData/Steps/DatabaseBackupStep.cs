@@ -34,17 +34,17 @@ public sealed class DatabaseBackupStep : JobStep
 
     //ბაზის სერვერის მხარე
     //ჭკვიანი სქემის სახელი. გამოიყენება ძველი დასატოვებელი და წასაშლელი ფაილების განსასაზღვრად. (ეს მონაცემთა ბაზის სერვერის მხარეს)
-    public string? SmartSchemaName { get; set; } 
+    public string? SmartSchemaName { get; set; }
 
     //ფაილსაცავის სახელი, რომელიც საშუალებას იძლევა ხელმისაწვდომი გახდეს ახლადგაკეთებული ბექაპი
-    public string? FileStorageName { get; set; } 
+    public string? FileStorageName { get; set; }
 
     //ჩამოტვირთვა და ლოკალური მხარე
     public int DownloadProcLineId { get; set; } //ჩამოტვირთვის პროცესის ხაზის იდენტიფიკატორი
     public string? LocalPath { get; set; } //ლოკალური ფოლდერი ბექაპების მისაღებად
 
     //ჭკვიანი სქემის სახელი. გამოიყენება ძველი დასატოვებელი და წასაშლელი ფაილების განსასაზღვრად. (ეს ლოკალური ფოლდერის მხარეს)
-    public string? LocalSmartSchemaName { get; set; } 
+    public string? LocalSmartSchemaName { get; set; }
 
     //დაკუმშვა
     public string? ArchiverName { get; set; } //ფაილის დასაკუმშად გამოსაყენებელი არქივატორის სახელი.
@@ -57,7 +57,7 @@ public sealed class DatabaseBackupStep : JobStep
     public string? UploadFileStorageName { get; set; }
 
     //ატვირთვის პროცესის ხაზის იდენტიფიკატორი
-    public int UploadProcLineId { get; set; } 
+    public int UploadProcLineId { get; set; }
 
     public string?
         UploadSmartSchemaName

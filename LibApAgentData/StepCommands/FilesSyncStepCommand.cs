@@ -1,10 +1,11 @@
-﻿using LibApAgentData.Domain;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using LibApAgentData.Domain;
 using LibApAgentData.FolderProcessors;
 using LibApAgentData.Steps;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using System.Threading;
+
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.StepCommands;
@@ -25,7 +26,8 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ძველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
         {
-            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager, [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
+            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager,
+                [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
                 return Task.FromResult(false);

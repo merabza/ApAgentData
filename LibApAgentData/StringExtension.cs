@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace LibApAgentData;
@@ -38,5 +37,4 @@ public static class StringExtension
         oneTry = fileNameWithoutExtension[..take].GetNewFileName(i, fileExtension);
         return oneTry;
     }
-
 }

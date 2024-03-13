@@ -1,6 +1,7 @@
 ﻿using System;
 using ConnectTools;
 using FileManagersMain;
+
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.FolderProcessors;

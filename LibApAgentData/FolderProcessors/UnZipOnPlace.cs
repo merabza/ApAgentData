@@ -4,6 +4,7 @@ using CompressionManagement;
 using ConnectTools;
 using FileManagersMain;
 using Microsoft.Extensions.Logging;
+
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibApAgentData.FolderProcessors;

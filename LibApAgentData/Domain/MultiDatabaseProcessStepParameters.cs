@@ -43,8 +43,6 @@ public sealed class MultiDatabaseProcessStepParameters
 
         logger.LogError("workFileManager for procLogFilesFolder does not created");
         return null;
-
-
     }
 
     //public DatabaseProcessesParameters GetDatabaseProcessesParameters()

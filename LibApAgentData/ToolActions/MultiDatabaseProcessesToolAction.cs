@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using DatabasesManagement;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
@@ -15,9 +15,9 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 {
     private readonly MultiDatabaseProcessStep _multiDatabaseProcessStep;
     private readonly MultiDatabaseProcessStepParameters _par;
-    private readonly bool _useConsole;
     private readonly string _procLogFilesFolder;
     private readonly string _stepName;
+    private readonly bool _useConsole;
 
     protected MultiDatabaseProcessesToolAction(ILogger logger, bool useConsole, string procLogFilesFolder,
         string stepName, ProcessManager processManager, MultiDatabaseProcessStep multiDatabaseProcessStep,

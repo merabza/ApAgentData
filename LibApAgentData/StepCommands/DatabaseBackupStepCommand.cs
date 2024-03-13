@@ -18,10 +18,10 @@ namespace LibApAgentData.StepCommands;
 public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 {
     private readonly string _downloadTempExtension;
-
-    private readonly bool _useConsole;
     private readonly JobStep _jobStep;
     private readonly DatabaseBackupStepParameters _par;
+
+    private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public DatabaseBackupStepCommand(bool useConsole, ILogger logger, ProcessManager processManager, JobStep jobStep,
@@ -49,11 +49,12 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
         //დადგინდეს არსებული ბაზების სია
         var getDatabaseNamesResult = await _par.AgentClient.GetDatabaseNames(cancellationToken);
-        if ( getDatabaseNamesResult.IsT1)
+        if (getDatabaseNamesResult.IsT1)
         {
             Err.PrintErrorsOnConsole(getDatabaseNamesResult.AsT1);
             return false;
-        }   
+        }
+
         var databaseInfos = getDatabaseNamesResult.AsT0;
 
         var dbInfos = databaseInfos.Where(w =>
@@ -100,12 +101,14 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
             Logger.LogInformation("Backup database {databaseName}...", databaseName);
 
-            var createBackupResult = await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, cancellationToken);
+            var createBackupResult =
+                await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, cancellationToken);
             if (createBackupResult.IsT1)
             {
                 Err.PrintErrorsOnConsole(createBackupResult.AsT1);
                 continue;
             }
+
             var backupFileParameters = createBackupResult.AsT0;
 
             //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფიქსირდა, ვჩერდებით.

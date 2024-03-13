@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using LibApAgentData.Domain;
 using LibApAgentData.FolderProcessors;
 using LibApAgentData.Steps;
@@ -12,8 +12,8 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class FilesMoveStepCommand : ProcessesToolAction
 {
-    private readonly bool _useConsole;
     private readonly FilesMoveStepParameters _par;
+    private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public FilesMoveStepCommand(ILogger logger, bool useConsole, ProcessManager processManager, JobStep jobStep,
@@ -29,7 +29,8 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
         {
-            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager, [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
+            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager,
+                [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
                 return Task.FromResult(false);

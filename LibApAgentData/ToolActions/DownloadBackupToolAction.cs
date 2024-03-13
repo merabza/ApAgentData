@@ -1,9 +1,9 @@
-﻿using LibApAgentData.Domain;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using LibApAgentData.Domain;
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using System.Threading;
 using WebAgentProjectsApiContracts.V1.Responses;
 
 namespace LibApAgentData.ToolActions;
@@ -15,10 +15,10 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
     private readonly int _compressProcLine;
     private readonly string _downloadTempExtension;
     private readonly SmartSchema _localSmartSchema;
-    private readonly bool _useConsole;
     private readonly DownloadBackupParameters _par;
     private readonly FileStorageData _uploadFileStorage;
     private readonly UploadParameters _uploadParameters;
+    private readonly bool _useConsole;
 
 
     // ReSharper disable once ConvertToPrimaryConstructor

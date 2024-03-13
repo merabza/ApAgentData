@@ -39,6 +39,5 @@ public sealed class ExecuteSqlCommandStepParameters
 
         StShared.WriteErrorLine("executeQueryCommand does not Specified", useConsole, logger);
         return null;
-
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using CompressionManagement;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
@@ -11,8 +11,8 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class UnZipOnPlaceCommand : ProcessesToolAction
 {
-    private readonly bool _useConsole;
     private readonly string _pathWithZips;
+    private readonly bool _useConsole;
     private readonly bool _withSubFolders;
 
     // ReSharper disable once ConvertToPrimaryConstructor

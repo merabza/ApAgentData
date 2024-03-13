@@ -174,7 +174,5 @@ public sealed class FilesBackupStepParameters
 
         StShared.WriteErrorLine("uploadTempExtension does not specified", useConsole, logger);
         return null;
-
-
     }
 }
