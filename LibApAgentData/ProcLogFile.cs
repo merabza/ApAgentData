@@ -63,7 +63,8 @@ public sealed class ProcLogFile
         {
             try
             {
-                StreamWriter sw = new(fileName, true, Encoding.UTF8);
+                // ReSharper disable once using
+                using StreamWriter sw = new(fileName, true, Encoding.UTF8);
                 try
                 {
                     sw.WriteLine(withText);

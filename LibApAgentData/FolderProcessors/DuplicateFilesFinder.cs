@@ -98,6 +98,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
     {
         //_consoleFormatter.WriteInSameLine($"Get Hash Sha256 for file {fileName}");
         Console.WriteLine($"Get Hash Sha256 for file {fileName}");
+        // ReSharper disable once using
         using var stream = File.OpenRead(fileName);
         return _sha256.ComputeHash(stream);
     }

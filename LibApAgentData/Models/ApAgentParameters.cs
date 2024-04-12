@@ -195,7 +195,8 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
 
         if (missingJobStepNames.Count <= 0)
         {
-            var processManager = processes.GetNewProcessManager();
+            // ReSharper disable once using
+            using var processManager = processes.GetNewProcessManager();
             try
             {
                 foreach (var stepToolAction in jobStepNames.Select(name =>
