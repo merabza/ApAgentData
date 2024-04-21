@@ -17,6 +17,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     private readonly MultiDatabaseProcessStepParameters _par;
     private readonly string _procLogFilesFolder;
     private readonly string _stepName;
+    private readonly ILogger _logger;
     private readonly bool _useConsole;
 
     protected MultiDatabaseProcessesToolAction(ILogger logger, bool useConsole, string procLogFilesFolder,
@@ -24,6 +25,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         MultiDatabaseProcessStepParameters par, string actionName, int procLineId) : base(logger, null, null,
         processManager, actionName, procLineId)
     {
+        _logger = logger;
         _useConsole = useConsole;
         _procLogFilesFolder = procLogFilesFolder;
         _stepName = stepName;
@@ -55,7 +57,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     {
         if (string.IsNullOrWhiteSpace(_procLogFilesFolder))
         {
-            Logger.LogError("Process log files Folder not specified");
+            _logger.LogError("Process log files Folder not specified");
             return false;
         }
 
@@ -63,19 +65,19 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         var all = true;
         foreach (var databaseName in databaseNames)
         {
-            ProcLogFile procLogFile = new(_useConsole, Logger, $"{_stepName}_{databaseName}_",
+            ProcLogFile procLogFile = new(_useConsole, _logger, $"{_stepName}_{databaseName}_",
                 _multiDatabaseProcessStep.PeriodType, _multiDatabaseProcessStep.StartAt,
                 _multiDatabaseProcessStep.HoleStartTime, _multiDatabaseProcessStep.HoleEndTime, _procLogFilesFolder,
                 _par.LocalWorkFileManager);
 
             if (procLogFile.HaveCurrentPeriodFile())
             {
-                Logger.LogInformation("{databaseName} {_stepName} had executed in this period", databaseName,
+                _logger.LogInformation("{databaseName} {_stepName} had executed in this period", databaseName,
                     _stepName);
                 continue;
             }
 
-            Logger.LogInformation(
+            _logger.LogInformation(
                 "{_stepName} for database {databaseName}", _stepName, databaseName);
             if (!await RunOneDatabaseAction(_par.AgentClient, databaseName, cancellationToken))
             {
@@ -92,7 +94,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
             procLogFile.CreateNow("Ok");
             //ასევე წაიშალოს ანალოგიური პროცესის მიერ წინათ შექმნილი ფაილები
             procLogFile.DeleteOldFiles();
-            Logger.LogInformation("Ok");
+            _logger.LogInformation("Ok");
         }
 
         return all;

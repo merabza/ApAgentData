@@ -12,12 +12,14 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class FilesSyncStepCommand : ProcessesToolAction
 {
+    private readonly ILogger _logger;
     private readonly FilesSyncStepParameters _par;
 
     public FilesSyncStepCommand(ILogger logger, ProcessManager processManager, JobStep jobStep,
         FilesSyncStepParameters filesSyncStepParameters) : base(logger, null, null, processManager, "Files Sync",
         jobStep.ProcLineId)
     {
+        _logger = logger;
         _par = filesSyncStepParameters;
     }
 
@@ -69,7 +71,7 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
                 return Task.FromResult(false);
 
 
-            CopyAndReplaceFiles copyAndReplaceFiles = new(Logger, _par.SourceFileManager, _par.DestinationFileManager,
+            CopyAndReplaceFiles copyAndReplaceFiles = new(_logger, _par.SourceFileManager, _par.DestinationFileManager,
                 _par.UseMethod, _par.UploadTempExtension, _par.DownloadTempExtension, _par.ExcludeSet,
                 destinationFileMaxLength);
 

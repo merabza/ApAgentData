@@ -13,6 +13,7 @@ namespace LibApAgentData.StepCommands;
 public sealed class FilesMoveStepCommand : ProcessesToolAction
 {
     private readonly FilesMoveStepParameters _par;
+    private readonly ILogger _logger;
     private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor
@@ -20,6 +21,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         FilesMoveStepParameters filesMoveStepParameters) : base(logger, null, null, processManager, "Files Move",
         jobStep.ProcLineId)
     {
+        _logger = logger;
         _useConsole = useConsole;
         _par = filesMoveStepParameters;
     }
@@ -63,7 +65,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         //წინასწარ დამუშავდეს ადგილზევე zip ფაილები
         if (_par.SourceIsLocal)
         {
-            UnZipOnPlace unZipOnPlace = new(Logger, _useConsole, _par.SourceFileManager);
+            UnZipOnPlace unZipOnPlace = new(_logger, _useConsole, _par.SourceFileManager);
             if (!unZipOnPlace.Run())
                 return Task.FromResult(false);
         }
@@ -83,7 +85,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                     return Task.FromResult(false);
             }
 
-            MoveFiles moveFiles = new(Logger, _par.SourceFileManager, _par.DestinationFileManager, moveFolderName,
+            MoveFiles moveFiles = new(_logger, _par.SourceFileManager, _par.DestinationFileManager, moveFolderName,
                 _par.UseMethod, _par.UploadTempExtension, _par.DownloadTempExtension, _par.ExcludeSet,
                 _par.MaxFolderCount,
                 _par.DestinationFileStorage.FileNameMaxLength == 0

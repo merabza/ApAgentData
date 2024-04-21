@@ -22,6 +22,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
     private readonly DatabaseBackupStepParameters _par;
 
     private readonly bool _useConsole;
+    private readonly ILogger _logger;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public DatabaseBackupStepCommand(bool useConsole, ILogger logger, ProcessManager processManager, JobStep jobStep,
@@ -29,6 +30,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         "Database Backup", jobStep.ProcLineId)
     {
         _useConsole = useConsole;
+        _logger = logger;
         _jobStep = jobStep;
         _par = par;
         _downloadTempExtension = downloadTempExtension;
@@ -36,14 +38,14 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
     protected override async Task<bool> RunAction(CancellationToken cancellationToken)
     {
-        Logger.LogInformation("Checking parameters...");
+        _logger.LogInformation("Checking parameters...");
 
         var localPath = _par.LocalPath;
 
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
         if (!Directory.Exists(localPath))
         {
-            Logger.LogInformation("Creating local folder {localPath}", localPath);
+            _logger.LogInformation("Creating local folder {localPath}", localPath);
             Directory.CreateDirectory(localPath);
         }
 
@@ -80,7 +82,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
             if (missingDatabaseNames.Count > 0)
                 foreach (var databaseName in missingDatabaseNames)
-                    Logger.LogWarning("Database with name {databaseName} is missing", databaseName);
+                    _logger.LogWarning("Database with name {databaseName} is missing", databaseName);
         }
 
         var needDownload = NeedDownload();
@@ -99,7 +101,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             if (HaveCurrentPeriodFile(backupFileNamePrefix, _par.DbBackupParameters.DateMask, backupFileNameSuffix))
                 continue;
 
-            Logger.LogInformation("Backup database {databaseName}...", databaseName);
+            _logger.LogInformation("Backup database {databaseName}...", databaseName);
 
             var createBackupResult =
                 await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, cancellationToken);
@@ -114,7 +116,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფიქსირდა, ვჩერდებით.
             if (backupFileParameters == null)
             {
-                Logger.LogError("Backup for database {databaseName} not created", databaseName);
+                _logger.LogError("Backup for database {databaseName} not created", databaseName);
                 continue;
             }
 
@@ -122,16 +124,16 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
                 backupFileParameters.Suffix, _par.DownloadSideSmartSchema);
 
             var downloadBackupParameters =
-                DownloadBackupParameters.Create(Logger, _useConsole, localPath, _par.DownloadFileStorageData);
+                DownloadBackupParameters.Create(_logger, _useConsole, localPath, _par.DownloadFileStorageData);
 
             if (downloadBackupParameters is null)
             {
-                StShared.WriteErrorLine("downloadBackupParameters does not created", _useConsole, Logger);
+                StShared.WriteErrorLine("downloadBackupParameters does not created", _useConsole, _logger);
                 return false;
             }
 
             //მოქაჩვის პროცესის გაშვება
-            var downloadBackupToolAction = new DownloadBackupToolAction(Logger, _useConsole,
+            var downloadBackupToolAction = new DownloadBackupToolAction(_logger, _useConsole,
                 ProcessManager, downloadBackupParameters, _par.DownloadProcLineId, backupFileParameters,
                 _downloadTempExtension, _par.CompressProcLineId, _par.LocalSmartSchema, _par.UploadFileStorageData,
                 _par.CompressParameters, _par.UploadParameters);

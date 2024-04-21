@@ -17,6 +17,7 @@ public sealed class CompressToolAction : ProcessesToolAction
     private readonly CompressParameters? _par;
     private readonly FileStorageData _uploadFileStorage;
     private readonly UploadParameters _uploadParameters;
+    private readonly ILogger _logger;
     private readonly bool _useConsole;
 
 
@@ -26,6 +27,7 @@ public sealed class CompressToolAction : ProcessesToolAction
         SmartSchema localSmartSchema, FileStorageData uploadFileStorage) : base(logger, null, null, processManager,
         "Compress Backup", compressProcLine)
     {
+        _logger = logger;
         _useConsole = useConsole;
         _par = par;
         _uploadParameters = uploadParameters;
@@ -36,7 +38,7 @@ public sealed class CompressToolAction : ProcessesToolAction
 
     public override ProcessesToolAction? GetNextAction()
     {
-        var uploadToolAction = new UploadToolAction(Logger, ProcessManager, _uploadParameters, _backupFileParameters);
+        var uploadToolAction = new UploadToolAction(_logger, ProcessManager, _uploadParameters, _backupFileParameters);
 
         return NeedUpload(_uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
     }
@@ -45,7 +47,7 @@ public sealed class CompressToolAction : ProcessesToolAction
     {
         if (uploadFileStorage.FileStoragePath is null)
         {
-            StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", _useConsole, Logger);
+            StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", _useConsole, _logger);
             return false;
         }
 

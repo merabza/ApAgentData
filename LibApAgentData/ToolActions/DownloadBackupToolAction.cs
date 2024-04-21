@@ -18,6 +18,7 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
     private readonly DownloadBackupParameters _par;
     private readonly FileStorageData _uploadFileStorage;
     private readonly UploadParameters _uploadParameters;
+    private readonly ILogger _logger;
     private readonly bool _useConsole;
 
 
@@ -29,6 +30,7 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
         UploadParameters uploadParameters) : base(logger, null, null, processManager, "Download Backup",
         downloadProcLineId)
     {
+        _logger = logger;
         _useConsole = useConsole;
         _par = downloadBackupParameters;
         _backupFileParameters = backupFileParameters;
@@ -42,7 +44,7 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
 
     public override ProcessesToolAction? GetNextAction()
     {
-        var compressToolAction = new CompressToolAction(Logger, _useConsole, ProcessManager, _compressParameters,
+        var compressToolAction = new CompressToolAction(_logger, _useConsole, ProcessManager, _compressParameters,
             _uploadParameters, _backupFileParameters, _compressProcLine, _localSmartSchema, _uploadFileStorage);
 
         if (_compressParameters is not null) return compressToolAction;
