@@ -14,10 +14,10 @@ public sealed class CompressToolAction : ProcessesToolAction
 {
     private readonly BackupFileParameters _backupFileParameters;
     private readonly SmartSchema _localSmartSchema;
+    private readonly ILogger _logger;
     private readonly CompressParameters? _par;
     private readonly FileStorageData _uploadFileStorage;
     private readonly UploadParameters _uploadParameters;
-    private readonly ILogger _logger;
     private readonly bool _useConsole;
 
 

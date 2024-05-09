@@ -11,8 +11,8 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class UnZipOnPlaceCommand : ProcessesToolAction
 {
-    private readonly string _pathWithZips;
     private readonly ILogger _logger;
+    private readonly string _pathWithZips;
     private readonly bool _useConsole;
     private readonly bool _withSubFolders;
 

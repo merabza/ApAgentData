@@ -13,11 +13,11 @@ namespace LibApAgentData.ToolActions;
 
 public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 {
+    private readonly ILogger _logger;
     private readonly MultiDatabaseProcessStep _multiDatabaseProcessStep;
     private readonly MultiDatabaseProcessStepParameters _par;
     private readonly string _procLogFilesFolder;
     private readonly string _stepName;
-    private readonly ILogger _logger;
     private readonly bool _useConsole;
 
     protected MultiDatabaseProcessesToolAction(ILogger logger, bool useConsole, string procLogFilesFolder,

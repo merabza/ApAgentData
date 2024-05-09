@@ -9,8 +9,8 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class RunProgramStepCommand : ProcessesToolAction
 {
-    private readonly RunProgramStepParameters _par;
     private readonly ILogger _logger;
+    private readonly RunProgramStepParameters _par;
     private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor

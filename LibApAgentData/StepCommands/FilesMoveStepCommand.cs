@@ -12,8 +12,8 @@ namespace LibApAgentData.StepCommands;
 
 public sealed class FilesMoveStepCommand : ProcessesToolAction
 {
-    private readonly FilesMoveStepParameters _par;
     private readonly ILogger _logger;
+    private readonly FilesMoveStepParameters _par;
     private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor

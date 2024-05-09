@@ -15,10 +15,10 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
     private readonly int _compressProcLine;
     private readonly string _downloadTempExtension;
     private readonly SmartSchema _localSmartSchema;
+    private readonly ILogger _logger;
     private readonly DownloadBackupParameters _par;
     private readonly FileStorageData _uploadFileStorage;
     private readonly UploadParameters _uploadParameters;
-    private readonly ILogger _logger;
     private readonly bool _useConsole;
 
 
