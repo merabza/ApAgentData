@@ -19,10 +19,10 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 {
     private readonly string _downloadTempExtension;
     private readonly JobStep _jobStep;
+    private readonly ILogger _logger;
     private readonly DatabaseBackupStepParameters _par;
 
     private readonly bool _useConsole;
-    private readonly ILogger _logger;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public DatabaseBackupStepCommand(bool useConsole, ILogger logger, ProcessManager processManager, JobStep jobStep,

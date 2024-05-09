@@ -18,8 +18,8 @@ namespace LibApAgentData.StepCommands;
 public sealed class FilesBackupStepCommand : ProcessesToolAction
 {
     private readonly JobStep _jobStep;
-    private readonly FilesBackupStepParameters _par;
     private readonly ILogger _logger;
+    private readonly FilesBackupStepParameters _par;
     private readonly bool _useConsole;
 
     // ReSharper disable once ConvertToPrimaryConstructor
