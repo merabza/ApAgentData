@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using LibApAgentData.Steps;
 using LibApiClientParameters;
 using LibDatabaseParameters;
@@ -32,23 +33,23 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
     public string? DownloadFileTempExtension { get; set; } //.down!
     public string? ArchivingFileTempExtension { get; set; } //.go!
     public string? DateMask { get; set; } //.go!
-    public Dictionary<string, ReplacePairsSet> ReplacePairsSets { get; set; } = new();
-    public Dictionary<string, JobSchedule> JobSchedules { get; set; } = new();
-    public Dictionary<string, DatabaseBackupStep> DatabaseBackupSteps { get; set; } = new();
-    public Dictionary<string, MultiDatabaseProcessStep> MultiDatabaseProcessSteps { get; set; } = new();
-    public Dictionary<string, RunProgramStep> RunProgramSteps { get; set; } = new();
-    public Dictionary<string, ExecuteSqlCommandStep> ExecuteSqlCommandSteps { get; set; } = new();
-    public Dictionary<string, FilesBackupStep> FilesBackupSteps { get; set; } = new();
-    public Dictionary<string, FilesSyncStep> FilesSyncSteps { get; set; } = new();
-    public Dictionary<string, FilesMoveStep> FilesMoveSteps { get; set; } = new();
-    public Dictionary<string, UnZipOnPlaceStep> UnZipOnPlaceSteps { get; set; } = new();
-    public List<JobStepBySchedule> JobsBySchedules { get; set; } = new();
-    public Dictionary<string, ApiClientSettings> ApiClients { get; set; } = new();
-    public Dictionary<string, ArchiverData> Archivers { get; set; } = new();
-
-    public Dictionary<string, DatabaseServerConnectionData> DatabaseServerConnections { get; set; } = new();
-    public Dictionary<string, ExcludeSet> ExcludeSets { get; set; } = new();
-    public Dictionary<string, FileStorageData> FileStorages { get; set; } = new();
+    public Dictionary<string, ReplacePairsSet> ReplacePairsSets { get; set; } = [];
+    public Dictionary<string, JobSchedule> JobSchedules { get; set; } = [];
+    public Dictionary<string, DatabaseBackupStep> DatabaseBackupSteps { get; set; } = [];
+    public Dictionary<string, MultiDatabaseProcessStep> MultiDatabaseProcessSteps { get; set; } = [];
+    public Dictionary<string, RunProgramStep> RunProgramSteps { get; set; } = [];
+    public Dictionary<string, ExecuteSqlCommandStep> ExecuteSqlCommandSteps { get; set; } = [];
+    public Dictionary<string, FilesBackupStep> FilesBackupSteps { get; set; } = [];
+    public Dictionary<string, FilesSyncStep> FilesSyncSteps { get; set; } = [];
+    public Dictionary<string, FilesMoveStep> FilesMoveSteps { get; set; } = [];
+    public Dictionary<string, UnZipOnPlaceStep> UnZipOnPlaceSteps { get; set; } = [];
+    public List<JobStepBySchedule> JobsBySchedules { get; set; } = [];
+    public Dictionary<string, ApiClientSettings> ApiClients { get; set; } = [];
+    public Dictionary<string, ArchiverData> Archivers { get; set; } = [];
+    public Dictionary<string, DatabaseServerConnectionData> DatabaseServerConnections { get; set; } = [];
+    public Dictionary<string, ExcludeSet> ExcludeSets { get; set; } = [];
+    public Dictionary<string, FileStorageData> FileStorages { get; set; } = [];
+    public Dictionary<string, SmartSchema> SmartSchemas { get; set; } = [];
 
     public bool CheckBeforeSave()
     {
@@ -64,9 +65,6 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
 
         return true;
     }
-
-    public Dictionary<string, SmartSchema> SmartSchemas { get; set; } = new();
-
 
     public string? CountLocalPath(string? currentPath, string? parametersFileName, string defaultFolderName)
     {
@@ -166,20 +164,17 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
         Dictionary<string, DateTime> nextRunDatesByScheduleNames)
     {
         var nowDateTime = DateTime.Now;
-        return JobSchedules
-            .Where(delegate(KeyValuePair<string, JobSchedule> w)
-            {
-                var nextRunDate = nextRunDatesByScheduleNames.ContainsKey(w.Key)
-                    ? nextRunDatesByScheduleNames[w.Key]
-                    : default;
-                return (byTime
-                    ? w.Value.ScheduleType != EScheduleType.AtStart && nextRunDate != default &&
-                      nextRunDate <= nowDateTime
-                    : w.Value.ScheduleType == EScheduleType.AtStart) && w.Value.Enabled;
-            }).ToDictionary(k => k.Key, v => v.Value);
+        return JobSchedules.Where(delegate(KeyValuePair<string, JobSchedule> w)
+        {
+            var nextRunDate = nextRunDatesByScheduleNames.GetValueOrDefault(w.Key);
+            return (byTime
+                ? w.Value.ScheduleType != EScheduleType.AtStart && nextRunDate != default && nextRunDate <= nowDateTime
+                : w.Value.ScheduleType == EScheduleType.AtStart) && w.Value.Enabled;
+        }).ToDictionary(k => k.Key, v => v.Value);
     }
 
-    public bool RunAllSteps(ILogger logger, bool useConsole, string scheduleName, IProcesses processes,
+    public bool RunAllSteps(ILogger logger, IHttpClientFactory httpClientFactory, bool useConsole, string scheduleName,
+        IProcesses processes,
         string procLogFilesFolder)
     {
         if (!JobSchedules.ContainsKey(scheduleName))
@@ -200,7 +195,8 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
             try
             {
                 foreach (var stepToolAction in jobStepNames.Select(name =>
-                             steps[name].GetToolAction(logger, useConsole, processManager, this, procLogFilesFolder)))
+                             steps[name].GetToolAction(logger, httpClientFactory, useConsole, processManager, this,
+                                 procLogFilesFolder)))
                     if (stepToolAction is not null)
                         processManager.Run(stepToolAction);
                 return true;

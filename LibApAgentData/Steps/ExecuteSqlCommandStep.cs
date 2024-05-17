@@ -5,6 +5,7 @@ using LibApiClientParameters;
 using LibDatabaseParameters;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using SystemToolsShared;
 
 namespace LibApAgentData.Steps;
@@ -24,11 +25,11 @@ public sealed class ExecuteSqlCommandStep : JobStep
     //ბრძანების შესრულების ტაიმაუტი. თუ ამ დროში ბრძანება არ დასრულდა. პროცესი უნდა გაჩერდეს.
     public int CommandTimeOut { get; set; }
 
-    public override ProcessesToolAction? GetToolAction(ILogger logger, bool useConsole, ProcessManager processManager,
-        ApAgentParameters parameters, string procLogFilesFolder)
+    public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var par = ExecuteSqlCommandStepParameters.Create(logger, useConsole, ExecuteQueryCommand, DatabaseWebAgentName,
-            new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
+        var par = ExecuteSqlCommandStepParameters.Create(logger, httpClientFactory, useConsole, ExecuteQueryCommand,
+            DatabaseWebAgentName, new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
             new DatabaseServerConnections(parameters.DatabaseServerConnections));
 
         if (par is not null)

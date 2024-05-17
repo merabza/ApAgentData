@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Net.Http;
+using System.Threading;
 using DatabasesManagement;
 using FileManagersMain;
 using LibApiClientParameters;
@@ -20,13 +21,13 @@ public sealed class MultiDatabaseProcessStepParameters
     public IDatabaseApiClient AgentClient { get; }
     public FileManager LocalWorkFileManager { get; } //ლოკალური ფოლდერის მენეჯერი
 
-    public static MultiDatabaseProcessStepParameters? Create(ILogger logger, bool useConsole, string? webAgentName,
-        ApiClients apiClients, string? databaseServerConnectionName,
+    public static MultiDatabaseProcessStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger, webAgentName,
-                apiClients, databaseServerConnectionName, databaseServerConnections, null, null, CancellationToken.None)
-            .Result;
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger,
+            httpClientFactory, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null,
+            null, CancellationToken.None).Result;
 
         if (agentClient is null)
         {
@@ -44,9 +45,4 @@ public sealed class MultiDatabaseProcessStepParameters
         logger.LogError("workFileManager for procLogFilesFolder does not created");
         return null;
     }
-
-    //public DatabaseProcessesParameters GetDatabaseProcessesParameters()
-    //{
-    //    return DatabaseProcessesParameters.Create(AgentClient);
-    //}
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.StepCommands;
@@ -42,25 +43,23 @@ public sealed class FilesBackupStep : JobStep
 
     public string? ExcludeSetName { get; set; } //გამოსარიცხი ფაილებისა და გზების კომპლექტის სახელი
 
-    public Dictionary<string, string> BackupFolderPaths { get; set; } =
-        new(); //დასაარქივებელი ფოლდერების ჩამონათვალი. (სახელი გამოიყენება ნიღბის კოდად)
+    //დასაარქივებელი ფოლდერების ჩამონათვალი. (სახელი გამოიყენება ნიღბის კოდად)
+    public Dictionary<string, string> BackupFolderPaths { get; set; } = [];
 
-    public override ProcessesToolAction? GetToolAction(ILogger logger, bool useConsole, ProcessManager processManager,
-        ApAgentParameters parameters, string procLogFilesFolder)
+    public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var par = FilesBackupStepParameters.Create(logger, useConsole, LocalPath,
-            ArchiverName, ExcludeSetName, UploadFileStorageName, MaskName, DateMask, LocalSmartSchemaName,
-            UploadSmartSchemaName, BackupFolderPaths, new Archivers(parameters.Archivers),
-            new ExcludeSets(parameters.ExcludeSets), new FileStorages(parameters.FileStorages),
-            new SmartSchemas(parameters.SmartSchemas), UploadProcLineId, BackupSeparately,
-            parameters.GetArchivingFileTempExtension(), parameters.GetUploadFileTempExtension());
+        var par = FilesBackupStepParameters.Create(logger, useConsole, LocalPath, ArchiverName, ExcludeSetName,
+            UploadFileStorageName, MaskName, DateMask, LocalSmartSchemaName, UploadSmartSchemaName, BackupFolderPaths,
+            new Archivers(parameters.Archivers), new ExcludeSets(parameters.ExcludeSets),
+            new FileStorages(parameters.FileStorages), new SmartSchemas(parameters.SmartSchemas), UploadProcLineId,
+            BackupSeparately, parameters.GetArchivingFileTempExtension(), parameters.GetUploadFileTempExtension());
 
-        if (par is null)
-        {
-            StShared.WriteErrorLine("FilesBackupStepParameters does not created", useConsole, logger);
-            return null;
-        }
+        if (par is not null) 
+            return new FilesBackupStepCommand(logger, useConsole, par, processManager, this);
 
-        return new FilesBackupStepCommand(logger, useConsole, par, processManager, this);
+        StShared.WriteErrorLine("FilesBackupStepParameters does not created", useConsole, logger);
+        return null;
+
     }
 }

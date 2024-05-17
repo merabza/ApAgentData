@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.StepCommands;
@@ -11,7 +12,6 @@ namespace LibApAgentData.Steps;
 
 public sealed class FilesMoveStep : JobStep
 {
-    //public string Prefix { get; set; }
     public string? MoveFolderMask { get; set; }
 
     //ფაილსაცავის სახელი, რომლიდანაც უნდა აიტვირთოს ფაილები
@@ -19,20 +19,27 @@ public sealed class FilesMoveStep : JobStep
 
     //ფაილსაცავის სახელი, რომელშიც უნდა ჩაიტვირთოს ფაილები
     public string? DestinationFileStorageName { get; set; }
-    public string? ExcludeSet { get; set; } //გამოსარიცხი ფაილებისა და გზების კომპლექტის სახელი
-    public string? DeleteDestinationFilesSet { get; set; } //მიზნის მხარეს წინასწარ წასაშლელი ფაილები კომპლექტის სახელი
-    public string? ReplacePairsSet { get; set; } //აკრძალული თანმიმდევრობის ჩანაცვლების კომპლექტის სახელი
-    public int MaxFolderCount { get; set; } //მაქსიმუმ რამდენი ფოლდერის სახელი შეუნარჩუნდეს ფაილს
 
-    public bool
-        CreateFolderWithDateTime { get; set; } //შევქმნათ თუ არა თარიღიანი და დროიანი ცალკე ფოლდერი ერთი სესიისათვის
+    //გამოსარიცხი ფაილებისა და გზების კომპლექტის სახელი
+    public string? ExcludeSet { get; set; }
 
-    //public Dictionary<string, string> PriorityFolderPaths { get; set; } //პრიორიტეტული ფოლდერების ჩამონათვალი. (სახელი გამოიყენება ნიღბის კოდად)
-    public List<string> PriorityPoints { get; set; } = new(); //პრიორიტეტული ფოლდერების ჩამონათვალი.
+    //მიზნის მხარეს წინასწარ წასაშლელი ფაილები კომპლექტის სახელი
+    public string? DeleteDestinationFilesSet { get; set; }
+
+    //აკრძალული თანმიმდევრობის ჩანაცვლების კომპლექტის სახელი
+    public string? ReplacePairsSet { get; set; }
+
+    //მაქსიმუმ რამდენი ფოლდერის სახელი შეუნარჩუნდეს ფაილს
+    public int MaxFolderCount { get; set; }
+
+    //შევქმნათ თუ არა თარიღიანი და დროიანი ცალკე ფოლდერი ერთი სესიისათვის
+    public bool CreateFolderWithDateTime { get; set; }
+
+    public List<string> PriorityPoints { get; set; } = []; //პრიორიტეტული ფოლდერების ჩამონათვალი.
 
 
-    public override ProcessesToolAction? GetToolAction(ILogger logger, bool useConsole, ProcessManager processManager,
-        ApAgentParameters parameters, string procLogFilesFolder)
+    public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
         var filesMoveStepParameters = FilesMoveStepParameters.Create(logger, useConsole,
             SourceFileStorageName, DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
@@ -42,12 +49,10 @@ public sealed class FilesMoveStep : JobStep
             new ReplacePairsSets(parameters.ReplacePairsSets), MaxFolderCount, CreateFolderWithDateTime,
             PriorityPoints);
 
-        if (filesMoveStepParameters is null)
-        {
-            StShared.WriteErrorLine("filesMoveStepParameters does not created for Files Move step", useConsole, logger);
-            return null;
-        }
+        if (filesMoveStepParameters is not null)
+            return new FilesMoveStepCommand(logger, useConsole, processManager, this, filesMoveStepParameters);
 
-        return new FilesMoveStepCommand(logger, useConsole, processManager, this, filesMoveStepParameters);
+        StShared.WriteErrorLine("filesMoveStepParameters does not created for Files Move step", useConsole, logger);
+        return null;
     }
 }

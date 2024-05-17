@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Net.Http;
+using System.Threading;
 using DatabasesManagement;
 using LibApiClientParameters;
 using LibDatabaseParameters;
@@ -19,13 +20,13 @@ public sealed class ExecuteSqlCommandStepParameters
 
     public string ExecuteQueryCommand { get; }
 
-    public static ExecuteSqlCommandStepParameters? Create(ILogger logger, bool useConsole, string? executeQueryCommand,
-        string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
-        DatabaseServerConnections databaseServerConnections)
+    public static ExecuteSqlCommandStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, string? executeQueryCommand, string? webAgentName, ApiClients apiClients,
+        string? databaseServerConnectionName, DatabaseServerConnections databaseServerConnections)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger, webAgentName,
-                apiClients, databaseServerConnectionName, databaseServerConnections, null, null, CancellationToken.None)
-            .Result;
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger,
+            httpClientFactory, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null,
+            null, CancellationToken.None).Result;
 
         if (agentClient is null)
         {

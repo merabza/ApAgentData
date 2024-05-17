@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using FileManagersMain;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
@@ -25,21 +26,9 @@ public sealed class MultiDatabaseProcessStep : JobStep
     //თუ DatabaseSet-ის მნიშვნელობაა DatabasesBySelection, მაშინ მონაცემთა ბაზების სახელები უნდა ავიღოთ ქვემოთ მოცემული სიიდან
     public List<string> DatabaseNames { get; set; } = new();
 
-    public override ProcessesToolAction? GetToolAction(ILogger logger, bool useConsole, ProcessManager processManager,
-        ApAgentParameters parameters, string procLogFilesFolder)
+    public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        //if (parameters == null)
-        //{
-        //    logger.LogError("Error, parameters not specified");
-        //    return null;
-        //}
-
-        //if (string.IsNullOrWhiteSpace(parameters.WorkFolder))
-        //{
-        //  logger.LogError("Action uses Work Folder. Work Folder not specified");
-        //  return null;
-        //}
-
         var localWorkFileManager =
             FileManagersFabric.CreateFileManager(useConsole, logger, procLogFilesFolder);
 
@@ -49,8 +38,8 @@ public sealed class MultiDatabaseProcessStep : JobStep
             return null;
         }
 
-        var par = MultiDatabaseProcessStepParameters.Create(logger, useConsole,
-            DatabaseWebAgentName, new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
+        var par = MultiDatabaseProcessStepParameters.Create(logger, httpClientFactory, useConsole, DatabaseWebAgentName,
+            new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
             new DatabaseServerConnections(parameters.DatabaseServerConnections), procLogFilesFolder);
 
         if (par is not null)

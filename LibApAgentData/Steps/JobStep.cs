@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using LibApAgentData.Models;
 using LibParameters;
 using LibToolActions.BackgroundTasks;
@@ -46,8 +47,8 @@ public /*open*/ class JobStep : ItemData
     //  return false;
     //}
 
-    public virtual ProcessesToolAction? GetToolAction(ILogger logger, bool useConsole, ProcessManager processManager,
-        ApAgentParameters parameters, string procLogFilesFolder)
+    public virtual ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
         return null;
     }

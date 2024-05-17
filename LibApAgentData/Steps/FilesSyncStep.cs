@@ -4,6 +4,7 @@ using LibApAgentData.StepCommands;
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using SystemToolsShared;
 
 namespace LibApAgentData.Steps;
@@ -17,8 +18,8 @@ public sealed class FilesSyncStep : JobStep
     public string? DeleteDestinationFilesSet { get; set; } //მიზნის მხარეს წინასწარ წასაშლელი ფაილები კომპლექტის სახელი
     public string? ReplacePairsSet { get; set; } //აკრძალული თანმიმდევრობის ჩანაცვლების კომპლექტის სახელი
 
-    public override ProcessesToolAction? GetToolAction(ILogger logger, bool useConsole, ProcessManager processManager,
-        ApAgentParameters parameters, string procLogFilesFolder)
+    public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
         var filesSyncStepParameters = FilesSyncStepParameters.Create(logger, useConsole,
             SourceFileStorageName, DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
@@ -26,12 +27,11 @@ public sealed class FilesSyncStep : JobStep
             new FileStorages(parameters.FileStorages), new ExcludeSets(parameters.ExcludeSets),
             new ReplacePairsSets(parameters.ReplacePairsSets));
 
-        if (filesSyncStepParameters is null)
-        {
-            StShared.WriteErrorLine("filesSyncStepParameters does not created for Files Sync step", useConsole, logger);
-            return null;
-        }
+        if (filesSyncStepParameters is not null)
+            return new FilesSyncStepCommand(logger, processManager, this, filesSyncStepParameters);
 
-        return new FilesSyncStepCommand(logger, processManager, this, filesSyncStepParameters);
+        StShared.WriteErrorLine("filesSyncStepParameters does not created for Files Sync step", useConsole, logger);
+        return null;
+
     }
 }

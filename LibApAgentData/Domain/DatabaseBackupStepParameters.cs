@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using DatabasesManagement;
 using DbTools;
@@ -56,8 +57,8 @@ public sealed class DatabaseBackupStepParameters
     public CompressParameters? CompressParameters { get; }
     public UploadParameters UploadParameters { get; }
 
-    public static DatabaseBackupStepParameters? Create(ILogger logger, bool useConsole, string? webAgentName,
-        ApiClients apiClients, string? databaseServerConnectionName,
+    public static DatabaseBackupStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string? localPath,
         DatabaseBackupParametersModel? databaseBackupParameters, string? dbServerSideBackupPath,
         EDatabaseSet databaseSet, List<string> databaseNames, string? fileStorageName, string? uploadFileStorageName,
@@ -79,9 +80,9 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger, webAgentName,
-                apiClients, databaseServerConnectionName, databaseServerConnections, null, null, CancellationToken.None)
-            .Result;
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger,
+            httpClientFactory, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null,
+            null, CancellationToken.None).Result;
 
         if (agentClient is null)
         {
