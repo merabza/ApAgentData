@@ -13,14 +13,14 @@ namespace LibApAgentData;
 public sealed class DatabasesListCreator
 {
     //private readonly bool _byParameters;
-    private readonly IDatabaseApiClient _agentClient;
+    private readonly IDatabaseManager _agentClient;
 
     private readonly EBackupType? _backupType;
     private readonly EDatabaseSet _databaseSet;
 
 
     // ReSharper disable once ConvertToPrimaryConstructor
-    public DatabasesListCreator(EDatabaseSet databaseSet, IDatabaseApiClient agentClient,
+    public DatabasesListCreator(EDatabaseSet databaseSet, IDatabaseManager agentClient,
         EBackupType? backupType = null)
     {
         _databaseSet = databaseSet;

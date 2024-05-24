@@ -20,7 +20,7 @@ public sealed class UpdateStatisticsStepCommand : MultiDatabaseProcessesToolActi
     {
     }
 
-    protected override async Task<bool> RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName,
+    protected override async Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
         CancellationToken cancellationToken)
     {
         var updateStatisticsResult = await agentClient.UpdateStatistics(databaseName, cancellationToken);

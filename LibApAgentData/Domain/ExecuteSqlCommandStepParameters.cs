@@ -10,13 +10,13 @@ namespace LibApAgentData.Domain;
 
 public sealed class ExecuteSqlCommandStepParameters
 {
-    private ExecuteSqlCommandStepParameters(IDatabaseApiClient agentClient, string executeQueryCommand)
+    private ExecuteSqlCommandStepParameters(IDatabaseManager agentClient, string executeQueryCommand)
     {
         AgentClient = agentClient;
         ExecuteQueryCommand = executeQueryCommand;
     }
 
-    public IDatabaseApiClient AgentClient { get; }
+    public IDatabaseManager AgentClient { get; }
 
     public string ExecuteQueryCommand { get; }
 
@@ -24,9 +24,9 @@ public sealed class ExecuteSqlCommandStepParameters
         bool useConsole, string? executeQueryCommand, string? webAgentName, ApiClients apiClients,
         string? databaseServerConnectionName, DatabaseServerConnections databaseServerConnections)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger,
-            httpClientFactory, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null,
-            null, CancellationToken.None).Result;
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManager(useConsole, logger, httpClientFactory,
+            webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null,
+            CancellationToken.None).Result;
 
         if (agentClient is null)
         {

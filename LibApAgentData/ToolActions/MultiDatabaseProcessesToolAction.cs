@@ -101,7 +101,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     }
 
 
-    protected virtual Task<bool> RunOneDatabaseAction(IDatabaseApiClient agentClient, string databaseName,
+    protected virtual Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
         CancellationToken cancellationToken)
     {
         return Task.FromResult(false);

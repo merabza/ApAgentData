@@ -12,22 +12,22 @@ namespace LibApAgentData.Domain;
 public sealed class MultiDatabaseProcessStepParameters
 {
     // ReSharper disable once ConvertToPrimaryConstructor
-    private MultiDatabaseProcessStepParameters(IDatabaseApiClient agentClient, FileManager localWorkFileManager)
+    private MultiDatabaseProcessStepParameters(IDatabaseManager agentClient, FileManager localWorkFileManager)
     {
         AgentClient = agentClient;
         LocalWorkFileManager = localWorkFileManager;
     }
 
-    public IDatabaseApiClient AgentClient { get; }
+    public IDatabaseManager AgentClient { get; }
     public FileManager LocalWorkFileManager { get; } //ლოკალური ფოლდერის მენეჯერი
 
     public static MultiDatabaseProcessStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManagementClient(useConsole, logger,
-            httpClientFactory, webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null,
-            null, CancellationToken.None).Result;
+        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManager(useConsole, logger, httpClientFactory,
+            webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null,
+            CancellationToken.None).Result;
 
         if (agentClient is null)
         {
