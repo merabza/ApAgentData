@@ -49,7 +49,6 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
     public Dictionary<string, DatabaseServerConnectionData> DatabaseServerConnections { get; set; } = [];
     public Dictionary<string, ExcludeSet> ExcludeSets { get; set; } = [];
     public Dictionary<string, FileStorageData> FileStorages { get; set; } = [];
-    public Dictionary<string, SmartSchema> SmartSchemas { get; set; } = [];
 
     public bool CheckBeforeSave()
     {
@@ -65,6 +64,8 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
 
         return true;
     }
+
+    public Dictionary<string, SmartSchema> SmartSchemas { get; set; } = [];
 
     public string? CountLocalPath(string? currentPath, string? parametersFileName, string defaultFolderName)
     {

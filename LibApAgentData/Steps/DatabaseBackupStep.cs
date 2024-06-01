@@ -75,9 +75,17 @@ public sealed class DatabaseBackupStep : JobStep
     //ამ სამუშაოებისათვის ცალკე პროცესების შექმნა ხდება მხოლოდ იმ შემთხვევაში, თუ ისინი სხვა პროცესის ხაზშია.
     //თუ რომელიმე სამუშაოსათვის შეიქმნა ცალკე პროცესი, შემდგომი სამუშაოების გაშვება ამ პროცესზე იქნება დამოკიდებული, მიუხედავად ხაზების ნომრებისა
     //თითოეული სამუშაო ახალ პროცესს ქმნის მხოლოდ იმ შემთხვევაში, თუ შემდეგი სამუშაოს პროცესის ხაზი არ ემთხვევა მიმდინარეს.
-    public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory, bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
+    public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
+        bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var par = DatabaseBackupStepParameters.Create(logger, httpClientFactory, useConsole, DatabaseWebAgentName, new ApiClients(parameters.ApiClients), DatabaseServerConnectionName, new DatabaseServerConnections(parameters.DatabaseServerConnections), LocalPath, DatabaseBackupParameters, DbServerSideBackupPath, DatabaseSet, DatabaseNames, FileStorageName, UploadFileStorageName, SmartSchemaName, LocalSmartSchemaName, UploadSmartSchemaName, ArchiverName, new FileStorages(parameters.FileStorages), new SmartSchemas(parameters.SmartSchemas), new Archivers(parameters.Archivers), DownloadProcLineId, CompressProcLineId, UploadProcLineId, parameters.GetArchivingFileTempExtension(), parameters.GetUploadFileTempExtension());
+        var par = DatabaseBackupStepParameters.Create(logger, httpClientFactory, useConsole, DatabaseWebAgentName,
+            new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
+            new DatabaseServerConnections(parameters.DatabaseServerConnections), LocalPath, DatabaseBackupParameters,
+            DbServerSideBackupPath, DatabaseSet, DatabaseNames, FileStorageName, UploadFileStorageName, SmartSchemaName,
+            LocalSmartSchemaName, UploadSmartSchemaName, ArchiverName, new FileStorages(parameters.FileStorages),
+            new SmartSchemas(parameters.SmartSchemas), new Archivers(parameters.Archivers), DownloadProcLineId,
+            CompressProcLineId, UploadProcLineId, parameters.GetArchivingFileTempExtension(),
+            parameters.GetUploadFileTempExtension());
 
         if (par is not null)
             return new DatabaseBackupStepCommand(useConsole, logger, processManager, this, par,

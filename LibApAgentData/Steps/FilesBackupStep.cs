@@ -55,11 +55,10 @@ public sealed class FilesBackupStep : JobStep
             new FileStorages(parameters.FileStorages), new SmartSchemas(parameters.SmartSchemas), UploadProcLineId,
             BackupSeparately, parameters.GetArchivingFileTempExtension(), parameters.GetUploadFileTempExtension());
 
-        if (par is not null) 
+        if (par is not null)
             return new FilesBackupStepCommand(logger, useConsole, par, processManager, this);
 
         StShared.WriteErrorLine("FilesBackupStepParameters does not created", useConsole, logger);
         return null;
-
     }
 }

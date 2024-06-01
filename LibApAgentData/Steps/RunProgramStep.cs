@@ -1,9 +1,9 @@
-﻿using LibApAgentData.Domain;
+﻿using System.Net.Http;
+using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.StepCommands;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using SystemToolsShared;
 
 namespace LibApAgentData.Steps;
@@ -23,6 +23,5 @@ public sealed class RunProgramStep : JobStep
 
         StShared.WriteErrorLine("parameters does not created, RunProgramStep did not run", useConsole, logger);
         return null;
-
     }
 }

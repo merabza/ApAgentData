@@ -1,10 +1,10 @@
-﻿using LibApAgentData.Domain;
+﻿using System.Net.Http;
+using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.StepCommands;
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using SystemToolsShared;
 
 namespace LibApAgentData.Steps;
@@ -32,6 +32,5 @@ public sealed class FilesSyncStep : JobStep
 
         StShared.WriteErrorLine("filesSyncStepParameters does not created for Files Sync step", useConsole, logger);
         return null;
-
     }
 }
