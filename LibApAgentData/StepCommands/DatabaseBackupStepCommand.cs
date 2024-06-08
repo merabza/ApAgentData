@@ -12,6 +12,7 @@ using LibApAgentData.ToolActions;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
+using SystemToolsShared.Errors;
 
 namespace LibApAgentData.StepCommands;
 
