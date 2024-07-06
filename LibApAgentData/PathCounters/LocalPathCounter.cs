@@ -23,7 +23,7 @@
 //        return currentPath;
 //      FileInfo pf = new FileInfo(_parametersFileName);
 //      string? workFolder = _parameters.WorkFolder ?? pf.Directory?.FullName;
-//      string workFolderCandidate = workFolder == null ? "" : Path.Combine(workFolder, _defaultFolderName);
+//      string workFolderCandidate = workFolder == null ? string.Empty : Path.Combine(workFolder, _defaultFolderName);
 //      return workFolderCandidate;
 //    }
 

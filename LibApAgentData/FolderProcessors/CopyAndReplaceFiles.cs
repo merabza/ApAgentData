@@ -34,7 +34,7 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
         {
             EMoveMethod.Upload => uploadTempExtension,
             EMoveMethod.Download => downloadTempExtension,
-            EMoveMethod.Local => "",
+            EMoveMethod.Local => string.Empty,
             _ => throw new ArgumentOutOfRangeException()
         };
         _fileMaxLength = destinationFileMaxLength - _tempExtension.Length;

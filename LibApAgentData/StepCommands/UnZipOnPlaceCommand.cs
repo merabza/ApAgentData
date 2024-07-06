@@ -71,6 +71,6 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
 
     private static string GetNewFolderName(string zipFileName, int i)
     {
-        return $"{zipFileName}{(i == 0 ? "" : $"({i})")}";
+        return $"{zipFileName}{(i == 0 ? string.Empty : $"({i})")}";
     }
 }

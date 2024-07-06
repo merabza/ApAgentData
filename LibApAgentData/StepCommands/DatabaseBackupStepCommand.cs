@@ -95,7 +95,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             var backupFileNamePrefix = _par.DbBackupParameters.GetPrefix(databaseName);
 
             var backupFileNameSuffix = _par.DbBackupParameters.GetSuffix() + (_par.CompressParameters is null
-                ? ""
+                ? string.Empty
                 : _par.CompressParameters.Archiver.FileExtension.AddNeedLeadPart("."));
 
             //შემოწმდეს ამ პერიოდში უკვე ხომ არ არის გაკეთებული ამ ბაზის ბექაპი

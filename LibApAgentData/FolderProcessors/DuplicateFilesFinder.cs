@@ -90,7 +90,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
     // Return a byte array as a sequence of hex values.
     private static string BytesToString(byte[] bytes)
     {
-        return bytes.Aggregate("", (current, b) => current + b.ToString("x2"));
+        return bytes.Aggregate(string.Empty, (current, b) => current + b.ToString("x2"));
     }
 
     // Compute the file's hash.

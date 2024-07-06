@@ -35,7 +35,7 @@ public sealed class MoveFiles : FolderProcessor
         {
             EMoveMethod.Upload => uploadTempExtension,
             EMoveMethod.Download => downloadTempExtension,
-            EMoveMethod.Local => "",
+            EMoveMethod.Local => string.Empty,
             _ => throw new ArgumentOutOfRangeException()
         };
         _fileMaxLength = destinationFileMaxLength - _tempExtension.Length;

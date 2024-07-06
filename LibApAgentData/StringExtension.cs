@@ -9,7 +9,7 @@ public static class StringExtension
     {
         const string restrictedSymbols = "<>:\"/\\|?*'«»";
         return fileName.Intersect(restrictedSymbols)
-            .Aggregate(fileName, (current, c) => current.Replace(c.ToString(), ""));
+            .Aggregate(fileName, (current, c) => current.Replace(c.ToString(), string.Empty));
     }
 
     public static string PreparedFileNameConsideringLength(this string fileName, int fileMaxLength)
@@ -23,7 +23,7 @@ public static class StringExtension
 
     public static string GetNewFileName(this string fileNameWithoutExtension, int i, string fileExtension)
     {
-        return $"{fileNameWithoutExtension}{(i == 0 ? "" : $"({i})")}{fileExtension}";
+        return $"{fileNameWithoutExtension}{(i == 0 ? string.Empty : $"({i})")}{fileExtension}";
     }
 
     public static string GetNewFileNameWithMaxLength(this string fileNameWithoutExtension, int i,
