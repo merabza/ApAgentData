@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using FileManagersMain;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
@@ -18,12 +19,13 @@ public sealed class ProcLogFile
     private readonly EPeriodType _periodType;
     private readonly string _processName;
     private readonly DateTime _startAt;
-    private readonly object _syncObject = new();
+    private readonly Lock _syncObject = new();
     private readonly bool _useConsole;
     private readonly FileManager _workFileManager;
     private readonly string _workFolder;
     private string? _justCreatedFileName;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public ProcLogFile(bool useConsole, ILogger logger, string processName, EPeriodType periodType,
         DateTime startAt, TimeSpan holeStartTime, TimeSpan holeEndTime, string workFolder, FileManager workFileManager,
         string dateMask = "yyyy_MM_dd_HHmmss_fffffff", string extension = ".log")

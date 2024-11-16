@@ -45,7 +45,6 @@ public sealed class DatabasesListCreator
                 sysBaseDoesMatter = true;
                 break;
             case EDatabaseSet.AllDatabases:
-                break;
             case EDatabaseSet.DatabasesBySelection:
                 break;
             default:
