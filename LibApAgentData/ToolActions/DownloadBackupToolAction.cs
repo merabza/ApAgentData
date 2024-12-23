@@ -53,13 +53,13 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
         return compressToolAction.GetNextAction();
     }
 
-    protected override Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         var success = _par.DownloadFileManager.DownloadFile(_backupFileParameters.Name, _downloadTempExtension);
 
         _par.LocalFileManager.RemoveRedundantFiles(_backupFileParameters.Prefix, _backupFileParameters.DateMask,
             _backupFileParameters.Suffix, _localSmartSchema);
 
-        return Task.FromResult(success);
+        return ValueTask.FromResult(success);
     }
 }

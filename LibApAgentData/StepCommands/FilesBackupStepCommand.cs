@@ -33,7 +33,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         _jobStep = jobStep;
     }
 
-    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override async ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Checking parameters...");
 
@@ -58,8 +58,8 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         return true;
     }
 
-    private async Task<bool> ExecuteBackup(string maskName, string[] sources, Archiver archiver, ExcludeSet excludeSet,
-        FileStorageData uploadFileStorage, CancellationToken cancellationToken)
+    private async ValueTask<bool> ExecuteBackup(string maskName, string[] sources, Archiver archiver, ExcludeSet excludeSet,
+        FileStorageData uploadFileStorage, CancellationToken cancellationToken = default)
     {
         if (ProcessManager is not null && ProcessManager.CheckCancellation())
             return false;

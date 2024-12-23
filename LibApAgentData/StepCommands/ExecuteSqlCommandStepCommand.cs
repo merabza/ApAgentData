@@ -23,10 +23,10 @@ public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
         _par = par;
     }
 
-    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override async ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
-        var executeCommandResult = await _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand, cancellationToken,
-            _executeSqlCommandStep.DatabaseName);
+        var executeCommandResult = await _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand,
+            _executeSqlCommandStep.DatabaseName, cancellationToken);
         if (executeCommandResult.IsSome)
             Err.PrintErrorsOnConsole((Err[])executeCommandResult);
         return true;

@@ -63,10 +63,10 @@ public sealed class CompressToolAction : ProcessesToolAction
                FileStat.NormalizePath(uploadFileStorage.FileStoragePath);
     }
 
-    protected override Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         if (_par is null)
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
 
         var filesForCompress = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
@@ -79,7 +79,7 @@ public sealed class CompressToolAction : ProcessesToolAction
             if (!_par.Archiver.PathToArchive(sourceFileName, tempFileName))
             {
                 File.Delete(tempFileName);
-                return Task.FromResult(false);
+                return ValueTask.FromResult(false);
             }
 
             File.Delete(destinationFileFullName);
@@ -94,7 +94,6 @@ public sealed class CompressToolAction : ProcessesToolAction
         //გავასწოროთ სუფიქსი, რადგან ფაილები დაარქივდა
         _backupFileParameters.Suffix += _par.Archiver.FileExtension;
 
-
-        return Task.FromResult(true);
+        return ValueTask.FromResult(true);
     }
 }

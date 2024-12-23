@@ -24,7 +24,7 @@ public sealed class UploadToolAction : ProcessesToolAction
         _backupFileParameters = backupFileParameters;
     }
 
-    protected override Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         var filesForUpload = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
@@ -32,20 +32,19 @@ public sealed class UploadToolAction : ProcessesToolAction
         var filesAlreadyUploaded = _par.UploadFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
 
-        List<BuFileInfo> allFiles = new();
+        var allFiles = new List<BuFileInfo>();
         allFiles.AddRange(filesForUpload);
         allFiles.AddRange(filesAlreadyUploaded);
         var preserveFileDates = _par.UploadSmartSchema.GetPreserveFileDates(allFiles);
-
 
         if (filesForUpload
             .Where(fileInfo => !_par.UploadFileManager.ContainsFile(fileInfo.FileName) &&
                                preserveFileDates.Contains(fileInfo.FileDateTime)).Any(fileInfo =>
                 !_par.UploadFileManager.UploadFile(fileInfo.FileName, _par.UploadTempExtension)))
-            return Task.FromResult(false);
+            return ValueTask.FromResult(false);
 
         _par.UploadFileManager.RemoveRedundantFiles(_backupFileParameters.Prefix, _backupFileParameters.DateMask,
             _backupFileParameters.Suffix, _par.UploadSmartSchema);
-        return Task.FromResult(true);
+        return ValueTask.FromResult(true);
     }
 }

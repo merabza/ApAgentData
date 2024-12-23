@@ -22,9 +22,9 @@ public sealed class RunProgramStepCommand : ProcessesToolAction
         _par = par;
     }
 
-    protected override Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         StShared.RunProcessWithOutput(_useConsole, _logger, _par.Program, _par.Arguments);
-        return Task.FromResult(true);
+        return ValueTask.FromResult(true);
     }
 }

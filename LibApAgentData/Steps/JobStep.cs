@@ -38,7 +38,7 @@ public /*open*/ class JobStep : ItemData
 
     public DateTime StartAt { get; set; } //საყრდენი დროის წერტილი, საიდანაც აითვლება პერიოდები.
 
-    //public virtual bool Run(ILogger logger, ApAgentParameters parameters, Processes processes, CancellationToken cancellationToken)
+    //public virtual bool Run(ILogger logger, ApAgentParameters parameters, Processes processes, CancellationToken cancellationToken = default)
     //{
     //  Console.WriteLine("Not Implemented Task Started");
     //  Thread.Sleep(1000);

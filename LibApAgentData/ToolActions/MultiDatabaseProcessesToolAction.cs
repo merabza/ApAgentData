@@ -34,7 +34,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
     }
 
 
-    private async Task<List<string>> GetDatabaseNames(CancellationToken cancellationToken)
+    private async ValueTask<List<string>> GetDatabaseNames(CancellationToken cancellationToken = default)
     {
         List<string> databaseNames;
         if (_multiDatabaseProcessStep.DatabaseSet == EDatabaseSet.DatabasesBySelection)
@@ -44,16 +44,14 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         else
         {
             DatabasesListCreator databasesListCreator = new(_multiDatabaseProcessStep.DatabaseSet, _par.AgentClient);
-
             var dbList = await databasesListCreator.LoadDatabaseNames(cancellationToken);
             databaseNames = dbList.Select(s => s.Name).ToList();
         }
-
         return databaseNames;
     }
 
 
-    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override async ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(_procLogFilesFolder))
         {
@@ -102,7 +100,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 
 
     protected virtual Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         return Task.FromResult(false);
     }

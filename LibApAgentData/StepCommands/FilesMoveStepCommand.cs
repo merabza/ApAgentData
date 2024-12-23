@@ -26,7 +26,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         _par = filesMoveStepParameters;
     }
 
-    protected override Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
@@ -35,7 +35,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                 [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
-                return Task.FromResult(false);
+                return ValueTask.FromResult(false);
         }
 
         //თუ მიზანი მოშორებულია და FTP-ა, 
@@ -57,7 +57,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
             ChangeFilesWithRestrictPatterns changeFilesWithManyDots =
                 new(_par.SourceFileManager, _par.ReplacePairsSet.PairsDict);
             if (!changeFilesWithManyDots.Run())
-                return Task.FromResult(false);
+                return ValueTask.FromResult(false);
         }
 
         //ლოკალურიდან FTP-ს მხარეს ატვირთვის დროს,
@@ -67,7 +67,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         {
             UnZipOnPlace unZipOnPlace = new(_logger, _useConsole, _par.SourceFileManager);
             if (!unZipOnPlace.Run())
-                return Task.FromResult(false);
+                return ValueTask.FromResult(false);
         }
 
         //თუ წყაროს ფოლდერი ცარიელია, გასაკეთებლი არაფერია
@@ -82,7 +82,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                 //შევამოწმოთ ასატვირთ ფოლდერში თუ არსებობს სესიის შესაბამისი ფოლდერი.
                 //თუ არ არსებობს, ვქმნით. //თუ ფოლდერი ვერ შეიქმნა, ვჩერდებით
                 if (!_par.DestinationFileManager.CareCreateDirectory(moveFolderName))
-                    return Task.FromResult(false);
+                    return ValueTask.FromResult(false);
             }
 
             MoveFiles moveFiles = new(_logger, _par.SourceFileManager, _par.DestinationFileManager, moveFolderName,
@@ -93,28 +93,28 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                     : _par.DestinationFileStorage.FileNameMaxLength);
 
             if (!moveFiles.Run())
-                return Task.FromResult(false);
+                return ValueTask.FromResult(false);
         }
 
         if (!_par.DestinationIsLocal)
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
 
         DuplicateFilesFinder duplicateFilesFinder = new(_par.DestinationFileManager);
         if (!duplicateFilesFinder.Run())
-            return Task.FromResult(false);
+            return ValueTask.FromResult(false);
 
         MultiDuplicatesFinder multiDuplicatesFinder = new(_useConsole, duplicateFilesFinder.FileList);
         if (!multiDuplicatesFinder.Run())
-            return Task.FromResult(false);
+            return ValueTask.FromResult(false);
 
         DuplicateFilesRemover duplicateFilesRemover =
             new(_useConsole, multiDuplicatesFinder.FileList, _par.PriorityPoints);
 
         if (!duplicateFilesRemover.Run())
-            return Task.FromResult(false);
+            return ValueTask.FromResult(false);
 
         //ცარიელი ფოლდერების წაშლა
         EmptyFoldersRemover emptyFoldersRemover = new(_par.DestinationFileManager);
-        return Task.FromResult(emptyFoldersRemover.Run());
+        return ValueTask.FromResult(emptyFoldersRemover.Run());
     }
 }

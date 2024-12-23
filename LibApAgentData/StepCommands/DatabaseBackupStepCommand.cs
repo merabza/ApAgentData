@@ -37,7 +37,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         _downloadTempExtension = downloadTempExtension;
     }
 
-    protected override async Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override async ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Checking parameters...");
 

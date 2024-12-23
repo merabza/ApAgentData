@@ -28,7 +28,7 @@ public sealed class DatabasesListCreator
         _backupType = backupType;
     }
 
-    public async Task<List<DatabaseInfoModel>> LoadDatabaseNames(CancellationToken cancellationToken)
+    public async Task<List<DatabaseInfoModel>> LoadDatabaseNames(CancellationToken cancellationToken = default)
     {
         var getDatabaseNamesResult = await _agentClient.GetDatabaseNames(cancellationToken);
         var databaseInfos = getDatabaseNamesResult.AsT0;

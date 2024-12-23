@@ -21,7 +21,7 @@ public sealed class RecompileProceduresStepCommand : MultiDatabaseProcessesToolA
     }
 
     protected override async Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var recompileProceduresResult = await agentClient.RecompileProcedures(databaseName, cancellationToken);
         if (!recompileProceduresResult.IsSome)

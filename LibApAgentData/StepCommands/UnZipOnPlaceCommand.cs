@@ -26,7 +26,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
         _withSubFolders = withSubFolders;
     }
 
-    protected override Task<bool> RunAction(CancellationToken cancellationToken)
+    protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Checking parameters...");
 
@@ -34,7 +34,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
         //თუ არ არსებობს ვჩერდებით
 
         var curDir = new DirectoryInfo(_pathWithZips);
-        return Task.FromResult(ProcessFolder(curDir, _withSubFolders));
+        return ValueTask.FromResult(ProcessFolder(curDir, _withSubFolders));
     }
 
     private bool ProcessFolder(DirectoryInfo curDir, bool useSubFolders = true)
