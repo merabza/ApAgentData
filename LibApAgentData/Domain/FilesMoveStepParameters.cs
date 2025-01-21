@@ -50,8 +50,7 @@ public sealed class FilesMoveStepParameters
     public string DownloadTempExtension { get; }
     public int MaxFolderCount { get; } //მაქსიმუმ რამდენი ფოლდერის სახელი შეუნარჩუნდეს ფაილს
 
-    public bool
-        CreateFolderWithDateTime { get; } //შევქმნათ თუ არა თარიღიანი და დროიანი ცალკე ფოლდერი ერთი სესიისათვის
+    public bool CreateFolderWithDateTime { get; } //შევქმნათ თუ არა თარიღიანი და დროიანი ცალკე ფოლდერი ერთი სესიისათვის
 
     //public Dictionary<string, string> PriorityFolderPaths { get; set; } //პრიორიტეტული ფოლდერების ჩამონათვალი. (სახელი გამოიყენება ნიღბის კოდად)
     public List<string> PriorityPoints { get; } //პრიორიტეტული ფოლდერების ჩამონათვალი.
@@ -95,8 +94,7 @@ public sealed class FilesMoveStepParameters
 
         if (destinationFileStorage == null)
         {
-            StShared.WriteErrorLine("destination File Storage not specified for Files Backup step", useConsole,
-                logger);
+            StShared.WriteErrorLine("destination File Storage not specified for Files Backup step", useConsole, logger);
             return null;
         }
 
@@ -130,8 +128,7 @@ public sealed class FilesMoveStepParameters
 
         if (string.IsNullOrWhiteSpace(excludeSetName))
         {
-            StShared.WriteErrorLine("excludeSetName does not specified for Files Sync step", useConsole,
-                logger);
+            StShared.WriteErrorLine("excludeSetName does not specified for Files Sync step", useConsole, logger);
             return null;
         }
 
@@ -139,8 +136,7 @@ public sealed class FilesMoveStepParameters
 
         if (excludeSet == null)
         {
-            StShared.WriteErrorLine("excludeSet does not created for Files Backup step", useConsole,
-                logger);
+            StShared.WriteErrorLine("excludeSet does not created for Files Backup step", useConsole, logger);
             return null;
         }
 
@@ -165,8 +161,7 @@ public sealed class FilesMoveStepParameters
 
         if (sourceFileManager == null)
         {
-            StShared.WriteErrorLine("sourceFileManager does not created for Files Backup step", useConsole,
-                logger);
+            StShared.WriteErrorLine("sourceFileManager does not created for Files Backup step", useConsole, logger);
             return null;
         }
 

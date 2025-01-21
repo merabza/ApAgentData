@@ -26,8 +26,8 @@ public sealed class ProcLogFile
     private string? _justCreatedFileName;
 
     // ReSharper disable once ConvertToPrimaryConstructor
-    public ProcLogFile(bool useConsole, ILogger logger, string processName, EPeriodType periodType,
-        DateTime startAt, TimeSpan holeStartTime, TimeSpan holeEndTime, string workFolder, FileManager workFileManager,
+    public ProcLogFile(bool useConsole, ILogger logger, string processName, EPeriodType periodType, DateTime startAt,
+        TimeSpan holeStartTime, TimeSpan holeEndTime, string workFolder, FileManager workFileManager,
         string dateMask = "yyyy_MM_dd_HHmmss_fffffff", string extension = ".log")
     {
         _extension = extension.AddNeedLeadPart(".");

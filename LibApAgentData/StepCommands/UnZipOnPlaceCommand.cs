@@ -54,8 +54,7 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
             while (Directory.Exists(Path.Combine(curDir.FullName, GetNewFolderName(zipFileName, i))))
                 i++;
 
-            var newDir =
-                Directory.CreateDirectory(Path.Combine(curDir.FullName, GetNewFolderName(zipFileName, i)));
+            var newDir = Directory.CreateDirectory(Path.Combine(curDir.FullName, GetNewFolderName(zipFileName, i)));
             var archiver = new ZipClassArchiver(_logger, _useConsole, file.Extension);
 
             Console.WriteLine($"Unzip {file.FullName}");

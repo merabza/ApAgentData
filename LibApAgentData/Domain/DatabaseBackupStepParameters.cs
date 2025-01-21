@@ -10,6 +10,7 @@ using LibDatabaseParameters;
 using LibFileParameters.Models;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
+using SystemToolsShared.Errors;
 
 namespace LibApAgentData.Domain;
 
@@ -20,7 +21,7 @@ public sealed class DatabaseBackupStepParameters
         FileStorageData downloadFileStorageData, FileStorageData uploadFileStorageData,
         SmartSchema downloadSideSmartSchema, SmartSchema localSmartSchema, FileManager downloadFileManager,
         DatabaseBackupParametersDomain dbBackupParameters, int downloadProcLineId, int compressProcLineId,
-        CompressParameters? compressParameters, UploadParameters uploadParameters)
+        CompressParameters? compressParameters, UploadParameters uploadParameters, string dbServerFoldersSetName)
     {
         AgentClient = agentClient;
         LocalPath = localPath;
@@ -38,6 +39,7 @@ public sealed class DatabaseBackupStepParameters
         CompressProcLineId = compressProcLineId;
         CompressParameters = compressParameters;
         UploadParameters = uploadParameters;
+        DbServerFoldersSetName = dbServerFoldersSetName;
     }
 
     public IDatabaseManager AgentClient { get; }
@@ -52,19 +54,20 @@ public sealed class DatabaseBackupStepParameters
     public SmartSchema LocalSmartSchema { get; }
     public FileManager DownloadFileManager { get; }
     public DatabaseBackupParametersDomain DbBackupParameters { get; }
+    public string DbServerFoldersSetName { get; set; }
     public int DownloadProcLineId { get; }
     public int CompressProcLineId { get; }
     public CompressParameters? CompressParameters { get; }
     public UploadParameters UploadParameters { get; }
 
     public static DatabaseBackupStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
-        bool useConsole, string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
+        bool useConsole, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string? localPath,
-        DatabaseBackupParametersModel? databaseBackupParameters, string? dbServerSideBackupPath,
-        EDatabaseSet databaseSet, List<string> databaseNames, string? fileStorageName, string? uploadFileStorageName,
-        string? smartSchemaName, string? localSmartSchemaName, string? uploadSmartSchemaName, string? archiverName,
-        FileStorages fileStorages, SmartSchemas smartSchemas, Archivers archivers, int downloadProcLineId,
-        int compressProcLineId, int uploadProcLineId, string? archiveTempExtension, string? uploadTempExtension)
+        DatabaseBackupParametersModel? databaseBackupParameters, EDatabaseSet databaseSet, List<string> databaseNames,
+        string? fileStorageName, string? uploadFileStorageName, string? smartSchemaName, string? localSmartSchemaName,
+        string? uploadSmartSchemaName, string? archiverName, FileStorages fileStorages, SmartSchemas smartSchemas,
+        Archivers archivers, int downloadProcLineId, int compressProcLineId, int uploadProcLineId,
+        string? archiveTempExtension, string? uploadTempExtension, string? dbServerFoldersSetName)
     {
         if (string.IsNullOrWhiteSpace(localPath))
         {
@@ -80,24 +83,17 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManager(useConsole, logger, httpClientFactory,
-            webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null,
-            CancellationToken.None).Result;
+        var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
+            databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
+            CancellationToken.None).Preserve().Result;
 
-        if (agentClient is null)
-        {
-            StShared.WriteErrorLine($"DatabaseManagementClient does not created for webAgent {webAgentName}",
-                useConsole, logger);
-            return null;
-        }
+        if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
 
         if (databaseBackupParameters is null)
         {
-            StShared.WriteErrorLine("databaseBackupParameters does not specified",
-                useConsole, logger);
+            StShared.WriteErrorLine("databaseBackupParameters does not specified", useConsole, logger);
             return null;
         }
-
 
         if (string.IsNullOrWhiteSpace(fileStorageName))
         {
@@ -209,24 +205,29 @@ public sealed class DatabaseBackupStepParameters
             }
         }
 
-
-        var dbBackupParameters =
-            DatabaseBackupParametersDomain.Create(databaseBackupParameters, dbServerSideBackupPath);
-
-        if (dbBackupParameters is null)
+        if (string.IsNullOrWhiteSpace(dbServerFoldersSetName))
         {
-            StShared.WriteErrorLine("Backup Parameters does not created", useConsole, logger);
+            StShared.WriteErrorLine("dbServerFoldersSetName is not specified", useConsole, logger);
             return null;
         }
 
-        var uploadParameters = UploadParameters.Create(logger, useConsole, localPath,
-            uploadFileStorageData, uploadSmartSchema, uploadTempExtension, uploadProcLineId);
+        var dbBackupParameters = DatabaseBackupParametersDomain.Create(databaseBackupParameters);
+
+        //if (dbBackupParameters is null)
+        //{
+        //    StShared.WriteErrorLine("Backup Parameters does not created", useConsole, logger);
+        //    return null;
+        //}
+
+        var uploadParameters = UploadParameters.Create(logger, useConsole, localPath, uploadFileStorageData,
+            uploadSmartSchema, uploadTempExtension, uploadProcLineId);
 
         if (uploadParameters is not null)
-            return new DatabaseBackupStepParameters(agentClient, localPath, localWorkFileManager,
+            return new DatabaseBackupStepParameters(createDatabaseManagerResult.AsT0, localPath, localWorkFileManager,
                 databaseBackupParameters.BackupType, databaseSet, databaseNames, downloadFileStorageData,
                 uploadFileStorageData, downloadSideSmartSchema, localSmartSchema, downloadFileManager,
-                dbBackupParameters, downloadProcLineId, compressProcLineId, compressParameters, uploadParameters);
+                dbBackupParameters, downloadProcLineId, compressProcLineId, compressParameters, uploadParameters,
+                dbServerFoldersSetName);
 
         StShared.WriteErrorLine("uploadParameters does not created", useConsole, logger);
         return null;

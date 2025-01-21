@@ -58,8 +58,8 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         return true;
     }
 
-    private async ValueTask<bool> ExecuteBackup(string maskName, string[] sources, Archiver archiver, ExcludeSet excludeSet,
-        FileStorageData uploadFileStorage, CancellationToken cancellationToken = default)
+    private async ValueTask<bool> ExecuteBackup(string maskName, string[] sources, Archiver archiver,
+        ExcludeSet excludeSet, FileStorageData uploadFileStorage, CancellationToken cancellationToken = default)
     {
         if (ProcessManager is not null && ProcessManager.CheckCancellation())
             return false;
@@ -71,8 +71,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         if (HaveCurrentPeriodFile(backupFileNamePrefix, _par.DateMask, backupFileNameSuffix))
             return true;
 
-        var backupFileName = backupFileNamePrefix + DateTime.Now.ToString(_par.DateMask) +
-                             backupFileNameSuffix;
+        var backupFileName = backupFileNamePrefix + DateTime.Now.ToString(_par.DateMask) + backupFileNameSuffix;
         var backupFileFullName = Path.Combine(_par.LocalPath, backupFileName);
 
         var tempFileName = backupFileFullName + _par.ArchivingTempExtension.AddNeedLeadPart(".");
@@ -89,14 +88,13 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         _par.LocalWorkFileManager.RemoveRedundantFiles(backupFileNamePrefix, _par.DateMask, backupFileNameSuffix,
             _par.LocalSmartSchema);
 
-        var backupFileParameters = new BackupFileParameters(backupFileName, backupFileNamePrefix,
+        var backupFileParameters = new BackupFileParameters(null, backupFileName, backupFileNamePrefix,
             backupFileNameSuffix, _par.DateMask);
 
         var uploadToolAction =
             new UploadToolAction(_logger, ProcessManager, _par.UploadParameters, backupFileParameters);
 
-        var nextAction =
-            NeedUpload(uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
+        var nextAction = NeedUpload(uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
         await RunNextAction(nextAction, cancellationToken);
 
 
@@ -105,9 +103,8 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
 
     private bool HaveCurrentPeriodFile(string processName, string dateMask, string extension)
     {
-        var currentPeriodFileChecker = new CurrentPeriodFileChecker(_jobStep.PeriodType,
-            _jobStep.StartAt, _jobStep.HoleStartTime, _jobStep.HoleEndTime, processName,
-            dateMask, extension, _par.LocalWorkFileManager);
+        var currentPeriodFileChecker = new CurrentPeriodFileChecker(_jobStep.PeriodType, _jobStep.StartAt,
+            _jobStep.HoleStartTime, _jobStep.HoleEndTime, processName, dateMask, extension, _par.LocalWorkFileManager);
         return currentPeriodFileChecker.HaveCurrentPeriodFile();
     }
 

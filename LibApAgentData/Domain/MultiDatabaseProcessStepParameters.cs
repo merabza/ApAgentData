@@ -5,7 +5,7 @@ using FileManagersMain;
 using LibApiClientParameters;
 using LibDatabaseParameters;
 using Microsoft.Extensions.Logging;
-using SystemToolsShared;
+using SystemToolsShared.Errors;
 
 namespace LibApAgentData.Domain;
 
@@ -25,22 +25,16 @@ public sealed class MultiDatabaseProcessStepParameters
         bool useConsole, string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManager(useConsole, logger, httpClientFactory,
-            webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null,
-            CancellationToken.None).Result;
+        var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
+            databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
+            CancellationToken.None).Preserve().Result;
 
-        if (agentClient is null)
-        {
-            StShared.WriteErrorLine($"DatabaseManagementClient does not created for webAgent {webAgentName}",
-                useConsole, logger);
-            return null;
-        }
+        if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
 
-        var localWorkFileManager =
-            FileManagersFabric.CreateFileManager(useConsole, logger, procLogFilesFolder);
+        var localWorkFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, procLogFilesFolder);
 
         if (localWorkFileManager != null)
-            return new MultiDatabaseProcessStepParameters(agentClient, localWorkFileManager);
+            return new MultiDatabaseProcessStepParameters(createDatabaseManagerResult.AsT0, localWorkFileManager);
 
         logger.LogError("workFileManager for procLogFilesFolder does not created");
         return null;

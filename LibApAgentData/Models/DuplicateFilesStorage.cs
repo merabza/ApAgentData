@@ -65,7 +65,9 @@ public sealed class DuplicateFilesStorage
 
             if (file1 == null && file2 == null)
                 _duplicateFiles.Add(new DuplicateFilesModel
-                    { Files = new List<FileModel> { comparedFiles.FirstFile, comparedFiles.SecondFile } });
+                {
+                    Files = new List<FileModel> { comparedFiles.FirstFile, comparedFiles.SecondFile }
+                });
         }
     }
 

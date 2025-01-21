@@ -45,8 +45,8 @@ public sealed class MoveFiles : FolderProcessor
     {
         var dirNames = afterRootPath == null
             ? new List<string>()
-            : afterRootPath.Split(FileManager.DirectorySeparatorChar).TakeLast(_maxFolderCount)
-                .Select(s => s.Trim()).ToList();
+            : afterRootPath.Split(FileManager.DirectorySeparatorChar).TakeLast(_maxFolderCount).Select(s => s.Trim())
+                .ToList();
         var destinationAfterRootPath = CheckDestinationDirs(dirNames);
 
 

@@ -18,7 +18,7 @@ public sealed class DatabaseBackupStep : JobStep
 {
     //თუ ბაზასთან დასაკავშირებლად ვიყენებთ პირდაპირ კავშირს, მაშინ ვებაგენტი აღარ გამოიყენება და პირიქით
     public string? DatabaseServerConnectionName { get; set; } //ბაზასთან დაკავშირების პარამეტრების ჩანაწერის სახელი
-    public string? DatabaseWebAgentName { get; set; } //შეიძლება ბაზასთან დასაკავშირებლად გამოვიყენოთ ვებაგენტი
+    //public string? DatabaseWebAgentName { get; set; } //შეიძლება ბაზასთან დასაკავშირებლად გამოვიყენოთ ვებაგენტი
 
     public DatabaseBackupParametersModel? DatabaseBackupParameters { get; set; }
 
@@ -26,12 +26,12 @@ public sealed class DatabaseBackupStep : JobStep
 
     //თუ DatabaseSet-ის მნიშვნელობაა DatabasesBySelection, მაშინ მონაცემთა ბაზების სახელები უნდა ავიღოთ ქვემოთ მოცემული სიიდან
     // ReSharper disable once CollectionNeverUpdated.Global
-    public List<string> DatabaseNames { get; set; } = new();
+    public List<string> DatabaseNames { get; set; } = [];
 
     //ბექაპირება
     //ბექაპის ფოლდერის გზა. ფოლდერი, სადაც უნდა შეიქმნას ბექაპის ფაილი სერვერის მხარეს.
     //ეს პარამეტრი გამოიყენება მხოლოდ იმ შემთხვევაში, თუ ბაზასთან დასაკავშირებლად არ ვიყენებთ ვებაგენტს
-    public string? DbServerSideBackupPath { get; set; }
+    //public string? DbServerSideBackupPath { get; set; }
 
     //ბაზის სერვერის მხარე
     //ჭკვიანი სქემის სახელი. გამოიყენება ძველი დასატოვებელი და წასაშლელი ფაილების განსასაზღვრად. (ეს მონაცემთა ბაზის სერვერის მხარეს)
@@ -57,6 +57,8 @@ public sealed class DatabaseBackupStep : JobStep
     //ფაილსაცავის სახელი, რომელიც გამოიყენება რეზერვაციისათვის ბექაპების ასატვირთად
     public string? UploadFileStorageName { get; set; }
 
+    public string? DbServerFoldersSetName { get; set; }
+
     //ატვირთვის პროცესის ხაზის იდენტიფიკატორი
     public int UploadProcLineId { get; set; }
 
@@ -78,14 +80,14 @@ public sealed class DatabaseBackupStep : JobStep
     public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var par = DatabaseBackupStepParameters.Create(logger, httpClientFactory, useConsole, DatabaseWebAgentName,
+        var par = DatabaseBackupStepParameters.Create(logger, httpClientFactory, useConsole,
             new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
             new DatabaseServerConnections(parameters.DatabaseServerConnections), LocalPath, DatabaseBackupParameters,
-            DbServerSideBackupPath, DatabaseSet, DatabaseNames, FileStorageName, UploadFileStorageName, SmartSchemaName,
-            LocalSmartSchemaName, UploadSmartSchemaName, ArchiverName, new FileStorages(parameters.FileStorages),
+            DatabaseSet, DatabaseNames, FileStorageName, UploadFileStorageName, SmartSchemaName, LocalSmartSchemaName,
+            UploadSmartSchemaName, ArchiverName, new FileStorages(parameters.FileStorages),
             new SmartSchemas(parameters.SmartSchemas), new Archivers(parameters.Archivers), DownloadProcLineId,
             CompressProcLineId, UploadProcLineId, parameters.GetArchivingFileTempExtension(),
-            parameters.GetUploadFileTempExtension());
+            parameters.GetUploadFileTempExtension(), DbServerFoldersSetName);
 
         if (par is not null)
             return new DatabaseBackupStepCommand(useConsole, logger, processManager, this, par,

@@ -5,6 +5,7 @@ using LibApiClientParameters;
 using LibDatabaseParameters;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
+using SystemToolsShared.Errors;
 
 namespace LibApAgentData.Domain;
 
@@ -24,19 +25,14 @@ public sealed class ExecuteSqlCommandStepParameters
         bool useConsole, string? executeQueryCommand, string? webAgentName, ApiClients apiClients,
         string? databaseServerConnectionName, DatabaseServerConnections databaseServerConnections)
     {
-        var agentClient = DatabaseAgentClientsFabric.CreateDatabaseManager(useConsole, logger, httpClientFactory,
-            webAgentName, apiClients, databaseServerConnectionName, databaseServerConnections, null, null,
-            CancellationToken.None).Result;
+        var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
+            databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
+            CancellationToken.None).Preserve().Result;
 
-        if (agentClient is null)
-        {
-            StShared.WriteErrorLine($"DatabaseManagementClient does not created for webAgent {webAgentName}",
-                useConsole, logger);
-            return null;
-        }
+        if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
 
         if (!string.IsNullOrWhiteSpace(executeQueryCommand))
-            return new ExecuteSqlCommandStepParameters(agentClient, executeQueryCommand);
+            return new ExecuteSqlCommandStepParameters(createDatabaseManagerResult.AsT0, executeQueryCommand);
 
         StShared.WriteErrorLine("executeQueryCommand does not Specified", useConsole, logger);
         return null;

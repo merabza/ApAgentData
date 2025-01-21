@@ -17,11 +17,8 @@ public sealed class CurrentPeriodFileChecker
     private readonly FileManager _workFileManager;
 
     // ReSharper disable once ConvertToPrimaryConstructor
-    public CurrentPeriodFileChecker(
-        EPeriodType periodType, DateTime startAt,
-        TimeSpan holeStartTime, TimeSpan holeEndTime,
-        string prefix, string dateMask,
-        string suffix, FileManager workFileManager)
+    public CurrentPeriodFileChecker(EPeriodType periodType, DateTime startAt, TimeSpan holeStartTime,
+        TimeSpan holeEndTime, string prefix, string dateMask, string suffix, FileManager workFileManager)
     {
         _periodType = periodType;
         _startAt = startAt;

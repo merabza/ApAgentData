@@ -47,6 +47,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
             var dbList = await databasesListCreator.LoadDatabaseNames(cancellationToken);
             databaseNames = dbList.Select(s => s.Name).ToList();
         }
+
         return databaseNames;
     }
 
@@ -75,8 +76,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
                 continue;
             }
 
-            _logger.LogInformation(
-                "{_stepName} for database {databaseName}", _stepName, databaseName);
+            _logger.LogInformation("{_stepName} for database {databaseName}", _stepName, databaseName);
             if (!await RunOneDatabaseAction(_par.AgentClient, databaseName, cancellationToken))
             {
                 all = false;

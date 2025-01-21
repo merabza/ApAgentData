@@ -29,8 +29,7 @@ public sealed class MultiDatabaseProcessStep : JobStep
     public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var localWorkFileManager =
-            FileManagersFabric.CreateFileManager(useConsole, logger, procLogFilesFolder);
+        var localWorkFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, procLogFilesFolder);
 
         if (localWorkFileManager == null)
         {

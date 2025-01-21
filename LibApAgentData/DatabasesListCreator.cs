@@ -20,8 +20,7 @@ public sealed class DatabasesListCreator
 
 
     // ReSharper disable once ConvertToPrimaryConstructor
-    public DatabasesListCreator(EDatabaseSet databaseSet, IDatabaseManager agentClient,
-        EBackupType? backupType = null)
+    public DatabasesListCreator(EDatabaseSet databaseSet, IDatabaseManager agentClient, EBackupType? backupType = null)
     {
         _databaseSet = databaseSet;
         _agentClient = agentClient;

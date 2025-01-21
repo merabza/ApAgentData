@@ -69,9 +69,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             EDatabaseSet.AllDatabases => dbInfos.Select(s => s.Name).ToList(),
             EDatabaseSet.SystemDatabases => dbInfos.Where(w => w.IsSystemDatabase).Select(s => s.Name).ToList(),
             EDatabaseSet.AllUserDatabases => dbInfos.Where(w => !w.IsSystemDatabase).Select(s => s.Name).ToList(),
-            EDatabaseSet.DatabasesBySelection => dbInfos.Select(s => s.Name)
-                .Intersect(_par.DatabaseNames)
-                .ToList(),
+            EDatabaseSet.DatabasesBySelection => dbInfos.Select(s => s.Name).Intersect(_par.DatabaseNames).ToList(),
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -104,8 +102,8 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
             _logger.LogInformation("Backup database {databaseName}...", databaseName);
 
-            var createBackupResult =
-                await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, cancellationToken);
+            var createBackupResult = await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName,
+                _par.DbServerFoldersSetName, cancellationToken);
             if (createBackupResult.IsT1)
             {
                 Err.PrintErrorsOnConsole(createBackupResult.AsT1);
@@ -134,16 +132,15 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             }
 
             //მოქაჩვის პროცესის გაშვება
-            var downloadBackupToolAction = new DownloadBackupToolAction(_logger, _useConsole,
-                ProcessManager, downloadBackupParameters, _par.DownloadProcLineId, backupFileParameters,
-                _downloadTempExtension, _par.CompressProcLineId, _par.LocalSmartSchema, _par.UploadFileStorageData,
-                _par.CompressParameters, _par.UploadParameters);
+            var downloadBackupToolAction = new DownloadBackupToolAction(_logger, _useConsole, ProcessManager,
+                downloadBackupParameters, _par.DownloadProcLineId, backupFileParameters, _downloadTempExtension,
+                _par.CompressProcLineId, _par.LocalSmartSchema, _par.UploadFileStorageData, _par.CompressParameters,
+                _par.UploadParameters);
             if (ProcessManager is not null && ProcessManager.CheckCancellation())
                 return false;
 
             //აქ შემდეგი მოქმედების გამოძახება ხდება, იმიტომ რომ თითოეული ბაზისათვის ცალკე მოქმედებების ჯაჭვის აგება ხდება
-            var nextAction =
-                needDownload ? downloadBackupToolAction : downloadBackupToolAction.GetNextAction();
+            var nextAction = needDownload ? downloadBackupToolAction : downloadBackupToolAction.GetNextAction();
             await RunNextAction(nextAction, cancellationToken);
         }
 
@@ -153,9 +150,8 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
     private bool HaveCurrentPeriodFile(string processName, string dateMask, string extension)
     {
-        var currentPeriodFileChecker = new CurrentPeriodFileChecker(_jobStep.PeriodType,
-            _jobStep.StartAt, _jobStep.HoleStartTime, _jobStep.HoleEndTime, processName, dateMask, extension,
-            _par.LocalWorkFileManager);
+        var currentPeriodFileChecker = new CurrentPeriodFileChecker(_jobStep.PeriodType, _jobStep.StartAt,
+            _jobStep.HoleStartTime, _jobStep.HoleEndTime, processName, dateMask, extension, _par.LocalWorkFileManager);
         return currentPeriodFileChecker.HaveCurrentPeriodFile();
     }
 

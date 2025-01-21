@@ -12,10 +12,9 @@ public sealed class FilesSyncStepParameters
 {
     private FilesSyncStepParameters(
         //FileStorageData sourceFileStorage, 
-        FileStorageData destinationFileStorage,
-        ExcludeSet excludeSet, ExcludeSet? deleteDestinationFilesSet, FileManager sourceFileManager,
-        FileManager destinationFileManager, EMoveMethod useMethod, ReplacePairsSet? replacePairsSet,
-        string uploadTempExtension, string downloadTempExtension)
+        FileStorageData destinationFileStorage, ExcludeSet excludeSet, ExcludeSet? deleteDestinationFilesSet,
+        FileManager sourceFileManager, FileManager destinationFileManager, EMoveMethod useMethod,
+        ReplacePairsSet? replacePairsSet, string uploadTempExtension, string downloadTempExtension)
     {
         //SourceFileStorage = sourceFileStorage;
         DestinationFileStorage = destinationFileStorage;
@@ -77,8 +76,7 @@ public sealed class FilesSyncStepParameters
 
         if (destinationFileStorage == null)
         {
-            StShared.WriteErrorLine("destination File Storage not specified for Files Backup step", useConsole,
-                logger);
+            StShared.WriteErrorLine("destination File Storage not specified for Files Backup step", useConsole, logger);
             return null;
         }
 
@@ -112,8 +110,7 @@ public sealed class FilesSyncStepParameters
 
         if (string.IsNullOrWhiteSpace(excludeSetName))
         {
-            StShared.WriteErrorLine("excludeSetName does not specified for Files Sync step", useConsole,
-                logger);
+            StShared.WriteErrorLine("excludeSetName does not specified for Files Sync step", useConsole, logger);
             return null;
         }
 
@@ -121,8 +118,7 @@ public sealed class FilesSyncStepParameters
 
         if (excludeSet == null)
         {
-            StShared.WriteErrorLine("excludeSet does not created for Files Backup step", useConsole,
-                logger);
+            StShared.WriteErrorLine("excludeSet does not created for Files Backup step", useConsole, logger);
             return null;
         }
 
@@ -147,8 +143,7 @@ public sealed class FilesSyncStepParameters
 
         if (sourceFileManager == null)
         {
-            StShared.WriteErrorLine("sourceFileManager does not created for Files Backup step", useConsole,
-                logger);
+            StShared.WriteErrorLine("sourceFileManager does not created for Files Backup step", useConsole, logger);
             return null;
         }
 
@@ -187,8 +182,7 @@ public sealed class FilesSyncStepParameters
 
         return new FilesSyncStepParameters(
             //sourceFileStorage, 
-            destinationFileStorage, excludeSet,
-            deleteDestinationFilesSet, sourceFileManager, destinationFileManager, useMethod, replacePairsSet,
-            uploadTempExtension, downloadTempExtension);
+            destinationFileStorage, excludeSet, deleteDestinationFilesSet, sourceFileManager, destinationFileManager,
+            useMethod, replacePairsSet, uploadTempExtension, downloadTempExtension);
     }
 }

@@ -63,8 +63,7 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
         switch (_useMethod)
         {
             case EMoveMethod.Upload:
-                if (!_destinationFileManager.UploadFile(afterRootPath, file.FileName,
-                        preparedDestinationAfterRootPath,
+                if (!_destinationFileManager.UploadFile(afterRootPath, file.FileName, preparedDestinationAfterRootPath,
                         preparedFileName, _tempExtension))
                 {
                     //თუ ვერ აიტვირთა, გადავდივართ შემდეგზე
@@ -76,8 +75,7 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
                 break;
             case EMoveMethod.Download:
                 if (!FileManager.DownloadFile(afterRootPath, file.FileName, preparedDestinationAfterRootPath,
-                        preparedFileName,
-                        _tempExtension))
+                        preparedFileName, _tempExtension))
                 {
                     //თუ ვერ აიტვირთა, გადავდივართ შემდეგზე
                     var fileName = file.FileName;

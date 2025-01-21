@@ -26,8 +26,8 @@ public static class StringExtension
         return $"{fileNameWithoutExtension}{(i == 0 ? string.Empty : $"({i})")}{fileExtension}";
     }
 
-    public static string GetNewFileNameWithMaxLength(this string fileNameWithoutExtension, int i,
-        string fileExtension, int maxLength = 255)
+    public static string GetNewFileNameWithMaxLength(this string fileNameWithoutExtension, int i, string fileExtension,
+        int maxLength = 255)
     {
         var oneTry = fileNameWithoutExtension.GetNewFileName(i, fileExtension);
         var more = oneTry.Length - maxLength;

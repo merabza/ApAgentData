@@ -41,8 +41,8 @@ public sealed class FilesMoveStep : JobStep
     public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var filesMoveStepParameters = FilesMoveStepParameters.Create(logger, useConsole,
-            SourceFileStorageName, DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
+        var filesMoveStepParameters = FilesMoveStepParameters.Create(logger, useConsole, SourceFileStorageName,
+            DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
             string.IsNullOrWhiteSpace(MoveFolderMask) ? parameters.GetDateMask() : MoveFolderMask,
             parameters.GetUploadFileTempExtension(), parameters.GetDownloadFileTempExtension(),
             new FileStorages(parameters.FileStorages), new ExcludeSets(parameters.ExcludeSets),

@@ -14,10 +14,8 @@ using SystemToolsShared;
 
 namespace LibApAgentData.Models;
 
-public sealed class ApAgentParameters : IParametersWithFileStorages,
-    IParametersWithDatabaseServerConnections,
-    IParametersWithApiClients,
-    IParametersWithSmartSchemas, IParametersWithArchivers, IParametersWithExcludeSets
+public sealed class ApAgentParameters : IParametersWithFileStorages, IParametersWithDatabaseServerConnections,
+    IParametersWithApiClients, IParametersWithSmartSchemas, IParametersWithArchivers, IParametersWithExcludeSets
 {
     public const string DefaultUploadFileTempExtension = ".up!";
     public const string DefaultDownloadFileTempExtension = ".down!";
@@ -175,8 +173,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
     }
 
     public bool RunAllSteps(ILogger logger, IHttpClientFactory httpClientFactory, bool useConsole, string scheduleName,
-        IProcesses processes,
-        string procLogFilesFolder)
+        IProcesses processes, string procLogFilesFolder)
     {
         if (!JobSchedules.ContainsKey(scheduleName))
             StShared.WriteErrorLine($"Schedules with name {scheduleName} not found", true, logger);
@@ -184,8 +181,8 @@ public sealed class ApAgentParameters : IParametersWithFileStorages,
         //თუ აქ მოვედით შედულეს ბარიერი გავლილია, ან პირდაპირ არის მოთხოვნილი ამ შედულეს შესაბამისი ჯობების გაშევბა
         //შედულეს ბარიერის რეალიზება უნდა მოხდეს ბექპროცესის ტაიმერში
         var steps = GetSteps();
-        var jobStepNames = JobsBySchedules.Where(s => s.ScheduleName == scheduleName)
-            .OrderBy(o => o.SequentialNumber).Select(s => s.JobStepName).ToList();
+        var jobStepNames = JobsBySchedules.Where(s => s.ScheduleName == scheduleName).OrderBy(o => o.SequentialNumber)
+            .Select(s => s.JobStepName).ToList();
 
         var missingJobStepNames = jobStepNames.Except(steps.Keys).ToList();
 

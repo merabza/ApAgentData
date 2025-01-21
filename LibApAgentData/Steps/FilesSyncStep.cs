@@ -21,8 +21,8 @@ public sealed class FilesSyncStep : JobStep
     public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
-        var filesSyncStepParameters = FilesSyncStepParameters.Create(logger, useConsole,
-            SourceFileStorageName, DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
+        var filesSyncStepParameters = FilesSyncStepParameters.Create(logger, useConsole, SourceFileStorageName,
+            DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
             parameters.GetUploadFileTempExtension(), parameters.GetDownloadFileTempExtension(),
             new FileStorages(parameters.FileStorages), new ExcludeSets(parameters.ExcludeSets),
             new ReplacePairsSets(parameters.ReplacePairsSets));
