@@ -5,6 +5,8 @@ namespace LibApAgentData;
 
 public static class StringExtension
 {
+    public const string ApAgentAppKey = "8959D94B-596E-48C1-A644-29667AEE2250";
+
     public static string PrepareFileName(this string fileName)
     {
         const string restrictedSymbols = "<>:\"/\\|?*'«»";
