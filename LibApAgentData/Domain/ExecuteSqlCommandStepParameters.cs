@@ -27,7 +27,7 @@ public sealed class ExecuteSqlCommandStepParameters
     {
         var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
-            CancellationToken.None).Preserve().Result;
+            CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
 

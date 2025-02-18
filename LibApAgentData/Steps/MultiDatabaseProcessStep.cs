@@ -37,7 +37,7 @@ public sealed class MultiDatabaseProcessStep : JobStep
             return null;
         }
 
-        var par = MultiDatabaseProcessStepParameters.Create(logger, httpClientFactory, useConsole, DatabaseWebAgentName,
+        var par = MultiDatabaseProcessStepParameters.Create(logger, httpClientFactory, useConsole,
             new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
             new DatabaseServerConnections(parameters.DatabaseServerConnections), procLogFilesFolder);
 

@@ -22,12 +22,12 @@ public sealed class MultiDatabaseProcessStepParameters
     public FileManager LocalWorkFileManager { get; } //ლოკალური ფოლდერის მენეჯერი
 
     public static MultiDatabaseProcessStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
-        bool useConsole, string? webAgentName, ApiClients apiClients, string? databaseServerConnectionName,
+        bool useConsole, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
         var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
-            CancellationToken.None).Preserve().Result;
+            CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
 
