@@ -49,7 +49,6 @@ public sealed class MoveFiles : FolderProcessor
                 .ToList();
         var destinationAfterRootPath = CheckDestinationDirs(dirNames);
 
-
         var preparedFileName = file.FileName.PrepareFileName().Trim();
         var extension = Path.GetExtension(preparedFileName).Trim();
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(preparedFileName).Trim();

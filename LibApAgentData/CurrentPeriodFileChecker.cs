@@ -30,7 +30,6 @@ public sealed class CurrentPeriodFileChecker
         _workFileManager = workFileManager;
     }
 
-
     public bool HaveCurrentPeriodFile()
     {
         var nowDateTime = DateTime.Now;

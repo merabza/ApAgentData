@@ -20,7 +20,6 @@ public sealed class CompressToolAction : ProcessesToolAction
     private readonly UploadParameters _uploadParameters;
     private readonly bool _useConsole;
 
-
     // ReSharper disable once ConvertToPrimaryConstructor
     public CompressToolAction(ILogger logger, bool useConsole, ProcessManager? processManager, CompressParameters? par,
         UploadParameters uploadParameters, BackupFileParameters backupFileParameters, int compressProcLine,
@@ -50,7 +49,6 @@ public sealed class CompressToolAction : ProcessesToolAction
             StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", _useConsole, _logger);
             return false;
         }
-
 
         //თუ ასატვირთი ფაილსაცავი ქსელურია, აქაჩვა გვჭირდება
         if (!FileStat.IsFileSchema(uploadFileStorage.FileStoragePath))

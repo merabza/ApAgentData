@@ -17,7 +17,6 @@ public sealed class DuplicateFilesStorage
             s.FirstFile.FileFullName == fileNamesTuple.Item1 && s.SecondFile.FileFullName == fileNamesTuple.Item2);
     }
 
-
     private Tuple<string, string> GetOrderedTuple(string file1, string file2)
     {
         return string.CompareOrdinal(file1, file2) < 1

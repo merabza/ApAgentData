@@ -55,7 +55,6 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
         var extension = Path.GetExtension(newFileName);
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(newFileName);
 
-
         var i = 0;
         while (FileManager.FileExists(afterRootPath, fileNameWithoutExtension.GetNewFileName(i, extension)))
             i++;

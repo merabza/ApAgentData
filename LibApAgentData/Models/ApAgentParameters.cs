@@ -22,7 +22,6 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     public const string DefaultArchivingFileTempExtension = ".go!";
     public const string DefaultDateMask = "yyyyMMddHHmmss";
 
-
     public string? LogFolder { get; set; }
     public string? WorkFolder { get; set; }
     public string? ProcLogFilesFolder { get; set; }

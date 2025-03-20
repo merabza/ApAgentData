@@ -109,7 +109,6 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(uploadFileStorageName))
         {
             StShared.WriteErrorLine("uploadFileStorageName is not specified", useConsole, logger);
@@ -123,7 +122,6 @@ public sealed class DatabaseBackupStepParameters
             StShared.WriteErrorLine("uploadFileStorageData did not created", useConsole, logger);
             return null;
         }
-
 
         if (string.IsNullOrWhiteSpace(smartSchemaName))
         {
@@ -139,7 +137,6 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(localSmartSchemaName))
         {
             StShared.WriteErrorLine("localSmartSchemaName is not specified", useConsole, logger);
@@ -154,7 +151,6 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(uploadSmartSchemaName))
         {
             StShared.WriteErrorLine("uploadSmartSchemaName is not specified", useConsole, logger);
@@ -168,7 +164,6 @@ public sealed class DatabaseBackupStepParameters
             StShared.WriteErrorLine("uploadSmartSchema did not created", useConsole, logger);
             return null;
         }
-
 
         //წავშალოთ ზედმეტი ფაილები მონაცემთა ბაზის მხარეს
         var downloadFileManager =

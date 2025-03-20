@@ -75,7 +75,6 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(excludeSetName))
         {
             StShared.WriteErrorLine("excludeSetName is not specified", useConsole, logger);
@@ -89,7 +88,6 @@ public sealed class FilesBackupStepParameters
             StShared.WriteErrorLine("Can not create excludeSet for Files Backup step", useConsole, logger);
             return null;
         }
-
 
         if (string.IsNullOrWhiteSpace(uploadFileStorageName))
         {
@@ -105,20 +103,17 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(maskName))
         {
             StShared.WriteErrorLine("maskName does not specified", useConsole, logger);
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(dateMask))
         {
             StShared.WriteErrorLine("dateMask does not specified", useConsole, logger);
             return null;
         }
-
 
         if (string.IsNullOrWhiteSpace(localSmartSchemaName))
         {
@@ -134,7 +129,6 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(uploadSmartSchemaName))
         {
             StShared.WriteErrorLine("uploadSmartSchemaName does not specified", useConsole, logger);
@@ -149,7 +143,6 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-
         var uploadParameters = UploadParameters.Create(logger, useConsole, localPath, uploadFileStorage,
             uploadSmartSchema, uploadTempExtension, uploadProcLineId);
 
@@ -159,13 +152,11 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-
         if (string.IsNullOrWhiteSpace(archivingTempExtension))
         {
             StShared.WriteErrorLine("archivingTempExtension does not specified", useConsole, logger);
             return null;
         }
-
 
         if (!string.IsNullOrWhiteSpace(uploadTempExtension))
             return new FilesBackupStepParameters(localPath, maskName, dateMask, archiver, backupFolderPaths,

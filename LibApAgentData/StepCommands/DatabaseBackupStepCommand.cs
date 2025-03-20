@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DbTools;
-using DbTools.Models;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.Steps;
@@ -147,14 +146,12 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         return true;
     }
 
-
     private bool HaveCurrentPeriodFile(string processName, string dateMask, string extension)
     {
         var currentPeriodFileChecker = new CurrentPeriodFileChecker(_jobStep.PeriodType, _jobStep.StartAt,
             _jobStep.HoleStartTime, _jobStep.HoleEndTime, processName, dateMask, extension, _par.LocalWorkFileManager);
         return currentPeriodFileChecker.HaveCurrentPeriodFile();
     }
-
 
     private bool NeedDownload()
     {

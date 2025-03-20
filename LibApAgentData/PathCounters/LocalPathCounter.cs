@@ -16,7 +16,6 @@
 //      _defaultFolderName = defaultFolderName;
 //    }
 
-
 //    public string Count(string currentPath)
 //    {
 //      if (!string.IsNullOrWhiteSpace(currentPath)) 
@@ -26,7 +25,6 @@
 //      string workFolderCandidate = workFolder == null ? string.Empty : Path.Combine(workFolder, _defaultFolderName);
 //      return workFolderCandidate;
 //    }
-
 
 //  }
 //}

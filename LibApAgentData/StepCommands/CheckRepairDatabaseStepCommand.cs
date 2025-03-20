@@ -20,7 +20,6 @@ public sealed class CheckRepairDatabaseStepCommand : MultiDatabaseProcessesToolA
     {
     }
 
-
     protected override async Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
         CancellationToken cancellationToken = default)
     {

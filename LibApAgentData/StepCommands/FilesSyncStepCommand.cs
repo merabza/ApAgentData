@@ -70,7 +70,6 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
             if (!prepareFolderFileNames.Run())
                 return ValueTask.FromResult(false);
 
-
             CopyAndReplaceFiles copyAndReplaceFiles = new(_logger, _par.SourceFileManager, _par.DestinationFileManager,
                 _par.UseMethod, _par.UploadTempExtension, _par.DownloadTempExtension, _par.ExcludeSet,
                 destinationFileMaxLength);

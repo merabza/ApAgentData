@@ -94,7 +94,6 @@ public sealed class FilesSyncStepParameters
             return null;
         }
 
-
         var destinationIsLocal = destinationFileStorage.IsFileSchema();
         if (destinationIsLocal is null)
         {
@@ -178,7 +177,6 @@ public sealed class FilesSyncStepParameters
         ReplacePairsSet? replacePairsSet = null;
         if (!string.IsNullOrWhiteSpace(replacePairsSetName))
             replacePairsSet = replacePairsSets.GetReplacePairsSetByKey(replacePairsSetName);
-
 
         return new FilesSyncStepParameters(
             //sourceFileStorage, 

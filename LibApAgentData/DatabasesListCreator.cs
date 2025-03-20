@@ -18,7 +18,6 @@ public sealed class DatabasesListCreator
     private readonly EBackupType? _backupType;
     private readonly EDatabaseSet _databaseSet;
 
-
     // ReSharper disable once ConvertToPrimaryConstructor
     public DatabasesListCreator(EDatabaseSet databaseSet, IDatabaseManager agentClient, EBackupType? backupType = null)
     {

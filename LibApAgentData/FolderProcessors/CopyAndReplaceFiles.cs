@@ -14,7 +14,6 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
 {
     private readonly Dictionary<string, List<MyFileInfo>> _checkedFolderFiles = [];
 
-
     private readonly List<string> _checkedFolders = [];
     private readonly FileManager _destinationFileManager;
     private readonly int _fileMaxLength;
@@ -46,7 +45,6 @@ public sealed class CopyAndReplaceFiles : FolderProcessor
             ? []
             : afterRootPath.PrepareAfterRootPath(FileManager.DirectorySeparatorChar);
         var preparedDestinationAfterRootPath = CheckDestinationDirs(dirNames);
-
 
         var preparedFileName = file.FileName.PreparedFileNameConsideringLength(_fileMaxLength);
 

@@ -97,7 +97,6 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         var nextAction = NeedUpload(uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
         await RunNextAction(nextAction, cancellationToken);
 
-
         return true;
     }
 
@@ -115,7 +114,6 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
             StShared.WriteWarningLine("uploadFileStorage.FileStoragePath does not specified", _useConsole, _logger);
             return false;
         }
-
 
         //თუ ასატვირთი ფაილსაცავი ქსელურია, აქაჩვა გვჭირდება
         if (!FileStat.IsFileSchema(uploadFileStorage.FileStoragePath))

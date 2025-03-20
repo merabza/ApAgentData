@@ -25,7 +25,6 @@ public sealed class UploadParameters
     public int UploadProcLineId { get; }
     public string LocalPath { get; }
 
-
     public static UploadParameters? Create(ILogger logger, bool useConsole, string localPath,
         FileStorageData uploadFileStorage, SmartSchema uploadSmartSchema, string? uploadTempExtension,
         int uploadProcLine)
@@ -46,7 +45,6 @@ public sealed class UploadParameters
             StShared.WriteErrorLine("UploadParameters: workFileManager does not created", useConsole, logger);
             return null;
         }
-
 
         if (!string.IsNullOrWhiteSpace(uploadTempExtension))
 

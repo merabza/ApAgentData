@@ -21,7 +21,6 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
     private readonly UploadParameters _uploadParameters;
     private readonly bool _useConsole;
 
-
     // ReSharper disable once ConvertToPrimaryConstructor
     public DownloadBackupToolAction(ILogger logger, bool useConsole, ProcessManager? processManager,
         DownloadBackupParameters downloadBackupParameters, int downloadProcLineId,

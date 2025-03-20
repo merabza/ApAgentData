@@ -37,7 +37,6 @@ public sealed class FilesMoveStep : JobStep
 
     public List<string> PriorityPoints { get; set; } = []; //პრიორიტეტული ფოლდერების ჩამონათვალი.
 
-
     public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {

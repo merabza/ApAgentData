@@ -36,12 +36,10 @@ public sealed class JobSchedule : ItemData
     } //Daily თუ შედულეს ტიპი არჩეულია Daily, მაშინ ეს მთელი რიცხვი მუთითებს რამდენ დღეში ერთხელ უნდა გაეშვას პროცესი.
     //თუ მომავალში გამოყენებული იქნება Weekly, ან Monthly შედულეს ტიპი, მაშინ ეს რიცხვი შესაბამისად აღნიშნავს რამდენ კვირაში ერთხელ და რამდენ თვეში ერთხელ უნდა ჩაირთოს პროცესი
 
-
     //თუ არჩეული არ არის ერთჯერადი შესრულება, შესაძლებელია განვსაზღვროთ რა პერიოდის განმავლობაში იმუშავებს ეს შედულე.
     //შესაძლებელია დაფიქსირდეს მხოლოდ საწყისი თარიღი. ან ორივე საწყისი და საბოლოო თარიღები
     public DateTime DurationStartDate { get; set; } //AtStart //Daily
     public DateTime DurationEndDate { get; set; } //AtStart //Daily
-
 
     //public DateTime ActiveStartDate { get; set; } //
     //public DateTime ActiveEndDate { get; set; } //Daily
@@ -74,7 +72,6 @@ public sealed class JobSchedule : ItemData
     } //Daily მიუთითებს საათები გამოიყენება ყოველი გაშვების ინტერვალის დასადგენად, თუ წუთები
 
     public int FreqSubDayInterval { get; set; } //Daily ყოველი რამდენი საათის თუ წუთების შემდეგ უნდა მოხდეს გაშვება
-
 
     //public bool StopAtEndDayTime { get; set; } //Daily
 

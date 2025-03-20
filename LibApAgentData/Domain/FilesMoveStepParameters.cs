@@ -55,7 +55,6 @@ public sealed class FilesMoveStepParameters
     //public Dictionary<string, string> PriorityFolderPaths { get; set; } //პრიორიტეტული ფოლდერების ჩამონათვალი. (სახელი გამოიყენება ნიღბის კოდად)
     public List<string> PriorityPoints { get; } //პრიორიტეტული ფოლდერების ჩამონათვალი.
 
-
     public static FilesMoveStepParameters? Create(ILogger logger, bool useConsole, string? sourceFileStorageName,
         string? destinationFileStorageName, string? excludeSetName, string? deleteDestinationFilesSetName,
         string? replacePairsSetName, string moveFolderMask, string uploadTempExtension, string downloadTempExtension,
@@ -111,7 +110,6 @@ public sealed class FilesMoveStepParameters
             StShared.WriteErrorLine("could not be determined source is File Schema or not", useConsole, logger);
             return null;
         }
-
 
         var destinationIsLocal = destinationFileStorage.IsFileSchema();
         if (destinationIsLocal is null)
@@ -196,7 +194,6 @@ public sealed class FilesMoveStepParameters
         ReplacePairsSet? replacePairsSet = null;
         if (!string.IsNullOrWhiteSpace(replacePairsSetName))
             replacePairsSet = replacePairsSets.GetReplacePairsSetByKey(replacePairsSetName);
-
 
         return new FilesMoveStepParameters(sourceFileStorage, sourceIsLocal.Value, destinationFileStorage,
             destinationIsLocal.Value, excludeSet, deleteDestinationFilesSet, sourceFileManager, destinationFileManager,

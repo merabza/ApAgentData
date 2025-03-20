@@ -33,7 +33,6 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         _par = par;
     }
 
-
     private async ValueTask<List<string>> GetDatabaseNames(CancellationToken cancellationToken = default)
     {
         List<string> databaseNames;
@@ -50,7 +49,6 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 
         return databaseNames;
     }
-
 
     protected override async ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
@@ -97,7 +95,6 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 
         return all;
     }
-
 
     protected virtual Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
         CancellationToken cancellationToken = default)
