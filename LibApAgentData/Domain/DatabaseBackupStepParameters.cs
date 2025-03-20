@@ -63,7 +63,7 @@ public sealed class DatabaseBackupStepParameters
     public static DatabaseBackupStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string? localPath,
-        DatabaseBackupParametersModel? databaseBackupParameters, EDatabaseSet databaseSet, List<string> databaseNames,
+        DatabaseParameters? databaseBackupParameters, EDatabaseSet databaseSet, List<string> databaseNames,
         string? fileStorageName, string? uploadFileStorageName, string? smartSchemaName, string? localSmartSchemaName,
         string? uploadSmartSchemaName, string? archiverName, FileStorages fileStorages, SmartSchemas smartSchemas,
         Archivers archivers, int downloadProcLineId, int compressProcLineId, int uploadProcLineId,
@@ -213,18 +213,18 @@ public sealed class DatabaseBackupStepParameters
 
         var dbBackupParameters = DatabaseBackupParametersDomain.Create(databaseBackupParameters);
 
-        //if (dbBackupParameters is null)
-        //{
-        //    StShared.WriteErrorLine("Backup Parameters does not created", useConsole, logger);
-        //    return null;
-        //}
+        if (databaseBackupParameters.BackupType is null)
+        {
+            StShared.WriteErrorLine("databaseBackupParameters.BackupType is not specified", useConsole, logger);
+            return null;
+        }
 
         var uploadParameters = UploadParameters.Create(logger, useConsole, localPath, uploadFileStorageData,
             uploadSmartSchema, uploadTempExtension, uploadProcLineId);
 
         if (uploadParameters is not null)
             return new DatabaseBackupStepParameters(createDatabaseManagerResult.AsT0, localPath, localWorkFileManager,
-                databaseBackupParameters.BackupType, databaseSet, databaseNames, downloadFileStorageData,
+                databaseBackupParameters.BackupType.Value, databaseSet, databaseNames, downloadFileStorageData,
                 uploadFileStorageData, downloadSideSmartSchema, localSmartSchema, downloadFileManager,
                 dbBackupParameters, downloadProcLineId, compressProcLineId, compressParameters, uploadParameters,
                 dbServerFoldersSetName);

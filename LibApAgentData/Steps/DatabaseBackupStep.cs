@@ -20,7 +20,7 @@ public sealed class DatabaseBackupStep : JobStep
     public string? DatabaseServerConnectionName { get; set; } //ბაზასთან დაკავშირების პარამეტრების ჩანაწერის სახელი
     //public string? DatabaseWebAgentName { get; set; } //შეიძლება ბაზასთან დასაკავშირებლად გამოვიყენოთ ვებაგენტი
 
-    public DatabaseBackupParametersModel? DatabaseBackupParameters { get; set; }
+    public DatabaseParameters? DatabaseBackupParameters { get; set; }
 
     public EDatabaseSet DatabaseSet { get; set; } //ბაზების სიმრავლე, რომლისთვისაც უნდა გაეშვას ეს პროცესი.
 

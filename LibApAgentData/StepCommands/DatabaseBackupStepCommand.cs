@@ -61,7 +61,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         var databaseInfos = getDatabaseNamesResult.AsT0;
 
         var dbInfos = databaseInfos.Where(w =>
-            w.RecoveryModel != EDatabaseRecovery.Simple || _par.BackupType != EBackupType.TrLog);
+            w.RecoveryModel != EDatabaseRecoveryModel.Simple || _par.BackupType != EBackupType.TrLog);
 
         //დადგინდეს დასაბექაპებელი ბაზების სია
         var databaseNames = _par.DatabaseSet switch

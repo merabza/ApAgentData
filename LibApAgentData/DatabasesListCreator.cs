@@ -52,6 +52,6 @@ public sealed class DatabasesListCreator
 
         return databaseInfos.Where(w =>
             (!sysBaseDoesMatter || w.IsSystemDatabase == checkSysBase) &&
-            (w.RecoveryModel != EDatabaseRecovery.Simple || _backupType != EBackupType.TrLog)).ToList();
+            (w.RecoveryModel != EDatabaseRecoveryModel.Simple || _backupType != EBackupType.TrLog)).ToList();
     }
 }
