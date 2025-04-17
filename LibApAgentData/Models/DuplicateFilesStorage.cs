@@ -45,8 +45,8 @@ public sealed class DuplicateFilesStorage
             FileModel? file2 = null;
             foreach (var duplicateFiles in _duplicateFiles)
             {
-                file1 = duplicateFiles.Files.SingleOrDefault(
-                    s => s.FileFullName == comparedFiles.FirstFile.FileFullName);
+                file1 =
+                    duplicateFiles.Files.SingleOrDefault(s => s.FileFullName == comparedFiles.FirstFile.FileFullName);
                 file2 = duplicateFiles.Files.SingleOrDefault(s =>
                     s.FileFullName == comparedFiles.SecondFile.FileFullName);
                 if (file1 != null && file2 == null)
