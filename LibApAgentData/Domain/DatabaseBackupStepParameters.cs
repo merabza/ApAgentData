@@ -75,7 +75,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var localWorkFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, localPath);
+        var localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
 
         if (localWorkFileManager is null)
         {
@@ -83,7 +83,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
+        var createDatabaseManagerResult = DatabaseManagersFactory.CreateDatabaseManager(logger, useConsole,
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
             CancellationToken.None).Result;
 
@@ -167,7 +167,7 @@ public sealed class DatabaseBackupStepParameters
 
         //წავშალოთ ზედმეტი ფაილები მონაცემთა ბაზის მხარეს
         var downloadFileManager =
-            FileManagersFabricExt.CreateFileManager(useConsole, logger, null, downloadFileStorageData, true);
+            FileManagersFactoryExt.CreateFileManager(useConsole, logger, null, downloadFileStorageData, true);
 
         if (downloadFileManager is null)
         {

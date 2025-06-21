@@ -25,13 +25,13 @@ public sealed class MultiDatabaseProcessStepParameters
         bool useConsole, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
-        var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
+        var createDatabaseManagerResult = DatabaseManagersFactory.CreateDatabaseManager(logger, useConsole,
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
             CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
 
-        var localWorkFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, procLogFilesFolder);
+        var localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, procLogFilesFolder);
 
         if (localWorkFileManager != null)
             return new MultiDatabaseProcessStepParameters(createDatabaseManagerResult.AsT0, localWorkFileManager);

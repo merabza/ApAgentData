@@ -25,7 +25,7 @@ public sealed class ExecuteSqlCommandStepParameters
         bool useConsole, string? executeQueryCommand, string? webAgentName, ApiClients apiClients,
         string? databaseServerConnectionName, DatabaseServerConnections databaseServerConnections)
     {
-        var createDatabaseManagerResult = DatabaseManagersFabric.CreateDatabaseManager(logger, useConsole,
+        var createDatabaseManagerResult = DatabaseManagersFactory.CreateDatabaseManager(logger, useConsole,
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
             CancellationToken.None).Result;
 

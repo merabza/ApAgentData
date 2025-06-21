@@ -4,7 +4,7 @@
 //namespace LibApAgentData.PathCounters
 //{
 
-//    public static class LocalPathCounterFabric
+//    public static class LocalPathCounterFactory
 //    {
 
 //        public static LocalPathCounter CreateFileBackupsLocalPathCounter(ApAgentParameters parameters,

@@ -30,7 +30,7 @@ public sealed class UploadParameters
         int uploadProcLine)
     {
         var uploadFileManager =
-            FileManagersFabricExt.CreateFileManager(useConsole, logger, localPath, uploadFileStorage);
+            FileManagersFactoryExt.CreateFileManager(useConsole, logger, localPath, uploadFileStorage);
 
         if (uploadFileManager is null)
         {
@@ -38,7 +38,7 @@ public sealed class UploadParameters
             return null;
         }
 
-        var workFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, localPath);
+        var workFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
 
         if (workFileManager is null)
         {

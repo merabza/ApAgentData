@@ -25,7 +25,7 @@ public sealed class DownloadBackupParameters
             return null;
         }
 
-        var localFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, localPath);
+        var localFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
 
         if (localFileManager is null)
         {
@@ -34,7 +34,7 @@ public sealed class DownloadBackupParameters
         }
 
         var downloadFileManager =
-            FileManagersFabricExt.CreateFileManager(useConsole, logger, localPath, downloadFileStorage);
+            FileManagersFactoryExt.CreateFileManager(useConsole, logger, localPath, downloadFileStorage);
 
         if (downloadFileManager is null)
         {

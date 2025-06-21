@@ -59,7 +59,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var localWorkFileManager = FileManagersFabric.CreateFileManager(useConsole, logger, localPath);
+        var localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
 
         if (localWorkFileManager is null)
         {
@@ -67,7 +67,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var archiver = ArchiverFabric.CreateArchiver(logger, useConsole, archivers, archiverName);
+        var archiver = ArchiverFactory.CreateArchiver(logger, useConsole, archivers, archiverName);
 
         if (archiver is null)
         {

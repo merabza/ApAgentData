@@ -150,11 +150,11 @@ public sealed class FilesMoveStepParameters
         if (sourceIsLocal.Value)
             //შევქმნათ ლოკალური გამგზავნი ფაილ მენეჯერი
             sourceFileManager =
-                FileManagersFabric.CreateFileManager(useConsole, logger, sourceFileStorage.FileStoragePath);
+                FileManagersFactory.CreateFileManager(useConsole, logger, sourceFileStorage.FileStoragePath);
         else
             //თუ წყარო მოშორებულია
             //შევქმნათ ჩამოსატვირთი ფაილ მენეჯერი
-            sourceFileManager = FileManagersFabricExt.CreateFileManager(useConsole, logger,
+            sourceFileManager = FileManagersFactoryExt.CreateFileManager(useConsole, logger,
                 destinationFileStorage.FileStoragePath, sourceFileStorage);
 
         if (sourceFileManager == null)
@@ -170,11 +170,11 @@ public sealed class FilesMoveStepParameters
         if (destinationIsLocal.Value)
             //შევქმნათ ლოკალური მიმღები ფაილ მენეჯერი
             destinationFileManager =
-                FileManagersFabric.CreateFileManager(useConsole, logger, destinationFileStorage.FileStoragePath);
+                FileManagersFactory.CreateFileManager(useConsole, logger, destinationFileStorage.FileStoragePath);
         else
             //თუ მიზანი მოშორებულია
             //შევქმნათ ასატვირთი ფაილ მენეჯერი
-            destinationFileManager = FileManagersFabricExt.CreateFileManager(useConsole, logger,
+            destinationFileManager = FileManagersFactoryExt.CreateFileManager(useConsole, logger,
                 sourceFileStorage.FileStoragePath, destinationFileStorage);
 
         if (destinationFileManager == null)
