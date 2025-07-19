@@ -31,7 +31,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         //სანამ რაიმეს გადაწერას დავიწყებთ, დავრწმუნდეთ, რომ მიზნის მხარეს არ არის შემორჩენილი ველი დროებითი ფაილები
         if (_par.DeleteDestinationFilesSet != null)
         {
-            DeleteTempFiles deleteTempFiles = new(_par.DestinationFileManager,
+            var deleteTempFiles = new DeleteTempFiles(_par.DestinationFileManager,
                 [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
@@ -54,8 +54,8 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
 
         if (_par.ReplacePairsSet != null)
         {
-            ChangeFilesWithRestrictPatterns changeFilesWithManyDots =
-                new(_par.SourceFileManager, _par.ReplacePairsSet.PairsDict);
+            var changeFilesWithManyDots =
+                new ChangeFilesWithRestrictPatterns(_par.SourceFileManager, _par.ReplacePairsSet.PairsDict);
             if (!changeFilesWithManyDots.Run())
                 return ValueTask.FromResult(false);
         }
@@ -65,7 +65,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         //წინასწარ დამუშავდეს ადგილზევე zip ფაილები
         if (_par.SourceIsLocal)
         {
-            UnZipOnPlace unZipOnPlace = new(_logger, _useConsole, _par.SourceFileManager);
+            var unZipOnPlace = new UnZipOnPlace(_logger, _useConsole, _par.SourceFileManager);
             if (!unZipOnPlace.Run())
                 return ValueTask.FromResult(false);
         }
@@ -85,7 +85,7 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                     return ValueTask.FromResult(false);
             }
 
-            MoveFiles moveFiles = new(_logger, _par.SourceFileManager, _par.DestinationFileManager, moveFolderName,
+            var moveFiles = new MoveFiles(_logger, _par.SourceFileManager, _par.DestinationFileManager, moveFolderName,
                 _par.UseMethod, _par.UploadTempExtension, _par.DownloadTempExtension, _par.ExcludeSet,
                 _par.MaxFolderCount,
                 _par.DestinationFileStorage.FileNameMaxLength == 0
@@ -99,22 +99,22 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         if (!_par.DestinationIsLocal)
             return ValueTask.FromResult(true);
 
-        DuplicateFilesFinder duplicateFilesFinder = new(_par.DestinationFileManager);
+        var duplicateFilesFinder = new DuplicateFilesFinder(_par.DestinationFileManager);
         if (!duplicateFilesFinder.Run())
             return ValueTask.FromResult(false);
 
-        MultiDuplicatesFinder multiDuplicatesFinder = new(_useConsole, duplicateFilesFinder.FileList);
+        var multiDuplicatesFinder = new MultiDuplicatesFinder(_useConsole, duplicateFilesFinder.FileList);
         if (!multiDuplicatesFinder.Run())
             return ValueTask.FromResult(false);
 
-        DuplicateFilesRemover duplicateFilesRemover =
-            new(_useConsole, multiDuplicatesFinder.FileList, _par.PriorityPoints);
+        var duplicateFilesRemover =
+            new DuplicateFilesRemover(_useConsole, multiDuplicatesFinder.FileList, _par.PriorityPoints);
 
         if (!duplicateFilesRemover.Run())
             return ValueTask.FromResult(false);
 
         //ცარიელი ფოლდერების წაშლა
-        EmptyFoldersRemover emptyFoldersRemover = new(_par.DestinationFileManager);
+        var emptyFoldersRemover = new EmptyFoldersRemover(_par.DestinationFileManager);
         return ValueTask.FromResult(emptyFoldersRemover.Run());
     }
 }

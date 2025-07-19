@@ -24,7 +24,7 @@ public sealed class MultiDatabaseProcessStep : JobStep
     public EDatabaseSet DatabaseSet { get; set; } //ბაზების სიმრავლე, რომლისთვისაც უნდა გაეშვას ეს პროცესი.
 
     //თუ DatabaseSet-ის მნიშვნელობაა DatabasesBySelection, მაშინ მონაცემთა ბაზების სახელები უნდა ავიღოთ ქვემოთ მოცემული სიიდან
-    public List<string> DatabaseNames { get; set; } = new();
+    public List<string> DatabaseNames { get; set; } = [];
 
     public override ProcessesToolAction? GetToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)

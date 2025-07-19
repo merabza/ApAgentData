@@ -45,7 +45,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
 
         Console.WriteLine($"Analyze file {fileFullName}");
 
-        FileModel fileModel = new(fileFullName, file.FileLength);
+        var fileModel = new FileModel(fileFullName, file.FileLength);
         FileList.Files.Add(fileModel);
 
         var filesWithSameSize = FileList.Files.Where(w => w.Size == fileModel.Size).ToList();

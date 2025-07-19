@@ -4,5 +4,5 @@ namespace LibApAgentData.Models;
 
 public sealed class DuplicateFilesModel
 {
-    public List<FileModel> Files { get; set; } = new();
+    public List<FileModel> Files { get; set; } = [];
 }

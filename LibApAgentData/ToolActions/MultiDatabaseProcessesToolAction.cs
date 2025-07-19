@@ -42,7 +42,8 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         }
         else
         {
-            DatabasesListCreator databasesListCreator = new(_multiDatabaseProcessStep.DatabaseSet, _par.AgentClient);
+            var databasesListCreator =
+                new DatabasesListCreator(_multiDatabaseProcessStep.DatabaseSet, _par.AgentClient);
             var dbList = await databasesListCreator.LoadDatabaseNames(cancellationToken);
             databaseNames = dbList.Select(s => s.Name).ToList();
         }
@@ -62,7 +63,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         var all = true;
         foreach (var databaseName in databaseNames)
         {
-            ProcLogFile procLogFile = new(_useConsole, _logger, $"{_stepName}_{databaseName}_",
+            var procLogFile = new ProcLogFile(_useConsole, _logger, $"{_stepName}_{databaseName}_",
                 _multiDatabaseProcessStep.PeriodType, _multiDatabaseProcessStep.StartAt,
                 _multiDatabaseProcessStep.HoleStartTime, _multiDatabaseProcessStep.HoleEndTime, _procLogFilesFolder,
                 _par.LocalWorkFileManager);

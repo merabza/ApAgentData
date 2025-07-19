@@ -7,8 +7,8 @@ namespace LibApAgentData.Models;
 
 public sealed class DuplicateFilesStorage
 {
-    private readonly List<ComparedFilesModel> _comparedFiles = new();
-    private readonly List<DuplicateFilesModel> _duplicateFiles = new();
+    private readonly List<ComparedFilesModel> _comparedFiles = [];
+    private readonly List<DuplicateFilesModel> _duplicateFiles = [];
 
     public ComparedFilesModel? GetComparedFiles(string fileFullName, string modelFileFullName)
     {
@@ -17,14 +17,14 @@ public sealed class DuplicateFilesStorage
             s.FirstFile.FileFullName == fileNamesTuple.Item1 && s.SecondFile.FileFullName == fileNamesTuple.Item2);
     }
 
-    private Tuple<string, string> GetOrderedTuple(string file1, string file2)
+    private static Tuple<string, string> GetOrderedTuple(string file1, string file2)
     {
         return string.CompareOrdinal(file1, file2) < 1
             ? new Tuple<string, string>(file1, file2)
             : new Tuple<string, string>(file2, file1);
     }
 
-    private Tuple<FileModel, FileModel> GetOrderedTuple(FileModel fileModel1, FileModel fileModel2)
+    private static Tuple<FileModel, FileModel> GetOrderedTuple(FileModel fileModel1, FileModel fileModel2)
     {
         return string.CompareOrdinal(fileModel1.FileFullName, fileModel2.FileFullName) < 1
             ? new Tuple<FileModel, FileModel>(fileModel1, fileModel2)
@@ -55,17 +55,17 @@ public sealed class DuplicateFilesStorage
                     break;
                 }
 
-                if (file1 == null && file2 != null)
-                {
-                    duplicateFiles.Files.Add(comparedFiles.FirstFile);
-                    break;
-                }
+                if (file1 != null || file2 == null) 
+                    continue;
+
+                duplicateFiles.Files.Add(comparedFiles.FirstFile);
+                break;
             }
 
             if (file1 == null && file2 == null)
                 _duplicateFiles.Add(new DuplicateFilesModel
                 {
-                    Files = new List<FileModel> { comparedFiles.FirstFile, comparedFiles.SecondFile }
+                    Files = [comparedFiles.FirstFile, comparedFiles.SecondFile]
                 });
         }
     }
@@ -78,7 +78,7 @@ public sealed class DuplicateFilesStorage
                 continue;
 
             FileModel? saveFile = null;
-            List<FileModel> priorityFiles = new();
+            List<FileModel> priorityFiles = [];
             if (priorityList is not null)
                 foreach (var p in priorityList)
                     priorityFiles.AddRange(duplicateFiles.Files.Where(w => w.FileFullName.StartsWith(p)));

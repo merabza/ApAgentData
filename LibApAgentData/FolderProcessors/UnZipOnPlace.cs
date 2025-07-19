@@ -40,7 +40,7 @@ public sealed class UnZipOnPlace : FolderProcessor
         FileManager.CreateDirectory(afterRootPath, newFolderName);
         var newDirFullName = FileManager.GetPath(afterRootPath, newFolderName);
 
-        ZipClassArchiver archiver = new(_logger, _useConsole, ".zip");
+        var archiver = new ZipClassArchiver(_logger, _useConsole, ".zip");
 
         Console.WriteLine($"Unzip {zipFileFullName}");
 

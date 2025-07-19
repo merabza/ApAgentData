@@ -96,10 +96,9 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
 
     public Dictionary<string, JobStep> GetSteps()
     {
-        Dictionary<string, JobStep> steps = new();
-
-        foreach (var kvp in DatabaseBackupSteps)
-            steps.Add(kvp.Key, kvp.Value);
+        var steps =
+            DatabaseBackupSteps.ToDictionary<KeyValuePair<string, DatabaseBackupStep>, string, JobStep>(kvp => kvp.Key,
+                kvp => kvp.Value);
 
         foreach (var kvp in MultiDatabaseProcessSteps)
             steps.Add(kvp.Key, kvp.Value);

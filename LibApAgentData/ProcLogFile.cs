@@ -47,14 +47,14 @@ public sealed class ProcLogFile
     public void CreateNow(string withText)
     {
         var fileName = Path.Combine(_workFolder, _maskManager.GetFileNameForDate(DateTime.Now, _extension));
-        FileInfo checkFile = new(fileName);
-        if (checkFile.Directory != null && !checkFile.Directory.Exists)
+        var checkFile = new FileInfo(fileName);
+        if (checkFile.Directory is { Exists: false })
             checkFile.Directory.Create();
-        if (checkFile.Directory == null || !checkFile.Directory.Exists)
+        if (checkFile.Directory is not { Exists: true })
         {
             lock (_syncObject)
             {
-                _logger.LogError($"File {fileName} cannot be created");
+                _logger.LogError("File {fileName} cannot be created", fileName);
             }
 
             return;
@@ -92,7 +92,7 @@ public sealed class ProcLogFile
 
     public void DeleteOldFiles()
     {
-        DirectoryInfo wfd = new(_workFolder);
+        var wfd = new DirectoryInfo(_workFolder);
         foreach (var file in wfd.GetFiles(_maskManager.GetFullMask(_extension)))
         {
             if (file.FullName == _justCreatedFileName)
@@ -103,7 +103,7 @@ public sealed class ProcLogFile
 
     internal bool HaveCurrentPeriodFile()
     {
-        CurrentPeriodFileChecker currentPeriodFileChecker = new(_periodType, _startAt, _holeStartTime, _holeEndTime,
+        var currentPeriodFileChecker = new CurrentPeriodFileChecker(_periodType, _startAt, _holeStartTime, _holeEndTime,
             _processName, _dateMask, _extension, _workFileManager);
         return currentPeriodFileChecker.HaveCurrentPeriodFile();
     }
