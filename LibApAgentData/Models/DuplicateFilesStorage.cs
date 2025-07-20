@@ -55,7 +55,7 @@ public sealed class DuplicateFilesStorage
                     break;
                 }
 
-                if (file1 != null || file2 == null) 
+                if (file1 != null || file2 == null)
                     continue;
 
                 duplicateFiles.Files.Add(comparedFiles.FirstFile);
