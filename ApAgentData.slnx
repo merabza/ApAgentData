@@ -4,8 +4,16 @@
         <Project Path="../ConnectionTools/CToolsFactory/CToolsFactory.csproj" />
         <Project Path="../ConnectionTools/FTPTools/FTPTools.csproj" />
     </Folder>
-    <Folder Name="/DatabaseTools/" />
+    <Folder Name="/DatabaseTools/">
+        <Project Path="../DatabaseTools/DbTools/DbTools.csproj" />
+        <Project Path="../DatabaseTools/DbToolsFactory/DbToolsFactory.csproj" />
+        <Project Path="../DatabaseTools/OleDbTools/OleDbTools.csproj" />
+        <Project Path="../DatabaseTools/SqLiteDbTools/SqLiteDbTools.csproj" />
+        <Project Path="../DatabaseTools/SqlServerDbTools/SqlServerDbTools.csproj" />
+    </Folder>
     <Folder Name="/ParametersManagement/">
+        <Project Path="../ParametersManagement/LibApiClientParameters/LibApiClientParameters.csproj" />
+        <Project Path="../ParametersManagement/LibDatabaseParameters/LibDatabaseParameters.csproj" />
         <Project Path="../ParametersManagement/LibFileParameters/LibFileParameters.csproj" />
         <Project Path="../ParametersManagement/LibParameters/LibParameters.csproj" />
     </Folder>
