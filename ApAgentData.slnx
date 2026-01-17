@@ -1,4 +1,10 @@
 <Solution>
+    <Folder Name="/ConnectionTools/">
+        <Project Path="../ConnectionTools/ConnectTools/ConnectTools.csproj" />
+        <Project Path="../ConnectionTools/CToolsFactory/CToolsFactory.csproj" />
+        <Project Path="../ConnectionTools/FTPTools/FTPTools.csproj" />
+    </Folder>
+    <Folder Name="/DatabaseTools/" />
     <Folder Name="/ParametersManagement/">
         <Project Path="../ParametersManagement/LibFileParameters/LibFileParameters.csproj" />
         <Project Path="../ParametersManagement/LibParameters/LibParameters.csproj" />
@@ -14,7 +20,9 @@
     <Folder Name="/Tests/">
     </Folder>
     <Folder Name="/ToolsManagement/">
+        <Project Path="../ToolsManagement/ApiClientsManagement/ApiClientsManagement.csproj" />
         <Project Path="../ToolsManagement/CompressionManagement/CompressionManagement.csproj" />
+        <Project Path="../ToolsManagement/DatabasesManagement/DatabasesManagement.csproj" />
         <Project Path="../ToolsManagement/FileManagersMain/FileManagersMain.csproj" />
         <Project Path="../ToolsManagement/LibToolActions/LibToolActions.csproj" />
     </Folder>
