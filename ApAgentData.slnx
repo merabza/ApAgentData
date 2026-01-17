@@ -1,5 +1,7 @@
 <Solution>
-    <Folder Name="/ParametersManagement/" />
+    <Folder Name="/ParametersManagement/">
+        <Project Path="../ParametersManagement/LibFileParameters/LibFileParameters.csproj" />
+    </Folder>
     <Folder Name="/Solution Items/">
         <File Path=".editorconfig" />
         <File Path="Directory.Build.props" />
