@@ -1,16 +1,22 @@
 <Solution>
     <Folder Name="/ParametersManagement/">
         <Project Path="../ParametersManagement/LibFileParameters/LibFileParameters.csproj" />
+        <Project Path="../ParametersManagement/LibParameters/LibParameters.csproj" />
     </Folder>
     <Folder Name="/Solution Items/">
         <File Path=".editorconfig" />
         <File Path="Directory.Build.props" />
         <File Path="Directory.Packages.props" />
     </Folder>
+    <Folder Name="/SystemTools/">
+        <Project Path="../SystemTools/SystemToolsShared/SystemToolsShared.csproj" />
+    </Folder>
     <Folder Name="/Tests/">
     </Folder>
     <Folder Name="/ToolsManagement/">
         <Project Path="../ToolsManagement/CompressionManagement/CompressionManagement.csproj" />
+        <Project Path="../ToolsManagement/FileManagersMain/FileManagersMain.csproj" />
+        <Project Path="../ToolsManagement/LibToolActions/LibToolActions.csproj" />
     </Folder>
     <Project Path="ApAgentData/ApAgentData.csproj" Id="3360edfe-cf30-429a-b368-4ff52e24cd1e" />
     <Project Path="LibApAgentData/LibApAgentData.csproj" />
