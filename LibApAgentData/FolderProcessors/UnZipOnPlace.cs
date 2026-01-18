@@ -34,7 +34,9 @@ public sealed class UnZipOnPlace : FolderProcessor
         var zipFileFullName = FileManager.GetPath(afterRootPath, file.FileName);
 
         while (FileManager.DirectoryExists(afterRootPath, GetNewFolderName(zipFileName, i)))
+        {
             i++;
+        }
 
         var newFolderName = GetNewFolderName(zipFileName, i);
         FileManager.CreateDirectory(afterRootPath, newFolderName);
@@ -45,7 +47,9 @@ public sealed class UnZipOnPlace : FolderProcessor
         Console.WriteLine($"Unzip {zipFileFullName}");
 
         if (!archiver.ArchiveToPath(zipFileFullName, newDirFullName))
+        {
             return false;
+        }
 
         FileManager.DeleteFile(afterRootPath, file.FileName);
 

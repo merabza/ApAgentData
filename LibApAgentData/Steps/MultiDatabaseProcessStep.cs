@@ -42,18 +42,27 @@ public sealed class MultiDatabaseProcessStep : JobStep
             new DatabaseServerConnections(parameters.DatabaseServerConnections), procLogFilesFolder);
 
         if (par is not null)
-            return ActionType switch
-            {
-                EMultiDatabaseActionType.UpdateStatistics => new UpdateStatisticsStepCommand(logger, useConsole,
-                    procLogFilesFolder, processManager, this, par, ProcLineId),
-                EMultiDatabaseActionType.CheckRepairDataBase => new CheckRepairDatabaseStepCommand(logger, useConsole,
-                    procLogFilesFolder, processManager, this, par, ProcLineId),
-                EMultiDatabaseActionType.RecompileProcedures => new RecompileProceduresStepCommand(logger, useConsole,
-                    procLogFilesFolder, processManager, this, par, ProcLineId),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+        {
+            return CreateActionClass(ActionType, logger, useConsole, processManager, procLogFilesFolder, par);
+        }
 
         logger.LogError("Error when creating MultiDatabaseProcessStep parameters");
         return null;
+    }
+
+    private ProcessesToolAction CreateActionClass(EMultiDatabaseActionType actionType, ILogger logger, bool useConsole,
+        ProcessManager processManager, string procLogFilesFolder, MultiDatabaseProcessStepParameters par)
+    {
+        return actionType switch
+        {
+            EMultiDatabaseActionType.UpdateStatistics => new UpdateStatisticsStepCommand(logger, useConsole,
+                procLogFilesFolder, processManager, this, par, ProcLineId),
+            EMultiDatabaseActionType.CheckRepairDataBase => new CheckRepairDatabaseStepCommand(logger, useConsole,
+                procLogFilesFolder, processManager, this, par, ProcLineId),
+            EMultiDatabaseActionType.RecompileProcedures => new RecompileProceduresStepCommand(logger, useConsole,
+                procLogFilesFolder, processManager, this, par, ProcLineId),
+            _ => throw new ArgumentOutOfRangeException(nameof(actionType), actionType,
+                $"Unsupported action type: {actionType}")
+        };
     }
 }

@@ -62,8 +62,7 @@ public sealed class DatabaseBackupStep : JobStep
     //ატვირთვის პროცესის ხაზის იდენტიფიკატორი
     public int UploadProcLineId { get; set; }
 
-    public string?
-        UploadSmartSchemaName
+    public string? UploadSmartSchemaName
     {
         get;
         set;
@@ -86,12 +85,14 @@ public sealed class DatabaseBackupStep : JobStep
             DatabaseSet, DatabaseNames, FileStorageName, UploadFileStorageName, SmartSchemaName, LocalSmartSchemaName,
             UploadSmartSchemaName, ArchiverName, new FileStorages(parameters.FileStorages),
             new SmartSchemas(parameters.SmartSchemas), new Archivers(parameters.Archivers), DownloadProcLineId,
-            CompressProcLineId, UploadProcLineId, parameters.GetArchivingFileTempExtension(),
-            parameters.GetUploadFileTempExtension(), DbServerFoldersSetName);
+            CompressProcLineId, UploadProcLineId, parameters.ArchivingFileTempExtension,
+            parameters.UploadFileTempExtension, DbServerFoldersSetName);
 
         if (par is not null)
+        {
             return new DatabaseBackupStepCommand(useConsole, logger, processManager, this, par,
-                parameters.GetDownloadFileTempExtension());
+                parameters.DownloadFileTempExtension);
+        }
 
         StShared.WriteErrorLine("par does not created", useConsole, logger);
         return null;

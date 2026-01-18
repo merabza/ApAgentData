@@ -25,7 +25,9 @@ public sealed class CheckRepairDatabaseStepCommand : MultiDatabaseProcessesToolA
     {
         var checkRepairDatabaseResult = await agentClient.CheckRepairDatabase(databaseName, cancellationToken);
         if (!checkRepairDatabaseResult.IsSome)
+        {
             return true;
+        }
 
         Err.PrintErrorsOnConsole((Err[])checkRepairDatabaseResult);
         return false;

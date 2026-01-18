@@ -21,7 +21,10 @@ public sealed class MultiDuplicatesFinder
     {
         Console.WriteLine("Find Multi duplicate Files");
 
-        foreach (var kvp in FileList.DuplicateFilesStorage) kvp.Value.CountMultiDuplicates();
+        foreach (var kvp in FileList.DuplicateFilesStorage)
+        {
+            kvp.Value.CountMultiDuplicates();
+        }
 
         StShared.ConsoleWriteInformationLine(null, _useConsole, "Finish");
 

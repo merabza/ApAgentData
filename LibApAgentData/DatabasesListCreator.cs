@@ -31,9 +31,19 @@ public sealed class DatabasesListCreator
         var getDatabaseNamesResult = await _agentClient.GetDatabaseNames(cancellationToken);
         var databaseInfos = getDatabaseNamesResult.AsT0;
 
+        var (sysBaseDoesMatter, checkSysBase) = GetDbSetParams(_databaseSet);
+
+        return databaseInfos.Where(w =>
+            (!sysBaseDoesMatter || w.IsSystemDatabase == checkSysBase) &&
+            (w.RecoveryModel != EDatabaseRecoveryModel.Simple || _backupType != EBackupType.TrLog)).ToList();
+    }
+
+    private static (bool, bool) GetDbSetParams(EDatabaseSet databaseSet)
+    {
         var sysBaseDoesMatter = false;
         var checkSysBase = false;
-        switch (_databaseSet)
+
+        switch (databaseSet)
         {
             case EDatabaseSet.SystemDatabases:
                 checkSysBase = true;
@@ -46,11 +56,10 @@ public sealed class DatabasesListCreator
             case EDatabaseSet.DatabasesBySelection:
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(databaseSet), databaseSet,
+                    "Unexpected database set value");
         }
 
-        return databaseInfos.Where(w =>
-            (!sysBaseDoesMatter || w.IsSystemDatabase == checkSysBase) &&
-            (w.RecoveryModel != EDatabaseRecoveryModel.Simple || _backupType != EBackupType.TrLog)).ToList();
+        return (sysBaseDoesMatter, checkSysBase);
     }
 }

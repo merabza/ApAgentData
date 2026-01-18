@@ -23,9 +23,12 @@
         <File Path="Directory.Packages.props" />
     </Folder>
     <Folder Name="/SystemTools/">
+        <Project Path="../SystemTools/ApiContracts/ApiContracts.csproj" />
+        <Project Path="../SystemTools/StringMessagesApiContracts/StringMessagesApiContracts.csproj" />
         <Project Path="../SystemTools/SystemToolsShared/SystemToolsShared.csproj" />
     </Folder>
     <Folder Name="/Tests/">
+        <Project Path="LibApAgentData.Tests/LibApAgentData.Tests.csproj" />
     </Folder>
     <Folder Name="/ToolsManagement/">
         <Project Path="../ToolsManagement/ApiClientsManagement/ApiClientsManagement.csproj" />
@@ -33,6 +36,10 @@
         <Project Path="../ToolsManagement/DatabasesManagement/DatabasesManagement.csproj" />
         <Project Path="../ToolsManagement/FileManagersMain/FileManagersMain.csproj" />
         <Project Path="../ToolsManagement/LibToolActions/LibToolActions.csproj" />
+    </Folder>
+    <Folder Name="/WebAgentContracts/">
+        <Project Path="../WebAgentContracts/WebAgentDatabasesApiContracts/WebAgentDatabasesApiContracts.csproj" />
+        <Project Path="../WebAgentContracts/WebAgentProjectsApiContracts/WebAgentProjectsApiContracts.csproj" />
     </Folder>
     <Project Path="ApAgentData/ApAgentData.csproj" Id="3360edfe-cf30-429a-b368-4ff52e24cd1e" />
     <Project Path="LibApAgentData/LibApAgentData.csproj" />

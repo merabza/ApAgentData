@@ -36,7 +36,9 @@ public sealed class CurrentPeriodFileChecker
         var endTime = DateTime.Today + _holeEndTime;
 
         if (endTime < nowDateTime)
+        {
             return true;
+        }
 
         var start = _startAt + _holeStartTime;
         var currentPeriodStart = start.DateAdd(_periodType, nowDateTime.DateDiff(_periodType, start));

@@ -29,12 +29,17 @@ public sealed class MultiDatabaseProcessStepParameters
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
             CancellationToken.None).Result;
 
-        if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
+        if (createDatabaseManagerResult.IsT1)
+        {
+            Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
+        }
 
         var localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, procLogFilesFolder);
 
         if (localWorkFileManager != null)
+        {
             return new MultiDatabaseProcessStepParameters(createDatabaseManagerResult.AsT0, localWorkFileManager);
+        }
 
         logger.LogError("workFileManager for procLogFilesFolder does not created");
         return null;

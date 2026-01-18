@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -42,18 +43,24 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
         if (!Directory.Exists(localPath))
         {
-            _logger.LogInformation("Creating local folder {localPath}", localPath);
+            _logger.LogInformation("Creating local folder {LocalPath}", localPath);
             Directory.CreateDirectory(localPath);
         }
 
         if (!_par.BackupSeparately)
+        {
             return await ExecuteBackup(_par.MaskName, _par.BackupFolderPaths.Select(s => s.Value).ToArray(),
                 _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken);
+        }
 
         foreach (var kvpBackupFolderPath in _par.BackupFolderPaths)
+        {
             if (!await ExecuteBackup(_par.MaskName + kvpBackupFolderPath.Key, [kvpBackupFolderPath.Value],
                     _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken))
+            {
                 return false;
+            }
+        }
 
         return true;
     }
@@ -62,16 +69,21 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         ExcludeSet excludeSet, FileStorageData uploadFileStorage, CancellationToken cancellationToken = default)
     {
         if (ProcessManager is not null && ProcessManager.CheckCancellation())
+        {
             return false;
+        }
 
         var backupFileNamePrefix = maskName;
         var backupFileNameSuffix = archiver.FileExtension.AddNeedLeadPart(".");
 
         //შემოწმდეს ამ პერიოდში უკვე ხომ არ არის გაკეთებული ამ ბაზის ბექაპი
         if (HaveCurrentPeriodFile(backupFileNamePrefix, _par.DateMask, backupFileNameSuffix))
+        {
             return true;
+        }
 
-        var backupFileName = backupFileNamePrefix + DateTime.Now.ToString(_par.DateMask) + backupFileNameSuffix;
+        var backupFileName =
+            $"{backupFileNamePrefix}{DateTime.Now.ToString(_par.DateMask, CultureInfo.InvariantCulture)}{backupFileNameSuffix}";
         var backupFileFullName = Path.Combine(_par.LocalPath, backupFileName);
 
         var tempFileName = backupFileFullName + _par.ArchivingTempExtension.AddNeedLeadPart(".");
@@ -117,7 +129,9 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
 
         //თუ ასატვირთი ფაილსაცავი ქსელურია, აქაჩვა გვჭირდება
         if (!FileStat.IsFileSchema(uploadFileStorage.FileStoragePath))
+        {
             return true;
+        }
 
         //თუ ატვირთვის ფაილსაცავი ლოკალურია და მისი ფოლდერი ემთხვევა ლოკალურ ფოლდერს
         //მაშინ აქაჩვა არ გვჭირდება

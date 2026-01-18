@@ -52,7 +52,9 @@ public sealed class CompressToolAction : ProcessesToolAction
 
         //თუ ასატვირთი ფაილსაცავი ქსელურია, აქაჩვა გვჭირდება
         if (!FileStat.IsFileSchema(uploadFileStorage.FileStoragePath))
+        {
             return true;
+        }
 
         //თუ ატვირთვის ფაილსაცავი ლოკალურია და მისი ფოლდერი ემთხვევა ლოკალურ ფოლდერს
         //მაშინ აქაჩვა არ გვჭირდება
@@ -64,7 +66,9 @@ public sealed class CompressToolAction : ProcessesToolAction
     protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
         if (_par is null)
+        {
             return ValueTask.FromResult(true);
+        }
 
         var filesForCompress = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);

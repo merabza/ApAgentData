@@ -25,7 +25,9 @@ public sealed class UpdateStatisticsStepCommand : MultiDatabaseProcessesToolActi
     {
         var updateStatisticsResult = await agentClient.UpdateStatistics(databaseName, cancellationToken);
         if (!updateStatisticsResult.IsSome)
+        {
             return true;
+        }
 
         Err.PrintErrorsOnConsole((Err[])updateStatisticsResult);
         return false;

@@ -19,14 +19,16 @@ public sealed class DeleteTempFiles : FolderProcessor
     protected override bool CheckParameters()
     {
         if (_patterns is { Length: > 0 })
+        {
             return true;
+        }
+
         Console.WriteLine("Delete Files patterns not specified");
         return false;
     }
 
-    protected override bool ProcessOneFile(string? destinationAfterRootPath, MyFileInfo file)
+    protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
-        return !NeedExclude(file.FileName, _patterns) ||
-               FileManager.DeleteFile(destinationAfterRootPath, file.FileName);
+        return !NeedExclude(file.FileName, _patterns) || FileManager.DeleteFile(afterRootPath, file.FileName);
     }
 }

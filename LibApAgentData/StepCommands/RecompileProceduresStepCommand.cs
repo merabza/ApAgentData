@@ -25,7 +25,9 @@ public sealed class RecompileProceduresStepCommand : MultiDatabaseProcessesToolA
     {
         var recompileProceduresResult = await agentClient.RecompileProcedures(databaseName, cancellationToken);
         if (!recompileProceduresResult.IsSome)
+        {
             return true;
+        }
 
         Err.PrintErrorsOnConsole((Err[])recompileProceduresResult);
         return false;

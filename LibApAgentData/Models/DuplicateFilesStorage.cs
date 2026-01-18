@@ -56,17 +56,21 @@ public sealed class DuplicateFilesStorage
                 }
 
                 if (file1 != null || file2 == null)
+                {
                     continue;
+                }
 
                 duplicateFiles.Files.Add(comparedFiles.FirstFile);
                 break;
             }
 
             if (file1 == null && file2 == null)
+            {
                 _duplicateFiles.Add(new DuplicateFilesModel
                 {
                     Files = [comparedFiles.FirstFile, comparedFiles.SecondFile]
                 });
+            }
         }
     }
 
@@ -75,16 +79,25 @@ public sealed class DuplicateFilesStorage
         foreach (var duplicateFiles in _duplicateFiles)
         {
             if (duplicateFiles.Files.Count < 2)
+            {
                 continue;
+            }
 
             FileModel? saveFile = null;
             List<FileModel> priorityFiles = [];
             if (priorityList is not null)
+            {
                 foreach (var p in priorityList)
-                    priorityFiles.AddRange(duplicateFiles.Files.Where(w => w.FileFullName.StartsWith(p)));
+                {
+                    priorityFiles.AddRange(duplicateFiles.Files.Where(w =>
+                        w.FileFullName.StartsWith(p, StringComparison.Ordinal)));
+                }
+            }
 
             if (priorityFiles.Count > 0)
+            {
                 saveFile = priorityFiles[0];
+            }
 
             if (saveFile == null)
             {
@@ -97,7 +110,9 @@ public sealed class DuplicateFilesStorage
             //    continue;
 
             foreach (var fileModel in duplicateFiles.Files.Where(w => w.FileFullName != saveFile.FileFullName))
+            {
                 File.Delete(fileModel.FileFullName);
+            }
         }
     }
 }

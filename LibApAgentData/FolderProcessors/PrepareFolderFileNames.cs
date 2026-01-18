@@ -1,5 +1,4 @@
-﻿using System;
-using ConnectTools;
+﻿using ConnectTools;
 using FileManagersMain;
 using LibApAgentData.StepCommands;
 using LibFileParameters.Models;
@@ -14,13 +13,7 @@ public sealed class PrepareFolderFileNames : FolderProcessor
         string downloadTempExtension, ExcludeSet excludeSet, int destinationFileMaxLength) : base("Prepare Names",
         "Prepare Folder and File Names", sourceFileManager, null, false, excludeSet, true, true)
     {
-        var tempExtension = useMethod switch
-        {
-            EMoveMethod.Upload => uploadTempExtension,
-            EMoveMethod.Download => downloadTempExtension,
-            EMoveMethod.Local => string.Empty,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        var tempExtension = useMethod.CountTempExtension(uploadTempExtension, downloadTempExtension);
         _fileMaxLength = destinationFileMaxLength - tempExtension.Length;
     }
 

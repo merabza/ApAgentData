@@ -41,7 +41,9 @@ public sealed class UploadToolAction : ProcessesToolAction
             .Where(fileInfo => !_par.UploadFileManager.ContainsFile(fileInfo.FileName) &&
                                preserveFileDates.Contains(fileInfo.FileDateTime)).Any(fileInfo =>
                 !_par.UploadFileManager.UploadFile(fileInfo.FileName, _par.UploadTempExtension)))
+        {
             return ValueTask.FromResult(false);
+        }
 
         _par.UploadFileManager.RemoveRedundantFiles(_backupFileParameters.Prefix, _backupFileParameters.DateMask,
             _backupFileParameters.Suffix, _par.UploadSmartSchema);

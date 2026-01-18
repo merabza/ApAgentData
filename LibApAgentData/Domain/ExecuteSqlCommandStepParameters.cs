@@ -29,10 +29,15 @@ public sealed class ExecuteSqlCommandStepParameters
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
             CancellationToken.None).Result;
 
-        if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
+        if (createDatabaseManagerResult.IsT1)
+        {
+            Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
+        }
 
         if (!string.IsNullOrWhiteSpace(executeQueryCommand))
+        {
             return new ExecuteSqlCommandStepParameters(createDatabaseManagerResult.AsT0, executeQueryCommand);
+        }
 
         StShared.WriteErrorLine("executeQueryCommand does not Specified", useConsole, logger);
         return null;

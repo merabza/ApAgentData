@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DbTools;
+using DbTools.Models;
 using LibApAgentData.Domain;
 using LibApAgentData.Models;
 using LibApAgentData.Steps;
@@ -45,7 +47,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
         if (!Directory.Exists(localPath))
         {
-            _logger.LogInformation("Creating local folder {localPath}", localPath);
+            _logger.LogInformation("Creating local folder {LocalPath}", localPath);
             Directory.CreateDirectory(localPath);
         }
 
@@ -62,15 +64,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         var dbInfos = databaseInfos.Where(w =>
             w.RecoveryModel != EDatabaseRecoveryModel.Simple || _par.BackupType != EBackupType.TrLog);
 
-        //დადგინდეს დასაბექაპებელი ბაზების სია
-        var databaseNames = _par.DatabaseSet switch
-        {
-            EDatabaseSet.AllDatabases => dbInfos.Select(s => s.Name).ToList(),
-            EDatabaseSet.SystemDatabases => dbInfos.Where(w => w.IsSystemDatabase).Select(s => s.Name).ToList(),
-            EDatabaseSet.AllUserDatabases => dbInfos.Where(w => !w.IsSystemDatabase).Select(s => s.Name).ToList(),
-            EDatabaseSet.DatabasesBySelection => dbInfos.Select(s => s.Name).Intersect(_par.DatabaseNames).ToList(),
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        List<string> databaseNames = CountDatabaseNames(_par.DatabaseSet, dbInfos);
 
         //თუ ბაზების არჩევა ხდება სიიდან, მაშინ უნდა შევამოწმოთ ხომ არ არის სიაში ისეთი ბაზა, რომელიც სერვერზე არ არის.
         //თუ ასეთი აღმოჩნდა, გამოვიტანოთ ინფორმაცია ამის შესახებ
@@ -79,8 +73,12 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             var missingDatabaseNames = _par.DatabaseNames.Except(databaseInfos.Select(s => s.Name)).ToList();
 
             if (missingDatabaseNames.Count > 0)
+            {
                 foreach (var databaseName in missingDatabaseNames)
-                    _logger.LogWarning("Database with name {databaseName} is missing", databaseName);
+                {
+                    _logger.LogWarning("Database with name {DatabaseName} is missing", databaseName);
+                }
+            }
         }
 
         var needDownload = NeedDownload();
@@ -88,7 +86,10 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         foreach (var databaseName in databaseNames)
         {
             if (ProcessManager is not null && ProcessManager.CheckCancellation())
+            {
                 return false;
+            }
+
             var backupFileNamePrefix = _par.DbBackupParameters.GetPrefix(databaseName);
 
             var backupFileNameSuffix = _par.DbBackupParameters.GetSuffix() + (_par.CompressParameters is null
@@ -97,9 +98,11 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
             //შემოწმდეს ამ პერიოდში უკვე ხომ არ არის გაკეთებული ამ ბაზის ბექაპი
             if (HaveCurrentPeriodFile(backupFileNamePrefix, _par.DbBackupParameters.DateMask, backupFileNameSuffix))
+            {
                 continue;
+            }
 
-            _logger.LogInformation("Backup database {databaseName}...", databaseName);
+            _logger.LogInformation("Backup database {DatabaseName}...", databaseName);
 
             var createBackupResult = await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName,
                 _par.DbServerFoldersSetName, cancellationToken);
@@ -114,7 +117,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფიქსირდა, ვჩერდებით.
             if (backupFileParameters == null)
             {
-                _logger.LogError("Backup for database {databaseName} not created", databaseName);
+                _logger.LogError("Backup for database {DatabaseName} not created", databaseName);
                 continue;
             }
 
@@ -136,7 +139,9 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
                 _par.CompressProcLineId, _par.LocalSmartSchema, _par.UploadFileStorageData, _par.CompressParameters,
                 _par.UploadParameters);
             if (ProcessManager is not null && ProcessManager.CheckCancellation())
+            {
                 return false;
+            }
 
             //აქ შემდეგი მოქმედების გამოძახება ხდება, იმიტომ რომ თითოეული ბაზისათვის ცალკე მოქმედებების ჯაჭვის აგება ხდება
             var nextAction = needDownload ? downloadBackupToolAction : downloadBackupToolAction.GetNextAction();
@@ -144,6 +149,20 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         }
 
         return true;
+    }
+
+    private List<string> CountDatabaseNames(EDatabaseSet databaseSet, IEnumerable<DatabaseInfoModel> dbInfos)
+    {
+        //დადგინდეს დასაბექაპებელი ბაზების სია
+        var databaseNames = databaseSet switch
+        {
+            EDatabaseSet.AllDatabases => dbInfos.Select(s => s.Name).ToList(),
+            EDatabaseSet.SystemDatabases => dbInfos.Where(w => w.IsSystemDatabase).Select(s => s.Name).ToList(),
+            EDatabaseSet.AllUserDatabases => dbInfos.Where(w => !w.IsSystemDatabase).Select(s => s.Name).ToList(),
+            EDatabaseSet.DatabasesBySelection => dbInfos.Select(s => s.Name).Intersect(_par.DatabaseNames).ToList(),
+            _ => throw new ArgumentOutOfRangeException(nameof(databaseSet), databaseSet, "Invalid database set value.")
+        };
+        return databaseNames;
     }
 
     private bool HaveCurrentPeriodFile(string processName, string dateMask, string extension)
@@ -158,11 +177,15 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         var fileStoragePath = _par.DownloadFileStorageData.FileStoragePath;
 
         if (string.IsNullOrWhiteSpace(fileStoragePath))
+        {
             return false;
+        }
 
         //თუ ბაზის ფაილსაცავი ქსელურია, მოქაჩვა გვჭირდება
         if (!FileStat.IsFileSchema(fileStoragePath))
+        {
             return true;
+        }
 
         //თუ ბაზის ფაილსაცავი ლოკალურია და მისი ფოლდერი ემთხვევა ლოკალურ ფოლდერს
         //მაშინ მოქაჩვა არ გვჭირდება

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -27,20 +28,21 @@ public sealed class DuplicateFilesFinder : FolderProcessor
     protected override bool CheckParameters()
     {
         if (FileManager is not DiskFileManager)
+        {
             return false;
+        }
 
         Console.WriteLine("Find Files");
         return true;
     }
 
-    protected override void Finish()
-    {
-    }
-
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
         if (FileManager is not DiskFileManager dFileManager)
+        {
             return false;
+        }
+
         var fileFullName = dFileManager.GetPath(afterRootPath, file.FileName);
 
         Console.WriteLine($"Analyze file {fileFullName}");
@@ -51,10 +53,14 @@ public sealed class DuplicateFilesFinder : FolderProcessor
         var filesWithSameSize = FileList.Files.Where(w => w.Size == fileModel.Size).ToList();
 
         if (filesWithSameSize.Count <= 1)
+        {
             return true;
+        }
 
         foreach (var currentFileModel in filesWithSameSize)
+        {
             currentFileModel.Sha256 ??= BytesToString(GetHashSha256(currentFileModel.FileFullName));
+        }
 
         FileModel? lastFileModel = null;
         foreach (var model in filesWithSameSize.OrderBy(o => o.Sha256))
@@ -64,21 +70,24 @@ public sealed class DuplicateFilesFinder : FolderProcessor
                 //დავადგინოთ გვაქვს თუ არა საცავი ამ კოდისათვის.
                 //და თუ არ არის შევქმნათ
                 DuplicateFilesStorage currentFilesStorage;
-                if (!FileList.DuplicateFilesStorage.ContainsKey(lastFileModel.Sha256))
+                if (!FileList.DuplicateFilesStorage.TryGetValue(lastFileModel.Sha256, out DuplicateFilesStorage? value))
                 {
                     currentFilesStorage = new DuplicateFilesStorage();
-                    FileList.DuplicateFilesStorage.Add(lastFileModel.Sha256, currentFilesStorage);
+                    value = currentFilesStorage;
+                    FileList.DuplicateFilesStorage.Add(lastFileModel.Sha256, value);
                 }
 
-                currentFilesStorage = FileList.DuplicateFilesStorage[lastFileModel.Sha256];
+                currentFilesStorage = value;
 
                 //დავადგინოთ ეს ფაილები უკვე შედარებული გვაქვს თუ არა
                 var comparedFiles =
                     currentFilesStorage.GetComparedFiles(lastFileModel.FileFullName, model.FileFullName);
 
                 if (comparedFiles == null)
+                {
                     currentFilesStorage.AddComparedFiles(lastFileModel, model,
                         FileStat.FileCompare(lastFileModel.FileFullName, model.FileFullName));
+                }
             }
 
             lastFileModel = model;
@@ -90,7 +99,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
     // Return a byte array as a sequence of hex values.
     private static string BytesToString(byte[] bytes)
     {
-        return bytes.Aggregate(string.Empty, (current, b) => current + b.ToString("x2"));
+        return bytes.Aggregate(string.Empty, (current, b) => current + b.ToString("x2", CultureInfo.InvariantCulture));
     }
 
     // Compute the file's hash.

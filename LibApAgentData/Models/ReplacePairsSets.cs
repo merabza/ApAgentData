@@ -13,6 +13,8 @@ public sealed class ReplacePairsSets
 
     public ReplacePairsSet? GetReplacePairsSetByKey(string key)
     {
-        return !string.IsNullOrWhiteSpace(key) && _replacePairsSet.ContainsKey(key) ? _replacePairsSet[key] : null;
+        return !string.IsNullOrWhiteSpace(key) && _replacePairsSet.TryGetValue(key, out ReplacePairsSet? value)
+            ? value
+            : null;
     }
 }

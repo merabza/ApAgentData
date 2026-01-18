@@ -140,22 +140,18 @@ public sealed class FilesMoveStepParameters
 
         ExcludeSet? deleteDestinationFilesSet = null;
         if (!string.IsNullOrWhiteSpace(deleteDestinationFilesSetName))
+        {
             deleteDestinationFilesSet = excludeSets.GetExcludeSetByKey(deleteDestinationFilesSetName);
+        }
 
         var fileStoragePath = sourceFileStorage.FileStoragePath;
         StShared.ConsoleWriteInformationLine(logger, useConsole, "Source is From {fileStoragePath}", fileStoragePath);
 
-        FileManager? sourceFileManager;
+        FileManager? sourceFileManager = sourceIsLocal.Value
+            ? FileManagersFactory.CreateFileManager(useConsole, logger, sourceFileStorage.FileStoragePath)
+            : FileManagersFactoryExt.CreateFileManager(useConsole, logger, destinationFileStorage.FileStoragePath,
+                sourceFileStorage);
         //თუ წყარო ლოკალურია
-        if (sourceIsLocal.Value)
-            //შევქმნათ ლოკალური გამგზავნი ფაილ მენეჯერი
-            sourceFileManager =
-                FileManagersFactory.CreateFileManager(useConsole, logger, sourceFileStorage.FileStoragePath);
-        else
-            //თუ წყარო მოშორებულია
-            //შევქმნათ ჩამოსატვირთი ფაილ მენეჯერი
-            sourceFileManager = FileManagersFactoryExt.CreateFileManager(useConsole, logger,
-                destinationFileStorage.FileStoragePath, sourceFileStorage);
 
         if (sourceFileManager == null)
         {
@@ -165,17 +161,11 @@ public sealed class FilesMoveStepParameters
 
         Console.WriteLine($"Destination is {destinationFileStorage.FileStoragePath}");
 
-        FileManager? destinationFileManager;
+        FileManager? destinationFileManager = destinationIsLocal.Value
+            ? FileManagersFactory.CreateFileManager(useConsole, logger, destinationFileStorage.FileStoragePath)
+            : FileManagersFactoryExt.CreateFileManager(useConsole, logger, sourceFileStorage.FileStoragePath,
+                destinationFileStorage);
         //თუ მიზანი ლოკალურია
-        if (destinationIsLocal.Value)
-            //შევქმნათ ლოკალური მიმღები ფაილ მენეჯერი
-            destinationFileManager =
-                FileManagersFactory.CreateFileManager(useConsole, logger, destinationFileStorage.FileStoragePath);
-        else
-            //თუ მიზანი მოშორებულია
-            //შევქმნათ ასატვირთი ფაილ მენეჯერი
-            destinationFileManager = FileManagersFactoryExt.CreateFileManager(useConsole, logger,
-                sourceFileStorage.FileStoragePath, destinationFileStorage);
 
         if (destinationFileManager == null)
         {
@@ -184,16 +174,15 @@ public sealed class FilesMoveStepParameters
             return null;
         }
 
-        EMoveMethod useMethod;
+        var locOrUp = destinationIsLocal.Value ? EMoveMethod.Local : EMoveMethod.Upload;
+        EMoveMethod useMethod = !sourceIsLocal.Value ? EMoveMethod.Download : locOrUp;
         //თუ წყარო მოშორებულია
-        if (!sourceIsLocal.Value)
-            useMethod = EMoveMethod.Download;
-        else
-            useMethod = destinationIsLocal.Value ? EMoveMethod.Local : EMoveMethod.Upload;
 
         ReplacePairsSet? replacePairsSet = null;
         if (!string.IsNullOrWhiteSpace(replacePairsSetName))
+        {
             replacePairsSet = replacePairsSets.GetReplacePairsSetByKey(replacePairsSetName);
+        }
 
         return new FilesMoveStepParameters(sourceFileStorage, sourceIsLocal.Value, destinationFileStorage,
             destinationIsLocal.Value, excludeSet, deleteDestinationFilesSet, sourceFileManager, destinationFileManager,

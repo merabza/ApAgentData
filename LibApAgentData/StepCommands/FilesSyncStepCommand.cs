@@ -32,7 +32,9 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
                 [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         //თუ მიზანი მოშორებულია და FTP-ა, 
@@ -54,7 +56,9 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
             var changeFilesWithManyDots =
                 new ChangeFilesWithRestrictPatterns(_par.SourceFileManager, _par.ReplacePairsSet.PairsDict);
             if (!changeFilesWithManyDots.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         var destinationFileMaxLength = _par.DestinationFileStorage.FileNameMaxLength == 0
@@ -68,14 +72,18 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
                 _par.UploadTempExtension, _par.DownloadTempExtension, _par.ExcludeSet, destinationFileMaxLength);
 
             if (!prepareFolderFileNames.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
 
             var copyAndReplaceFiles = new CopyAndReplaceFiles(_logger, _par.SourceFileManager,
                 _par.DestinationFileManager, _par.UseMethod, _par.UploadTempExtension, _par.DownloadTempExtension,
                 _par.ExcludeSet, destinationFileMaxLength);
 
             if (!copyAndReplaceFiles.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         //თუ მიზნის ფოლდერი ცარელაა, გასაკეთებლი არაფერია
@@ -85,7 +93,9 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
                 new DeleteRedundantFiles(_par.SourceFileManager, _par.DestinationFileManager, _par.ExcludeSet);
 
             if (!deleteRedundantFiles.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         //ცარელა ფოლდერების წაშლა

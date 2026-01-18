@@ -26,10 +26,31 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     public string? WorkFolder { get; set; }
     public string? ProcLogFilesFolder { get; set; }
     public string? ApAgentParametersFileNameForLocalReServer { get; set; }
-    public string? UploadFileTempExtension { get; set; } //.up!
-    public string? DownloadFileTempExtension { get; set; } //.down!
-    public string? ArchivingFileTempExtension { get; set; } //.go!
-    public string? DateMask { get; set; } //.go!
+
+    public string UploadFileTempExtension
+    {
+        get => field ?? DefaultUploadFileTempExtension;
+        set;
+    } //.up!
+
+    public string DownloadFileTempExtension
+    {
+        get => field ?? DefaultDownloadFileTempExtension;
+        set;
+    } //.down!
+
+    public string ArchivingFileTempExtension
+    {
+        get => field ?? DefaultArchivingFileTempExtension;
+        set;
+    } //.go!
+
+    public string DateMask
+    {
+        get => field ?? DefaultDateMask;
+        set;
+    } //.go!
+
     public Dictionary<string, ReplacePairsSet> ReplacePairsSets { get; set; } = [];
     public Dictionary<string, JobSchedule> JobSchedules { get; set; } = [];
     public Dictionary<string, DatabaseBackupStep> DatabaseBackupSteps { get; set; } = [];
@@ -57,7 +78,10 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
         var jb = missingJobStepNames
             .Select(missingJobStepName => JobsBySchedules.Where(x => x.JobStepName == missingJobStepName))
             .SelectMany(jbs => jbs).ToList();
-        foreach (var j in jb) JobsBySchedules.Remove(j);
+        foreach (var j in jb)
+        {
+            JobsBySchedules.Remove(j);
+        }
 
         return true;
     }
@@ -67,32 +91,30 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     public string? CountLocalPath(string? currentPath, string? parametersFileName, string defaultFolderName)
     {
         if (!string.IsNullOrWhiteSpace(currentPath))
+        {
             return currentPath;
+        }
+
         var pf = string.IsNullOrWhiteSpace(parametersFileName) ? null : new FileInfo(parametersFileName);
         var workFolder = WorkFolder ?? pf?.Directory?.FullName;
         var workFolderCandidate = workFolder is null ? null : Path.Combine(workFolder, defaultFolderName);
         return workFolderCandidate;
     }
 
-    public string GetUploadFileTempExtension()
-    {
-        return UploadFileTempExtension ?? DefaultUploadFileTempExtension;
-    }
+    //public string GetDownloadFileTempExtension()
+    //{
+    //    return DownloadFileTempExtension ?? DefaultDownloadFileTempExtension;
+    //}
 
-    public string GetDownloadFileTempExtension()
-    {
-        return DownloadFileTempExtension ?? DefaultDownloadFileTempExtension;
-    }
+    //public string GetArchivingFileTempExtension()
+    //{
+    //    return ArchivingFileTempExtension ?? DefaultArchivingFileTempExtension;
+    //}
 
-    public string GetArchivingFileTempExtension()
-    {
-        return ArchivingFileTempExtension ?? DefaultArchivingFileTempExtension;
-    }
-
-    public string GetDateMask()
-    {
-        return DateMask ?? DefaultDateMask;
-    }
+    //public string GetDateMask()
+    //{
+    //    return DateMask ?? DefaultDateMask;
+    //}
 
     public Dictionary<string, JobStep> GetSteps()
     {
@@ -101,25 +123,39 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
                 kvp => kvp.Value);
 
         foreach (var kvp in MultiDatabaseProcessSteps)
+        {
             steps.Add(kvp.Key, kvp.Value);
+        }
 
         foreach (var kvp in RunProgramSteps)
+        {
             steps.Add(kvp.Key, kvp.Value);
+        }
 
         foreach (var kvp in ExecuteSqlCommandSteps)
+        {
             steps.Add(kvp.Key, kvp.Value);
+        }
 
         foreach (var kvp in FilesBackupSteps)
+        {
             steps.Add(kvp.Key, kvp.Value);
+        }
 
         foreach (var kvp in FilesSyncSteps)
+        {
             steps.Add(kvp.Key, kvp.Value);
+        }
 
         foreach (var kvp in FilesMoveSteps)
+        {
             steps.Add(kvp.Key, kvp.Value);
+        }
 
         foreach (var kvp in UnZipOnPlaceSteps)
+        {
             steps.Add(kvp.Key, kvp.Value);
+        }
 
         return steps;
     }
@@ -174,7 +210,9 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
         IProcesses processes, string procLogFilesFolder)
     {
         if (!JobSchedules.ContainsKey(scheduleName))
+        {
             StShared.WriteErrorLine($"Schedules with name {scheduleName} not found", true, logger);
+        }
 
         //თუ აქ მოვედით შედულეს ბარიერი გავლილია, ან პირდაპირ არის მოთხოვნილი ამ შედულეს შესაბამისი ჯობების გაშევბა
         //შედულეს ბარიერის რეალიზება უნდა მოხდეს ბექპროცესის ტაიმერში
@@ -193,8 +231,13 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
                 foreach (var stepToolAction in jobStepNames.Select(name =>
                              steps[name].GetToolAction(logger, httpClientFactory, useConsole, processManager, this,
                                  procLogFilesFolder)))
+                {
                     if (stepToolAction is not null)
+                    {
                         processManager.Run(stepToolAction);
+                    }
+                }
+
                 return true;
             }
             catch (OperationCanceledException e)
@@ -210,7 +253,10 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
         }
 
         foreach (var stepName in missingJobStepNames)
+        {
             StShared.WriteErrorLine($"Step with name {stepName} not found", true, logger);
+        }
+
         return false;
     }
 }

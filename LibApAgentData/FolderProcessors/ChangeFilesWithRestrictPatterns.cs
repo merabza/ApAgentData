@@ -23,28 +23,32 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
     protected override bool CheckParameters()
     {
         if (_replaceSet is { Count: > 0 })
+        {
             return true;
+        }
+
         Console.WriteLine("Replace Set patterns not specified");
         return false;
     }
 
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
-        var haveReplace = true;
         var newFileName = file.FileName;
-        while (haveReplace)
+        bool replaced;
+        do
         {
-            haveReplace = false;
+            replaced = false;
             foreach (var kvp in _replaceSet.Where(kvp => newFileName.Contains(kvp.Key)))
             {
                 newFileName = newFileName.Replace(kvp.Key, kvp.Value);
-                haveReplace = true;
-                break;
+                replaced = true;
             }
-        }
+        } while (replaced);
 
         if (newFileName == file.FileName)
+        {
             return true;
+        }
 
         //ვიპოვოთ newFileName არის თუ არა destinationFileManager-ის ფოლდერში
         //თუ არ არსებობს, შევუცვალოთ სახელი ფაილს
@@ -57,7 +61,9 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
 
         var i = 0;
         while (FileManager.FileExists(afterRootPath, fileNameWithoutExtension.GetNewFileName(i, extension)))
+        {
             i++;
+        }
 
         return FileManager.RenameFile(afterRootPath, file.FileName,
             fileNameWithoutExtension.GetNewFileName(i, extension));

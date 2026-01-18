@@ -26,7 +26,10 @@ public sealed class DeleteRedundantFiles : FolderProcessor
         var folders = _sourceFileManager.GetFolderNames(afterRootPath, null);
 
         if (folders.Contains(folderName))
+        {
             return (true, false, false);
+        }
+
         var deleted = FileManager.DeleteDirectory(afterRootPath, folderName, true);
         return deleted ? (true, true, true) : (false, false, false);
     }
@@ -35,9 +38,11 @@ public sealed class DeleteRedundantFiles : FolderProcessor
     {
         var myFileInfos = _sourceFileManager.GetFilesWithInfo(afterRootPath, null);
 
-        if ((ExcludeSet != null && ExcludeSet.NeedExclude(FileManager.PathCombine(afterRootPath, file.FileName))) ||
+        if (ExcludeSet != null && ExcludeSet.NeedExclude(FileManager.PathCombine(afterRootPath, file.FileName)) ||
             !myFileInfos.Select(x => x.FileName).Contains(file.FileName))
+        {
             return FileManager.DeleteFile(afterRootPath, file.FileName);
+        }
 
         return true;
     }

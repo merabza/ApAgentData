@@ -46,7 +46,11 @@ public sealed class DownloadBackupToolAction : ProcessesToolAction
         var compressToolAction = new CompressToolAction(_logger, _useConsole, ProcessManager, _compressParameters,
             _uploadParameters, _backupFileParameters, _compressProcLine, _localSmartSchema, _uploadFileStorage);
 
-        if (_compressParameters is not null) return compressToolAction;
+        if (_compressParameters is not null)
+        {
+            return compressToolAction;
+        }
+
         _par.LocalFileManager.RemoveRedundantFiles(_backupFileParameters.Prefix, _backupFileParameters.DateMask,
             _backupFileParameters.Suffix, _localSmartSchema);
         return compressToolAction.GetNextAction();

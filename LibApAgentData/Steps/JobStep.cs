@@ -11,12 +11,10 @@ namespace LibApAgentData.Steps;
 //ერთი ამოცანა ამოცანების რიგში
 public /*open*/ class JobStep : ItemData
 {
-    //
     public bool Enabled { get; set; } //მიუთითებს დასაშვებია თუ არა ამ ნაბიჯის გამოყენება.
 
     //public int SequentialNumber { get; set; } //ამოცანის რიგითი ნომერი. ამოცანების შესრულებისას ეს ნომერი გამოყენებული იქნება თანმიმდევრობის დასადგენად.
-    public int
-        ProcLineId
+    public int ProcLineId
     {
         get;
         set;

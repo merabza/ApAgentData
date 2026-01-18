@@ -49,12 +49,15 @@ public sealed class ProcLogFile
         var fileName = Path.Combine(_workFolder, _maskManager.GetFileNameForDate(DateTime.Now, _extension));
         var checkFile = new FileInfo(fileName);
         if (checkFile.Directory is { Exists: false })
+        {
             checkFile.Directory.Create();
+        }
+
         if (checkFile.Directory is not { Exists: true })
         {
             lock (_syncObject)
             {
-                _logger.LogError("File {fileName} cannot be created", fileName);
+                _logger.LogError("File {FileName} cannot be created", fileName);
             }
 
             return;
@@ -97,7 +100,10 @@ public sealed class ProcLogFile
         foreach (var file in wfd.GetFiles(_maskManager.GetFullMask(_extension)))
         {
             if (file.FullName == _justCreatedFileName)
+            {
                 continue;
+            }
+
             file.Delete();
         }
     }

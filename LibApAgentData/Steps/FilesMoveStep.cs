@@ -42,14 +42,16 @@ public sealed class FilesMoveStep : JobStep
     {
         var filesMoveStepParameters = FilesMoveStepParameters.Create(logger, useConsole, SourceFileStorageName,
             DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
-            string.IsNullOrWhiteSpace(MoveFolderMask) ? parameters.GetDateMask() : MoveFolderMask,
-            parameters.GetUploadFileTempExtension(), parameters.GetDownloadFileTempExtension(),
+            string.IsNullOrWhiteSpace(MoveFolderMask) ? parameters.DateMask : MoveFolderMask,
+            parameters.UploadFileTempExtension, parameters.DownloadFileTempExtension,
             new FileStorages(parameters.FileStorages), new ExcludeSets(parameters.ExcludeSets),
             new ReplacePairsSets(parameters.ReplacePairsSets), MaxFolderCount, CreateFolderWithDateTime,
             PriorityPoints);
 
         if (filesMoveStepParameters is not null)
+        {
             return new FilesMoveStepCommand(logger, useConsole, processManager, this, filesMoveStepParameters);
+        }
 
         StShared.WriteErrorLine("filesMoveStepParameters does not created for Files Move step", useConsole, logger);
         return null;

@@ -19,7 +19,9 @@ public sealed class RunProgramStep : JobStep
         var par = RunProgramStepParameters.Create(logger, useConsole, Program, Arguments);
 
         if (par is not null)
+        {
             return new RunProgramStepCommand(logger, useConsole, ProcLineId, par);
+        }
 
         StShared.WriteErrorLine("parameters does not created, RunProgramStep did not run", useConsole, logger);
         return null;

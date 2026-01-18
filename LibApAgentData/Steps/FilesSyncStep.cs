@@ -23,12 +23,14 @@ public sealed class FilesSyncStep : JobStep
     {
         var filesSyncStepParameters = FilesSyncStepParameters.Create(logger, useConsole, SourceFileStorageName,
             DestinationFileStorageName, ExcludeSet, DeleteDestinationFilesSet, ReplacePairsSet,
-            parameters.GetUploadFileTempExtension(), parameters.GetDownloadFileTempExtension(),
+            parameters.UploadFileTempExtension, parameters.DownloadFileTempExtension,
             new FileStorages(parameters.FileStorages), new ExcludeSets(parameters.ExcludeSets),
             new ReplacePairsSets(parameters.ReplacePairsSets));
 
         if (filesSyncStepParameters is not null)
+        {
             return new FilesSyncStepCommand(logger, processManager, this, filesSyncStepParameters);
+        }
 
         StShared.WriteErrorLine("filesSyncStepParameters does not created for Files Sync step", useConsole, logger);
         return null;

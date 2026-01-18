@@ -159,9 +159,11 @@ public sealed class FilesBackupStepParameters
         }
 
         if (!string.IsNullOrWhiteSpace(uploadTempExtension))
+        {
             return new FilesBackupStepParameters(localPath, maskName, dateMask, archiver, backupFolderPaths,
                 localWorkFileManager, excludeSet, uploadFileStorage, localSmartSchema, backupSeparately,
                 uploadParameters, archivingTempExtension);
+        }
 
         StShared.WriteErrorLine("uploadTempExtension does not specified", useConsole, logger);
         return null;

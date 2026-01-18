@@ -41,18 +41,24 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
     {
         Console.WriteLine($"Process Folder {curDir.FullName}");
 
-        if (useSubFolders)
-            if (curDir.GetDirectories().Any(dir => !ProcessFolder(dir)))
-                return false;
+        if (useSubFolders && curDir.GetDirectories().Any(dir => !ProcessFolder(dir)))
+        {
+            return false;
+        }
 
         foreach (var file in curDir.GetFiles())
         {
-            if (!file.Extension.Equals(".zip", StringComparison.CurrentCultureIgnoreCase))
+            if (!file.Extension.Equals(".zip", StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
+
             var zipFileName = Path.GetFileNameWithoutExtension(file.Name);
             var i = 0;
             while (Directory.Exists(Path.Combine(curDir.FullName, GetNewFolderName(zipFileName, i))))
+            {
                 i++;
+            }
 
             var newDir = Directory.CreateDirectory(Path.Combine(curDir.FullName, GetNewFolderName(zipFileName, i)));
             var archiver = new ZipClassArchiver(_logger, _useConsole, file.Extension);
@@ -60,7 +66,9 @@ public sealed class UnZipOnPlaceCommand : ProcessesToolAction
             Console.WriteLine($"Unzip {file.FullName}");
 
             if (!archiver.ArchiveToPath(file.FullName, newDir.FullName))
+            {
                 return false;
+            }
 
             file.Delete();
         }

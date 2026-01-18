@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using LibApAgentData.Domain;
@@ -35,7 +36,9 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                 [.. _par.DeleteDestinationFilesSet.FolderFileMasks]);
 
             if (!deleteTempFiles.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         //თუ მიზანი მოშორებულია და FTP-ა, 
@@ -57,7 +60,9 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
             var changeFilesWithManyDots =
                 new ChangeFilesWithRestrictPatterns(_par.SourceFileManager, _par.ReplacePairsSet.PairsDict);
             if (!changeFilesWithManyDots.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         //ლოკალურიდან FTP-ს მხარეს ატვირთვის დროს,
@@ -67,7 +72,9 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
         {
             var unZipOnPlace = new UnZipOnPlace(_logger, _useConsole, _par.SourceFileManager);
             if (!unZipOnPlace.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         //თუ წყაროს ფოლდერი ცარიელია, გასაკეთებლი არაფერია
@@ -77,12 +84,14 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
             if (_par.CreateFolderWithDateTime)
             {
                 //შევქმნათ ამ სესიის შესაბამისი დროის მიხედვით ფოლდერის სახელი
-                moveFolderName = DateTime.Now.ToString(_par.MoveFolderMask);
+                moveFolderName = DateTime.Now.ToString(_par.MoveFolderMask, CultureInfo.InvariantCulture);
 
                 //შევამოწმოთ ასატვირთ ფოლდერში თუ არსებობს სესიის შესაბამისი ფოლდერი.
                 //თუ არ არსებობს, ვქმნით. //თუ ფოლდერი ვერ შეიქმნა, ვჩერდებით
                 if (!_par.DestinationFileManager.CareCreateDirectory(moveFolderName))
+                {
                     return ValueTask.FromResult(false);
+                }
             }
 
             var moveFiles = new MoveFiles(_logger, _par.SourceFileManager, _par.DestinationFileManager, moveFolderName,
@@ -93,25 +102,35 @@ public sealed class FilesMoveStepCommand : ProcessesToolAction
                     : _par.DestinationFileStorage.FileNameMaxLength);
 
             if (!moveFiles.Run())
+            {
                 return ValueTask.FromResult(false);
+            }
         }
 
         if (!_par.DestinationIsLocal)
+        {
             return ValueTask.FromResult(true);
+        }
 
         var duplicateFilesFinder = new DuplicateFilesFinder(_par.DestinationFileManager);
         if (!duplicateFilesFinder.Run())
+        {
             return ValueTask.FromResult(false);
+        }
 
         var multiDuplicatesFinder = new MultiDuplicatesFinder(_useConsole, duplicateFilesFinder.FileList);
         if (!multiDuplicatesFinder.Run())
+        {
             return ValueTask.FromResult(false);
+        }
 
         var duplicateFilesRemover =
             new DuplicateFilesRemover(_useConsole, multiDuplicatesFinder.FileList, _par.PriorityPoints);
 
         if (!duplicateFilesRemover.Run())
+        {
             return ValueTask.FromResult(false);
+        }
 
         //ცარიელი ფოლდერების წაშლა
         var emptyFoldersRemover = new EmptyFoldersRemover(_par.DestinationFileManager);

@@ -48,8 +48,10 @@ public sealed class UploadParameters
 
         if (!string.IsNullOrWhiteSpace(uploadTempExtension))
 
+        {
             return new UploadParameters(uploadFileManager, workFileManager, uploadSmartSchema,
                 uploadTempExtension.AddNeedLeadPart("."), uploadProcLine, localPath);
+        }
 
         StShared.WriteErrorLine("uploadTempExtension does not specified", useConsole, logger);
         return null;

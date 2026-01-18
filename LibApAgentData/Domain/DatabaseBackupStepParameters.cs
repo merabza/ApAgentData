@@ -87,7 +87,10 @@ public sealed class DatabaseBackupStepParameters
             databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
             CancellationToken.None).Result;
 
-        if (createDatabaseManagerResult.IsT1) Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
+        if (createDatabaseManagerResult.IsT1)
+        {
+            Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
+        }
 
         if (databaseBackupParameters is null)
         {
@@ -218,11 +221,13 @@ public sealed class DatabaseBackupStepParameters
             uploadSmartSchema, uploadTempExtension, uploadProcLineId);
 
         if (uploadParameters is not null)
+        {
             return new DatabaseBackupStepParameters(createDatabaseManagerResult.AsT0, localPath, localWorkFileManager,
                 databaseBackupParameters.BackupType.Value, databaseSet, databaseNames, downloadFileStorageData,
                 uploadFileStorageData, downloadSideSmartSchema, localSmartSchema, downloadFileManager,
                 dbBackupParameters, downloadProcLineId, compressProcLineId, compressParameters, uploadParameters,
                 dbServerFoldersSetName);
+        }
 
         StShared.WriteErrorLine("uploadParameters does not created", useConsole, logger);
         return null;
