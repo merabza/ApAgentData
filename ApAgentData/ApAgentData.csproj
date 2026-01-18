@@ -12,8 +12,8 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LibApAgentData\ApAgentData.LibApAgentData.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\ApAgentData.LibApAgentData\ApAgentData.LibApAgentData.csproj" />
+    </ItemGroup>
 
 </Project>

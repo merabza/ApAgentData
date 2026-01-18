@@ -1,21 +1,21 @@
 <Solution>
     <Folder Name="/ConnectionTools/">
-        <Project Path="../ConnectionTools/ConnectTools/ConnectTools.csproj" />
-        <Project Path="../ConnectionTools/CToolsFactory/CToolsFactory.csproj" />
-        <Project Path="../ConnectionTools/FTPTools/FTPTools.csproj" />
+        <Project Path="../ConnectionTools/ConnectionTools.ConnectTools/ConnectionTools.ConnectTools.csproj" />
+        <Project Path="../ConnectionTools/ConnectionTools.CToolsFactory/ConnectionTools.CToolsFactory.csproj" />
+        <Project Path="../ConnectionTools/ConnectionTools.FTPTools/ConnectionTools.FTPTools.csproj" />
     </Folder>
     <Folder Name="/DatabaseTools/">
-        <Project Path="../DatabaseTools/DbTools/DbTools.csproj" />
-        <Project Path="../DatabaseTools/DbToolsFactory/DbToolsFactory.csproj" />
-        <Project Path="../DatabaseTools/OleDbTools/OleDbTools.csproj" />
-        <Project Path="../DatabaseTools/SqLiteDbTools/SqLiteDbTools.csproj" />
-        <Project Path="../DatabaseTools/SqlServerDbTools/SqlServerDbTools.csproj" />
+        <Project Path="../DatabaseTools/DatabaseTools.DbTools/DatabaseTools.DbTools.csproj" />
+        <Project Path="../DatabaseTools/DatabaseTools.DbToolsFactory/DatabaseTools.DbToolsFactory.csproj" />
+        <Project Path="../DatabaseTools/DatabaseTools.OleDbTools/DatabaseTools.OleDbTools.csproj" />
+        <Project Path="../DatabaseTools/DatabaseTools.SqLiteDbTools/DatabaseTools.SqLiteDbTools.csproj" />
+        <Project Path="../DatabaseTools/DatabaseTools.SqlServerDbTools/DatabaseTools.SqlServerDbTools.csproj" />
     </Folder>
     <Folder Name="/ParametersManagement/">
-        <Project Path="../ParametersManagement/LibApiClientParameters/LibApiClientParameters.csproj" />
-        <Project Path="../ParametersManagement/LibDatabaseParameters/LibDatabaseParameters.csproj" />
-        <Project Path="../ParametersManagement/LibFileParameters/LibFileParameters.csproj" />
-        <Project Path="../ParametersManagement/LibParameters/LibParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement.LibApiClientParameters/ParametersManagement.LibApiClientParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement.LibDatabaseParameters/ParametersManagement.LibDatabaseParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement.LibFileParameters/ParametersManagement.LibFileParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement.LibParameters/ParametersManagement.LibParameters.csproj" />
     </Folder>
     <Folder Name="/Solution Items/">
         <File Path=".editorconfig" />
@@ -23,24 +23,24 @@
         <File Path="Directory.Packages.props" />
     </Folder>
     <Folder Name="/SystemTools/">
-        <Project Path="../SystemTools/ApiContracts/ApiContracts.csproj" />
-        <Project Path="../SystemTools/StringMessagesApiContracts/StringMessagesApiContracts.csproj" />
-        <Project Path="../SystemTools/SystemToolsShared/SystemToolsShared.csproj" />
+        <Project Path="../SystemTools/SystemTools.ApiContracts/SystemTools.ApiContracts.csproj" />
+        <Project Path="../SystemTools/SystemTools.StringMessagesApiContracts/SystemTools.StringMessagesApiContracts.csproj" />
+        <Project Path="../SystemTools/SystemTools.SystemToolsShared/SystemTools.SystemToolsShared.csproj" />
     </Folder>
     <Folder Name="/Tests/">
-        <Project Path="LibApAgentData.Tests/LibApAgentData.Tests.csproj" />
+        <Project Path="ApAgentData.LibApAgentData.Tests/ApAgentData.LibApAgentData.Tests.csproj" />
     </Folder>
     <Folder Name="/ToolsManagement/">
-        <Project Path="../ToolsManagement/ApiClientsManagement/ApiClientsManagement.csproj" />
-        <Project Path="../ToolsManagement/CompressionManagement/CompressionManagement.csproj" />
-        <Project Path="../ToolsManagement/DatabasesManagement/DatabasesManagement.csproj" />
-        <Project Path="../ToolsManagement/FileManagersMain/FileManagersMain.csproj" />
-        <Project Path="../ToolsManagement/LibToolActions/LibToolActions.csproj" />
+        <Project Path="../ToolsManagement/ToolsManagement.ApiClientsManagement/ToolsManagement.ApiClientsManagement.csproj" />
+        <Project Path="../ToolsManagement/ToolsManagement.CompressionManagement/ToolsManagement.CompressionManagement.csproj" />
+        <Project Path="../ToolsManagement/ToolsManagement.DatabasesManagement/ToolsManagement.DatabasesManagement.csproj" />
+        <Project Path="../ToolsManagement/ToolsManagement.FileManagersMain/ToolsManagement.FileManagersMain.csproj" />
+        <Project Path="../ToolsManagement/ToolsManagement.LibToolActions/ToolsManagement.LibToolActions.csproj" />
     </Folder>
     <Folder Name="/WebAgentContracts/">
-        <Project Path="../WebAgentContracts/WebAgentDatabasesApiContracts/WebAgentDatabasesApiContracts.csproj" />
-        <Project Path="../WebAgentContracts/WebAgentProjectsApiContracts/WebAgentProjectsApiContracts.csproj" />
+        <Project Path="../WebAgentContracts/WebAgentContracts.WebAgentDatabasesApiContracts/WebAgentContracts.WebAgentDatabasesApiContracts.csproj" />
+        <Project Path="../WebAgentContracts/WebAgentContracts.WebAgentProjectsApiContracts/WebAgentContracts.WebAgentProjectsApiContracts.csproj" />
     </Folder>
     <Project Path="ApAgentData/ApAgentData.csproj" Id="3360edfe-cf30-429a-b368-4ff52e24cd1e" />
-    <Project Path="LibApAgentData/ApAgentData.LibApAgentData.csproj" />
+    <Project Path="ApAgentData.LibApAgentData/ApAgentData.LibApAgentData.csproj" />
 </Solution>
