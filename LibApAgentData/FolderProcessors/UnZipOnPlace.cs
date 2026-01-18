@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace LibApAgentData.FolderProcessors;
+namespace ApAgentData.LibApAgentData.FolderProcessors;
 
 public sealed class UnZipOnPlace : FolderProcessor
 {

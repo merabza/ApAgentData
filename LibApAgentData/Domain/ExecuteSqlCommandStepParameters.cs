@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 using SystemToolsShared.Errors;
 
-namespace LibApAgentData.Domain;
+namespace ApAgentData.LibApAgentData.Domain;
 
 public sealed class ExecuteSqlCommandStepParameters
 {

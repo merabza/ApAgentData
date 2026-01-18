@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace LibApAgentData;
+namespace ApAgentData.LibApAgentData;
 
 public static class StringExtension
 {

@@ -1,11 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LibApAgentData.Domain;
+using ApAgentData.LibApAgentData.Domain;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
-namespace LibApAgentData.StepCommands;
+namespace ApAgentData.LibApAgentData.StepCommands;
 
 public sealed class RunProgramStepCommand : ProcessesToolAction
 {

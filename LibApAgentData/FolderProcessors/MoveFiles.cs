@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ApAgentData.LibApAgentData.StepCommands;
 using ConnectTools;
 using FileManagersMain;
-using LibApAgentData.StepCommands;
 using LibFileParameters.Models;
 using Microsoft.Extensions.Logging;
 
-namespace LibApAgentData.FolderProcessors;
+namespace ApAgentData.LibApAgentData.FolderProcessors;
 
 public sealed class MoveFiles : CopyMoveFiles
 {

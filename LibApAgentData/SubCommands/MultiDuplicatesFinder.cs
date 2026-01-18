@@ -1,8 +1,8 @@
 ﻿using System;
-using LibApAgentData.Models;
+using ApAgentData.LibApAgentData.Models;
 using SystemToolsShared;
 
-namespace LibApAgentData.SubCommands;
+namespace ApAgentData.LibApAgentData.SubCommands;
 
 public sealed class MultiDuplicatesFinder
 {

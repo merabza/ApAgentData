@@ -42,5 +42,5 @@
         <Project Path="../WebAgentContracts/WebAgentProjectsApiContracts/WebAgentProjectsApiContracts.csproj" />
     </Folder>
     <Project Path="ApAgentData/ApAgentData.csproj" Id="3360edfe-cf30-429a-b368-4ff52e24cd1e" />
-    <Project Path="LibApAgentData/LibApAgentData.csproj" />
+    <Project Path="LibApAgentData/ApAgentData.LibApAgentData.csproj" />
 </Solution>

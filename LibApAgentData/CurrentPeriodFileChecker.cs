@@ -3,7 +3,7 @@ using System.Linq;
 using FileManagersMain;
 using SystemToolsShared;
 
-namespace LibApAgentData;
+namespace ApAgentData.LibApAgentData;
 
 public sealed class CurrentPeriodFileChecker
 {

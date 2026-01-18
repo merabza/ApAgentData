@@ -3,14 +3,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using ApAgentData.LibApAgentData.Models;
 using ConnectTools;
 using FileManagersMain;
-using LibApAgentData.Models;
 using SystemToolsShared;
 
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace LibApAgentData.FolderProcessors;
+namespace ApAgentData.LibApAgentData.FolderProcessors;
 
 public sealed class DuplicateFilesFinder : FolderProcessor
 {

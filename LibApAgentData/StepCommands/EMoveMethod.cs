@@ -1,4 +1,4 @@
-﻿namespace LibApAgentData.StepCommands;
+﻿namespace ApAgentData.LibApAgentData.StepCommands;
 
 public enum EMoveMethod
 {

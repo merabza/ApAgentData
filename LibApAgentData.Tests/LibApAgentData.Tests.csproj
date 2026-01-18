@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LibApAgentData\LibApAgentData.csproj" />
+    <ProjectReference Include="..\LibApAgentData\ApAgentData.LibApAgentData.csproj" />
   </ItemGroup>
 
 </Project>

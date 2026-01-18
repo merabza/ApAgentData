@@ -6,7 +6,7 @@ using FileManagersMain;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
-namespace LibApAgentData;
+namespace ApAgentData.LibApAgentData;
 
 public sealed class ProcLogFile
 {

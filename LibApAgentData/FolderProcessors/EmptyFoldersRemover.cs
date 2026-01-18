@@ -2,7 +2,7 @@
 
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace LibApAgentData.FolderProcessors;
+namespace ApAgentData.LibApAgentData.FolderProcessors;
 
 public sealed class EmptyFoldersRemover : FolderProcessor
 {

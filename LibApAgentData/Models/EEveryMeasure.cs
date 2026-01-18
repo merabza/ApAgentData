@@ -1,4 +1,4 @@
-﻿namespace LibApAgentData.Models;
+﻿namespace ApAgentData.LibApAgentData.Models;
 
 public enum EEveryMeasure
 {

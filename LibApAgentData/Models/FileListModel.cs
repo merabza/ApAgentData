@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LibApAgentData.Models;
+namespace ApAgentData.LibApAgentData.Models;
 
 public sealed class FileListModel
 {

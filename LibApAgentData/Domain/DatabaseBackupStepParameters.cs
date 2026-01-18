@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
+using ApAgentData.LibApAgentData.Models;
 using DatabasesManagement;
 using DbTools;
 using FileManagersMain;
-using LibApAgentData.Models;
 using LibApiClientParameters;
 using LibDatabaseParameters;
 using LibFileParameters.Models;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 using SystemToolsShared.Errors;
 
-namespace LibApAgentData.Domain;
+namespace ApAgentData.LibApAgentData.Domain;
 
 public sealed class DatabaseBackupStepParameters
 {

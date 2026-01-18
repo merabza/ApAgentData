@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using LibApAgentData.Domain;
-using LibApAgentData.Models;
-using LibApAgentData.StepCommands;
+using ApAgentData.LibApAgentData.Domain;
+using ApAgentData.LibApAgentData.Models;
+using ApAgentData.LibApAgentData.StepCommands;
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
-namespace LibApAgentData.Steps;
+namespace ApAgentData.LibApAgentData.Steps;
 
 public sealed class FilesMoveStep : JobStep
 {

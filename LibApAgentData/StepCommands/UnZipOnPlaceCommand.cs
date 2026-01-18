@@ -7,7 +7,7 @@ using CompressionManagement;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 
-namespace LibApAgentData.StepCommands;
+namespace ApAgentData.LibApAgentData.StepCommands;
 
 public sealed class UnZipOnPlaceCommand : ProcessesToolAction
 {

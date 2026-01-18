@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LibApAgentData.Domain;
+using ApAgentData.LibApAgentData.Domain;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 using WebAgentDatabasesApiContracts.V1.Responses;
 
-namespace LibApAgentData.ToolActions;
+namespace ApAgentData.LibApAgentData.ToolActions;
 
 public sealed class UploadToolAction : ProcessesToolAction
 {

@@ -3,7 +3,7 @@ using System.Linq;
 using LibParameters;
 using SystemToolsShared;
 
-namespace LibApAgentData.Models;
+namespace ApAgentData.LibApAgentData.Models;
 
 public sealed class ReplacePairsSet : ItemData
 {

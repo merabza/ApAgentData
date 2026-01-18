@@ -1,14 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LibApAgentData.Domain;
-using LibApAgentData.FolderProcessors;
-using LibApAgentData.Steps;
+using ApAgentData.LibApAgentData.Domain;
+using ApAgentData.LibApAgentData.FolderProcessors;
+using ApAgentData.LibApAgentData.Steps;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace LibApAgentData.StepCommands;
+namespace ApAgentData.LibApAgentData.StepCommands;
 
 public sealed class FilesSyncStepCommand : ProcessesToolAction
 {

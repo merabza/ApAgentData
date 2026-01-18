@@ -5,7 +5,7 @@ using LibFileParameters.Models;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
-namespace LibApAgentData.Domain;
+namespace ApAgentData.LibApAgentData.Domain;
 
 public sealed class FilesBackupStepParameters
 {

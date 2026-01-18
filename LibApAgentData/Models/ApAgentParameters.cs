@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using LibApAgentData.Steps;
+using ApAgentData.LibApAgentData.Steps;
 using LibApiClientParameters;
 using LibDatabaseParameters;
 using LibFileParameters.Interfaces;
@@ -12,7 +12,7 @@ using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
-namespace LibApAgentData.Models;
+namespace ApAgentData.LibApAgentData.Models;
 
 public sealed class ApAgentParameters : IParametersWithFileStorages, IParametersWithDatabaseServerConnections,
     IParametersWithApiClients, IParametersWithSmartSchemas, IParametersWithArchivers, IParametersWithExcludeSets

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace LibApAgentData.Models;
+namespace ApAgentData.LibApAgentData.Models;
 
 public sealed class DuplicateFilesStorage
 {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Net.Http;
-using LibApAgentData.Models;
+using ApAgentData.LibApAgentData.Models;
 using LibParameters;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
-namespace LibApAgentData.Steps;
+namespace ApAgentData.LibApAgentData.Steps;
 
 //ერთი ამოცანა ამოცანების რიგში
 public /*open*/ class JobStep : ItemData

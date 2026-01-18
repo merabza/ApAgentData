@@ -7,7 +7,7 @@ using FileManagersMain;
 
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace LibApAgentData.FolderProcessors;
+namespace ApAgentData.LibApAgentData.FolderProcessors;
 
 public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
 {

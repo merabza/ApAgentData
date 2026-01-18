@@ -1,7 +1,7 @@
 ﻿using System;
 using LibParameters;
 
-namespace LibApAgentData.Models;
+namespace ApAgentData.LibApAgentData.Models;
 
 public sealed class JobSchedule : ItemData
 {

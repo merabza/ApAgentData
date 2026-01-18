@@ -1,12 +1,12 @@
 ﻿using System;
+using ApAgentData.LibApAgentData.Models;
+using ApAgentData.LibApAgentData.StepCommands;
 using FileManagersMain;
-using LibApAgentData.Models;
-using LibApAgentData.StepCommands;
 using LibFileParameters.Models;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared;
 
-namespace LibApAgentData.Domain;
+namespace ApAgentData.LibApAgentData.Domain;
 
 public sealed class FilesSyncStepParameters
 {

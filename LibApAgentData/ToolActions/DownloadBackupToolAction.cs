@@ -1,12 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LibApAgentData.Domain;
+using ApAgentData.LibApAgentData.Domain;
 using LibFileParameters.Models;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using WebAgentDatabasesApiContracts.V1.Responses;
 
-namespace LibApAgentData.ToolActions;
+namespace ApAgentData.LibApAgentData.ToolActions;
 
 public sealed class DownloadBackupToolAction : ProcessesToolAction
 {

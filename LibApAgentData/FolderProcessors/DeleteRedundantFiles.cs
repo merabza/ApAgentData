@@ -5,7 +5,7 @@ using LibFileParameters.Models;
 
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace LibApAgentData.FolderProcessors;
+namespace ApAgentData.LibApAgentData.FolderProcessors;
 
 public sealed class DeleteRedundantFiles : FolderProcessor
 {

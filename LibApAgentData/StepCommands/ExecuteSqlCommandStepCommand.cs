@@ -1,12 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LibApAgentData.Domain;
-using LibApAgentData.Steps;
+using ApAgentData.LibApAgentData.Domain;
+using ApAgentData.LibApAgentData.Steps;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared.Errors;
 
-namespace LibApAgentData.StepCommands;
+namespace ApAgentData.LibApAgentData.StepCommands;
 
 public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
 {

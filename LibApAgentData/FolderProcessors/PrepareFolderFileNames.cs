@@ -1,9 +1,9 @@
-﻿using ConnectTools;
+﻿using ApAgentData.LibApAgentData.StepCommands;
+using ConnectTools;
 using FileManagersMain;
-using LibApAgentData.StepCommands;
 using LibFileParameters.Models;
 
-namespace LibApAgentData.FolderProcessors;
+namespace ApAgentData.LibApAgentData.FolderProcessors;
 
 public sealed class PrepareFolderFileNames : FolderProcessor
 {

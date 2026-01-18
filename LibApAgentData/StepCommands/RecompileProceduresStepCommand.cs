@@ -1,14 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using ApAgentData.LibApAgentData.Domain;
+using ApAgentData.LibApAgentData.Steps;
+using ApAgentData.LibApAgentData.ToolActions;
 using DatabasesManagement;
-using LibApAgentData.Domain;
-using LibApAgentData.Steps;
-using LibApAgentData.ToolActions;
 using LibToolActions.BackgroundTasks;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared.Errors;
 
-namespace LibApAgentData.StepCommands;
+namespace ApAgentData.LibApAgentData.StepCommands;
 
 public sealed class RecompileProceduresStepCommand : MultiDatabaseProcessesToolAction
 {

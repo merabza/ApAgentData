@@ -7,7 +7,7 @@ using LibDatabaseParameters;
 using Microsoft.Extensions.Logging;
 using SystemToolsShared.Errors;
 
-namespace LibApAgentData.Domain;
+namespace ApAgentData.LibApAgentData.Domain;
 
 public sealed class MultiDatabaseProcessStepParameters
 {
