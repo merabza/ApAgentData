@@ -46,7 +46,7 @@ public sealed class ProcLogFile
 
     public void CreateNow(string withText)
     {
-        var fileName = Path.Combine(_workFolder, _maskManager.GetFileNameForDate(DateTime.Now, _extension));
+        string fileName = Path.Combine(_workFolder, _maskManager.GetFileNameForDate(DateTime.Now, _extension));
         var checkFile = new FileInfo(fileName);
         if (checkFile.Directory is { Exists: false })
         {

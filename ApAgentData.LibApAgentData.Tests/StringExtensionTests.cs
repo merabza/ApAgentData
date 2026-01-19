@@ -13,7 +13,7 @@ public class StringExtensionTests
         const string fileName = "test<>:\"/\\|?*'«»file.txt";
 
         // Act
-        var result = fileName.PrepareFileName();
+        string result = fileName.PrepareFileName();
 
         // Assert
         Assert.Equal("testfile.txt", result);
@@ -26,7 +26,7 @@ public class StringExtensionTests
         const string fileName = "valid_file-name.123.txt";
 
         // Act
-        var result = fileName.PrepareFileName();
+        string result = fileName.PrepareFileName();
 
         // Assert
         Assert.Equal("valid_file-name.123.txt", result);
@@ -39,7 +39,7 @@ public class StringExtensionTests
         const string fileName = "";
 
         // Act
-        var result = fileName.PrepareFileName();
+        string result = fileName.PrepareFileName();
 
         // Assert
         Assert.Equal("", result);
@@ -52,7 +52,7 @@ public class StringExtensionTests
         const string fileName = "<>:\"/\\|?*'«»";
 
         // Act
-        var result = fileName.PrepareFileName();
+        string result = fileName.PrepareFileName();
 
         // Assert
         Assert.Equal("", result);
@@ -65,7 +65,7 @@ public class StringExtensionTests
         const string fileName = "my file name.txt";
 
         // Act
-        var result = fileName.PrepareFileName();
+        string result = fileName.PrepareFileName();
 
         // Assert
         Assert.Equal("my file name.txt", result);
@@ -78,7 +78,7 @@ public class StringExtensionTests
         const string fileName = "test<test>test:test.txt";
 
         // Act
-        var result = fileName.PrepareFileName();
+        string result = fileName.PrepareFileName();
 
         // Assert
         Assert.Equal("testtesttesttest.txt", result);
@@ -96,7 +96,7 @@ public class StringExtensionTests
         const int maxLength = 50;
 
         // Act
-        var result = fileName.PreparedFileNameConsideringLength(maxLength);
+        string result = fileName.PreparedFileNameConsideringLength(maxLength);
 
         // Assert
         Assert.Equal("shortfile.txt", result);
@@ -110,7 +110,7 @@ public class StringExtensionTests
         const int maxLength = 20;
 
         // Act
-        var result = fileName.PreparedFileNameConsideringLength(maxLength);
+        string result = fileName.PreparedFileNameConsideringLength(maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -125,7 +125,7 @@ public class StringExtensionTests
         const int maxLength = 15;
 
         // Act
-        var result = fileName.PreparedFileNameConsideringLength(maxLength);
+        string result = fileName.PreparedFileNameConsideringLength(maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -145,7 +145,7 @@ public class StringExtensionTests
         const int maxLength = 50;
 
         // Act
-        var result = fileName.PreparedFileNameConsideringLength(maxLength);
+        string result = fileName.PreparedFileNameConsideringLength(maxLength);
 
         // Assert
         Assert.Equal("test file.txt", result);
@@ -159,7 +159,7 @@ public class StringExtensionTests
         const int maxLength = 5;
 
         // Act
-        var result = fileName.PreparedFileNameConsideringLength(maxLength);
+        string result = fileName.PreparedFileNameConsideringLength(maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -173,7 +173,7 @@ public class StringExtensionTests
         const int maxLength = 5;
 
         // Act
-        var result = fileName.PreparedFileNameConsideringLength(maxLength);
+        string result = fileName.PreparedFileNameConsideringLength(maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -191,7 +191,7 @@ public class StringExtensionTests
         const string fileExtension = ".txt";
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileName(0, fileExtension);
+        string result = fileNameWithoutExtension.GetNewFileName(0, fileExtension);
 
         // Assert
         Assert.Equal("testfile.txt", result);
@@ -205,7 +205,7 @@ public class StringExtensionTests
         const string fileExtension = ".txt";
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileName(1, fileExtension);
+        string result = fileNameWithoutExtension.GetNewFileName(1, fileExtension);
 
         // Assert
         Assert.Equal("testfile(1).txt", result);
@@ -219,7 +219,7 @@ public class StringExtensionTests
         const string fileExtension = ".txt";
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileName(5, fileExtension);
+        string result = fileNameWithoutExtension.GetNewFileName(5, fileExtension);
 
         // Assert
         Assert.Equal("testfile(5).txt", result);
@@ -233,7 +233,7 @@ public class StringExtensionTests
         const string fileExtension = "";
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileName(3, fileExtension);
+        string result = fileNameWithoutExtension.GetNewFileName(3, fileExtension);
 
         // Assert
         Assert.Equal("testfile(3)", result);
@@ -247,7 +247,7 @@ public class StringExtensionTests
         const string fileExtension = ".txt";
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileName(2, fileExtension);
+        string result = fileNameWithoutExtension.GetNewFileName(2, fileExtension);
 
         // Assert
         Assert.Equal("(2).txt", result);
@@ -261,7 +261,7 @@ public class StringExtensionTests
         const string fileExtension = ".zip";
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileName(1, fileExtension);
+        string result = fileNameWithoutExtension.GetNewFileName(1, fileExtension);
 
         // Assert
         Assert.Equal("testfile.backup(1).zip", result);
@@ -280,7 +280,7 @@ public class StringExtensionTests
         const int maxLength = 50;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
 
         // Assert
         Assert.Equal("testfile.txt", result);
@@ -295,7 +295,7 @@ public class StringExtensionTests
         const int maxLength = 20;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -311,7 +311,7 @@ public class StringExtensionTests
         const int maxLength = 25;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(5, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(5, fileExtension, maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -323,11 +323,11 @@ public class StringExtensionTests
     public void GetNewFileNameWithMaxLength_UsesDefaultMaxLengthOf255()
     {
         // Arrange
-        var fileNameWithoutExtension = new string('a', 300);
+        string fileNameWithoutExtension = new('a', 300);
         const string fileExtension = ".txt";
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension);
 
         // Assert
         Assert.True(result.Length <= 255);
@@ -343,7 +343,7 @@ public class StringExtensionTests
         const int maxLength = 10;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -359,7 +359,7 @@ public class StringExtensionTests
         const int maxLength = 15;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(10, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(10, fileExtension, maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -377,7 +377,7 @@ public class StringExtensionTests
         const int maxLength = 12;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
 
         // Assert
         Assert.Equal("testfile.txt", result);
@@ -394,7 +394,7 @@ public class StringExtensionTests
         const int maxLength = 11;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -410,7 +410,7 @@ public class StringExtensionTests
         const int maxLength = 15;
 
         // Act
-        var result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(999, fileExtension, maxLength);
+        string result = fileNameWithoutExtension.GetNewFileNameWithMaxLength(999, fileExtension, maxLength);
 
         // Assert
         Assert.True(result.Length <= maxLength);
@@ -430,8 +430,8 @@ public class StringExtensionTests
         const int maxLength = 20;
 
         // Act
-        var prepared = fileName.PrepareFileName();
-        var withLength = fileName.PreparedFileNameConsideringLength(maxLength);
+        string prepared = fileName.PrepareFileName();
+        string withLength = fileName.PreparedFileNameConsideringLength(maxLength);
 
         // Assert
         Assert.DoesNotContain("<", prepared);
@@ -448,9 +448,9 @@ public class StringExtensionTests
         const string fileExtension = ".txt";
 
         // Act
-        var result1 = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, 20);
-        var result2 = fileNameWithoutExtension.GetNewFileNameWithMaxLength(1, fileExtension, 20);
-        var result3 = fileNameWithoutExtension.GetNewFileNameWithMaxLength(2, fileExtension, 20);
+        string result1 = fileNameWithoutExtension.GetNewFileNameWithMaxLength(0, fileExtension, 20);
+        string result2 = fileNameWithoutExtension.GetNewFileNameWithMaxLength(1, fileExtension, 20);
+        string result3 = fileNameWithoutExtension.GetNewFileNameWithMaxLength(2, fileExtension, 20);
 
         // Assert
         Assert.True(result1.Length <= 20);

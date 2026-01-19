@@ -11,9 +11,11 @@ using ApAgentData.LibApAgentData.ToolActions;
 using DatabaseTools.DbTools;
 using DatabaseTools.DbTools.Models;
 using Microsoft.Extensions.Logging;
+using OneOf;
 using SystemTools.SystemToolsShared;
 using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.LibToolActions.BackgroundTasks;
+using WebAgentContracts.WebAgentDatabasesApiContracts.V1.Responses;
 
 namespace ApAgentData.LibApAgentData.StepCommands;
 
@@ -42,7 +44,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
     {
         _logger.LogInformation("Checking parameters...");
 
-        var localPath = _par.LocalPath;
+        string localPath = _par.LocalPath;
 
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
         if (!Directory.Exists(localPath))
@@ -52,16 +54,17 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         }
 
         //დადგინდეს არსებული ბაზების სია
-        var getDatabaseNamesResult = await _par.AgentClient.GetDatabaseNames(cancellationToken);
+        OneOf<List<DatabaseInfoModel>, Err[]> getDatabaseNamesResult =
+            await _par.AgentClient.GetDatabaseNames(cancellationToken);
         if (getDatabaseNamesResult.IsT1)
         {
             Err.PrintErrorsOnConsole(getDatabaseNamesResult.AsT1);
             return false;
         }
 
-        var databaseInfos = getDatabaseNamesResult.AsT0;
+        List<DatabaseInfoModel>? databaseInfos = getDatabaseNamesResult.AsT0;
 
-        var dbInfos = databaseInfos.Where(w =>
+        IEnumerable<DatabaseInfoModel> dbInfos = databaseInfos.Where(w =>
             w.RecoveryModel != EDatabaseRecoveryModel.Simple || _par.BackupType != EBackupType.TrLog);
 
         List<string> databaseNames = CountDatabaseNames(_par.DatabaseSet, dbInfos);
@@ -70,29 +73,29 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         //თუ ასეთი აღმოჩნდა, გამოვიტანოთ ინფორმაცია ამის შესახებ
         if (_par.DatabaseSet == EDatabaseSet.DatabasesBySelection)
         {
-            var missingDatabaseNames = _par.DatabaseNames.Except(databaseInfos.Select(s => s.Name)).ToList();
+            List<string> missingDatabaseNames = _par.DatabaseNames.Except(databaseInfos.Select(s => s.Name)).ToList();
 
             if (missingDatabaseNames.Count > 0)
             {
-                foreach (var databaseName in missingDatabaseNames)
+                foreach (string databaseName in missingDatabaseNames)
                 {
                     _logger.LogWarning("Database with name {DatabaseName} is missing", databaseName);
                 }
             }
         }
 
-        var needDownload = NeedDownload();
+        bool needDownload = NeedDownload();
         //თითოეული ბაზისათვის გაკეთდეს ბაქაპირების პროცესი
-        foreach (var databaseName in databaseNames)
+        foreach (string databaseName in databaseNames)
         {
             if (ProcessManager is not null && ProcessManager.CheckCancellation())
             {
                 return false;
             }
 
-            var backupFileNamePrefix = _par.DbBackupParameters.GetPrefix(databaseName);
+            string backupFileNamePrefix = _par.DbBackupParameters.GetPrefix(databaseName);
 
-            var backupFileNameSuffix = _par.DbBackupParameters.GetSuffix() + (_par.CompressParameters is null
+            string backupFileNameSuffix = _par.DbBackupParameters.GetSuffix() + (_par.CompressParameters is null
                 ? string.Empty
                 : _par.CompressParameters.Archiver.FileExtension.AddNeedLeadPart("."));
 
@@ -104,15 +107,16 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
             _logger.LogInformation("Backup database {DatabaseName}...", databaseName);
 
-            var createBackupResult = await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName,
-                _par.DbServerFoldersSetName, cancellationToken);
+            OneOf<BackupFileParameters, Err[]> createBackupResult =
+                await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, _par.DbServerFoldersSetName,
+                    cancellationToken);
             if (createBackupResult.IsT1)
             {
                 Err.PrintErrorsOnConsole(createBackupResult.AsT1);
                 continue;
             }
 
-            var backupFileParameters = createBackupResult.AsT0;
+            BackupFileParameters? backupFileParameters = createBackupResult.AsT0;
 
             //თუ ბექაპის დამზადებისას რაიმე პრობლემა დაფიქსირდა, ვჩერდებით.
             if (backupFileParameters == null)
@@ -144,7 +148,8 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
             }
 
             //აქ შემდეგი მოქმედების გამოძახება ხდება, იმიტომ რომ თითოეული ბაზისათვის ცალკე მოქმედებების ჯაჭვის აგება ხდება
-            var nextAction = needDownload ? downloadBackupToolAction : downloadBackupToolAction.GetNextAction();
+            ProcessesToolAction? nextAction =
+                needDownload ? downloadBackupToolAction : downloadBackupToolAction.GetNextAction();
             await RunNextAction(nextAction, cancellationToken);
         }
 
@@ -154,7 +159,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
     private List<string> CountDatabaseNames(EDatabaseSet databaseSet, IEnumerable<DatabaseInfoModel> dbInfos)
     {
         //დადგინდეს დასაბექაპებელი ბაზების სია
-        var databaseNames = databaseSet switch
+        List<string> databaseNames = databaseSet switch
         {
             EDatabaseSet.AllDatabases => dbInfos.Select(s => s.Name).ToList(),
             EDatabaseSet.SystemDatabases => dbInfos.Where(w => w.IsSystemDatabase).Select(s => s.Name).ToList(),
@@ -174,7 +179,7 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
 
     private bool NeedDownload()
     {
-        var fileStoragePath = _par.DownloadFileStorageData.FileStoragePath;
+        string? fileStoragePath = _par.DownloadFileStorageData.FileStoragePath;
 
         if (string.IsNullOrWhiteSpace(fileStoragePath))
         {

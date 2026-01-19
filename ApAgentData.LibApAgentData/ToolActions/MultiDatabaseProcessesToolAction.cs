@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ApAgentData.LibApAgentData.Domain;
 using ApAgentData.LibApAgentData.Models;
 using ApAgentData.LibApAgentData.Steps;
+using DatabaseTools.DbTools.Models;
 using Microsoft.Extensions.Logging;
 using ToolsManagement.DatabasesManagement;
 using ToolsManagement.LibToolActions.BackgroundTasks;
@@ -44,7 +45,7 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
         {
             var databasesListCreator =
                 new DatabasesListCreator(_multiDatabaseProcessStep.DatabaseSet, _par.AgentClient);
-            var dbList = await databasesListCreator.LoadDatabaseNames(cancellationToken);
+            List<DatabaseInfoModel> dbList = await databasesListCreator.LoadDatabaseNames(cancellationToken);
             databaseNames = dbList.Select(s => s.Name).ToList();
         }
 
@@ -59,9 +60,9 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
             return false;
         }
 
-        var databaseNames = await GetDatabaseNames(cancellationToken);
-        var all = true;
-        foreach (var databaseName in databaseNames)
+        List<string> databaseNames = await GetDatabaseNames(cancellationToken);
+        bool all = true;
+        foreach (string databaseName in databaseNames)
         {
             var procLogFile = new ProcLogFile(_useConsole, _logger, $"{_stepName}_{databaseName}_",
                 _multiDatabaseProcessStep.PeriodType, _multiDatabaseProcessStep.StartAt,

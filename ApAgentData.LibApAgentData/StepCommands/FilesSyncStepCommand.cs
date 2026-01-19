@@ -61,7 +61,7 @@ public sealed class FilesSyncStepCommand : ProcessesToolAction
             }
         }
 
-        var destinationFileMaxLength = _par.DestinationFileStorage.FileNameMaxLength == 0
+        int destinationFileMaxLength = _par.DestinationFileStorage.FileNameMaxLength == 0
             ? 255
             : _par.DestinationFileStorage.FileNameMaxLength;
 

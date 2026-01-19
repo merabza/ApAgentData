@@ -43,7 +43,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
             return false;
         }
 
-        var fileFullName = dFileManager.GetPath(afterRootPath, file.FileName);
+        string fileFullName = dFileManager.GetPath(afterRootPath, file.FileName);
 
         Console.WriteLine($"Analyze file {fileFullName}");
 

@@ -40,8 +40,8 @@ public sealed class DatabasesListCreator
 
     private static (bool, bool) GetDbSetParams(EDatabaseSet databaseSet)
     {
-        var sysBaseDoesMatter = false;
-        var checkSysBase = false;
+        bool sysBaseDoesMatter = false;
+        bool checkSysBase = false;
 
         switch (databaseSet)
         {

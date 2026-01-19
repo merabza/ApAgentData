@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -38,7 +39,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
     {
         _logger.LogInformation("Checking parameters...");
 
-        var localPath = _par.LocalPath;
+        string localPath = _par.LocalPath;
 
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
         if (!Directory.Exists(localPath))
@@ -53,7 +54,7 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
                 _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken);
         }
 
-        foreach (var kvpBackupFolderPath in _par.BackupFolderPaths)
+        foreach (KeyValuePair<string, string> kvpBackupFolderPath in _par.BackupFolderPaths)
         {
             if (!await ExecuteBackup(_par.MaskName + kvpBackupFolderPath.Key, [kvpBackupFolderPath.Value],
                     _par.Archiver, _par.ExcludeSet, _par.UploadFileStorage, cancellationToken))
@@ -73,8 +74,8 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
             return false;
         }
 
-        var backupFileNamePrefix = maskName;
-        var backupFileNameSuffix = archiver.FileExtension.AddNeedLeadPart(".");
+        string backupFileNamePrefix = maskName;
+        string backupFileNameSuffix = archiver.FileExtension.AddNeedLeadPart(".");
 
         //შემოწმდეს ამ პერიოდში უკვე ხომ არ არის გაკეთებული ამ ბაზის ბექაპი
         if (HaveCurrentPeriodFile(backupFileNamePrefix, _par.DateMask, backupFileNameSuffix))
@@ -82,11 +83,11 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
             return true;
         }
 
-        var backupFileName =
+        string backupFileName =
             $"{backupFileNamePrefix}{DateTime.Now.ToString(_par.DateMask, CultureInfo.InvariantCulture)}{backupFileNameSuffix}";
-        var backupFileFullName = Path.Combine(_par.LocalPath, backupFileName);
+        string backupFileFullName = Path.Combine(_par.LocalPath, backupFileName);
 
-        var tempFileName = backupFileFullName + _par.ArchivingTempExtension.AddNeedLeadPart(".");
+        string tempFileName = backupFileFullName + _par.ArchivingTempExtension.AddNeedLeadPart(".");
 
         if (!archiver.SourcesToArchive(sources, tempFileName, [.. excludeSet.FolderFileMasks]))
         {
@@ -106,7 +107,8 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         var uploadToolAction =
             new UploadToolAction(_logger, ProcessManager, _par.UploadParameters, backupFileParameters);
 
-        var nextAction = NeedUpload(uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
+        ProcessesToolAction? nextAction =
+            NeedUpload(uploadFileStorage) ? uploadToolAction : uploadToolAction.GetNextAction();
         await RunNextAction(nextAction, cancellationToken);
 
         return true;

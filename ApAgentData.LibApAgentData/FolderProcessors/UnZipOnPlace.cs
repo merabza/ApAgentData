@@ -28,19 +28,19 @@ public sealed class UnZipOnPlace : FolderProcessor
 
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
-        var zipFileName = Path.GetFileNameWithoutExtension(file.FileName);
-        var i = 0;
+        string zipFileName = Path.GetFileNameWithoutExtension(file.FileName);
+        int i = 0;
 
-        var zipFileFullName = FileManager.GetPath(afterRootPath, file.FileName);
+        string zipFileFullName = FileManager.GetPath(afterRootPath, file.FileName);
 
         while (FileManager.DirectoryExists(afterRootPath, GetNewFolderName(zipFileName, i)))
         {
             i++;
         }
 
-        var newFolderName = GetNewFolderName(zipFileName, i);
+        string newFolderName = GetNewFolderName(zipFileName, i);
         FileManager.CreateDirectory(afterRootPath, newFolderName);
-        var newDirFullName = FileManager.GetPath(afterRootPath, newFolderName);
+        string newDirFullName = FileManager.GetPath(afterRootPath, newFolderName);
 
         var archiver = new ZipClassArchiver(_logger, _useConsole, ".zip");
 

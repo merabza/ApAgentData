@@ -29,13 +29,13 @@ public sealed class MoveFiles : CopyMoveFiles
     {
         var dirNames = afterRootPath?.Split(FileManager.DirectorySeparatorChar).TakeLast(_maxFolderCount)
             .Select(s => s.Trim()).ToList() ?? [];
-        var destinationAfterRootPath = CheckDestinationDirs(dirNames);
+        string? destinationAfterRootPath = CheckDestinationDirs(dirNames);
 
-        var preparedFileName = file.FileName.PrepareFileName().Trim();
-        var extension = Path.GetExtension(preparedFileName).Trim();
-        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(preparedFileName).Trim();
+        string preparedFileName = file.FileName.PrepareFileName().Trim();
+        string extension = Path.GetExtension(preparedFileName).Trim();
+        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(preparedFileName).Trim();
 
-        var i = 0;
+        int i = 0;
         while (DestinationFileManager.FileExists(destinationAfterRootPath,
                    fileNameWithoutExtension.GetNewFileNameWithMaxLength(i, extension, FileMaxLength)))
         {
@@ -49,10 +49,10 @@ public sealed class MoveFiles : CopyMoveFiles
 
     private string? CheckDestinationDirs(IEnumerable<string> dirNames)
     {
-        var afterRootPath = _moveFolderName;
-        foreach (var dir in dirNames)
+        string afterRootPath = _moveFolderName;
+        foreach (string dir in dirNames)
         {
-            var validDir = dir;
+            string validDir = dir;
             //როცა ფოლდერის სახელის ბოლოში არის წერტილი, ეს ცუდად მოქმედებს შემდეგ პროცესებზე
             //FTP-ს მხარეს გადაწერა ხერხდება, მაგრამ FTP-დან ლინუქსზე ვეღარ.
             //ვინდოუსი ჭკვიანურად იქცევა და ასეთი ფოლდერის შექმნისას თვითონ აჭრის ბოლო წერტილებს.
@@ -68,7 +68,7 @@ public sealed class MoveFiles : CopyMoveFiles
                 return null;
             }
 
-            var forCreateDirPart = DestinationFileManager.PathCombine(afterRootPath, dir);
+            string forCreateDirPart = DestinationFileManager.PathCombine(afterRootPath, dir);
             if (!_checkedFolders.Contains(forCreateDirPart))
             {
                 if (!DestinationFileManager.CareCreateDirectory(afterRootPath, dir, true))

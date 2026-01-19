@@ -33,7 +33,7 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
 
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
-        var newFileName = file.FileName;
+        string? newFileName = file.FileName;
         bool replaced;
         do
         {
@@ -56,10 +56,10 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
 
         //შევუცვალოთ სახელი ფაილს fileName დან newFileName-კენ
 
-        var extension = Path.GetExtension(newFileName);
-        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(newFileName);
+        string? extension = Path.GetExtension(newFileName);
+        string? fileNameWithoutExtension = Path.GetFileNameWithoutExtension(newFileName);
 
-        var i = 0;
+        int i = 0;
         while (FileManager.FileExists(afterRootPath, fileNameWithoutExtension.GetNewFileName(i, extension)))
         {
             i++;

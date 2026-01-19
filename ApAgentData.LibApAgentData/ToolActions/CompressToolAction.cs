@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ApAgentData.LibApAgentData.Domain;
@@ -70,14 +71,14 @@ public sealed class CompressToolAction : ProcessesToolAction
             return ValueTask.FromResult(true);
         }
 
-        var filesForCompress = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
+        List<BuFileInfo> filesForCompress = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
 
-        foreach (var fileInfo in filesForCompress)
+        foreach (BuFileInfo fileInfo in filesForCompress)
         {
-            var sourceFileName = Path.Combine(_par.WorkPath, fileInfo.FileName);
-            var destinationFileFullName = sourceFileName + _par.Archiver.FileExtension;
-            var tempFileName = destinationFileFullName + _par.ArchiveTempExtension;
+            string sourceFileName = Path.Combine(_par.WorkPath, fileInfo.FileName);
+            string destinationFileFullName = sourceFileName + _par.Archiver.FileExtension;
+            string tempFileName = destinationFileFullName + _par.ArchiveTempExtension;
             if (!_par.Archiver.PathToArchive(sourceFileName, tempFileName))
             {
                 File.Delete(tempFileName);

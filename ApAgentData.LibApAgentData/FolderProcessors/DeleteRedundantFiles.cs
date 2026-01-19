@@ -30,7 +30,7 @@ public sealed class DeleteRedundantFiles : FolderProcessor
             return (true, false, false);
         }
 
-        var deleted = FileManager.DeleteDirectory(afterRootPath, folderName, true);
+        bool deleted = FileManager.DeleteDirectory(afterRootPath, folderName, true);
         return deleted ? (true, true, true) : (false, false, false);
     }
 

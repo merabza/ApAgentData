@@ -96,8 +96,8 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
         }
 
         var pf = string.IsNullOrWhiteSpace(parametersFileName) ? null : new FileInfo(parametersFileName);
-        var workFolder = WorkFolder ?? pf?.Directory?.FullName;
-        var workFolderCandidate = workFolder is null ? null : Path.Combine(workFolder, defaultFolderName);
+        string? workFolder = WorkFolder ?? pf?.Directory?.FullName;
+        string? workFolderCandidate = workFolder is null ? null : Path.Combine(workFolder, defaultFolderName);
         return workFolderCandidate;
     }
 
@@ -116,7 +116,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     //    return DateMask ?? DefaultDateMask;
     //}
 
-    public Dictionary<string, JobStep> GetSteps()
+    private Dictionary<string, JobStep> GetSteps()
     {
         var steps =
             DatabaseBackupSteps.ToDictionary<KeyValuePair<string, DatabaseBackupStep>, string, JobStep>(kvp => kvp.Key,
@@ -171,7 +171,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
         DatabaseServerConnections.Clear();
     }
 
-    public void ClearSteps()
+    private void ClearSteps()
     {
         JobsBySchedules.Clear();
         FilesBackupSteps.Clear();
@@ -252,7 +252,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
             return false;
         }
 
-        foreach (var stepName in missingJobStepNames)
+        foreach (string stepName in missingJobStepNames)
         {
             StShared.WriteErrorLine($"Step with name {stepName} not found", true, logger);
         }

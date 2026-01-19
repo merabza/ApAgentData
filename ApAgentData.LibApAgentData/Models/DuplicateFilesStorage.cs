@@ -87,7 +87,7 @@ public sealed class DuplicateFilesStorage
             List<FileModel> priorityFiles = [];
             if (priorityList is not null)
             {
-                foreach (var p in priorityList)
+                foreach (string p in priorityList)
                 {
                     priorityFiles.AddRange(duplicateFiles.Files.Where(w =>
                         w.FileFullName.StartsWith(p, StringComparison.Ordinal)));

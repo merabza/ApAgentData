@@ -29,9 +29,9 @@ public sealed class CopyAndReplaceFiles : CopyMoveFiles
         var dirNames = afterRootPath is null
             ? []
             : afterRootPath.PrepareAfterRootPath(FileManager.DirectorySeparatorChar);
-        var destinationAfterRootPath = CheckDestinationDirs(dirNames);
+        string? destinationAfterRootPath = CheckDestinationDirs(dirNames);
 
-        var preparedFileName = file.FileName.PreparedFileNameConsideringLength(_fileMaxLength);
+        string preparedFileName = file.FileName.PreparedFileNameConsideringLength(_fileMaxLength);
 
         var myFileInfo = GetOneFileWithInfo(destinationAfterRootPath, preparedFileName);
 
@@ -76,9 +76,9 @@ public sealed class CopyAndReplaceFiles : CopyMoveFiles
     private string? CheckDestinationDirs(IEnumerable<string> dirNames)
     {
         string? afterRootPath = null;
-        foreach (var dir in dirNames)
+        foreach (string dir in dirNames)
         {
-            var forCreateDirPart = DestinationFileManager.PathCombine(afterRootPath, dir);
+            string forCreateDirPart = DestinationFileManager.PathCombine(afterRootPath, dir);
             if (!_checkedFolders.Contains(forCreateDirPart))
             {
                 if (!DestinationFileManager.CareCreateDirectory(afterRootPath, dir, true))

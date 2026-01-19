@@ -104,14 +104,14 @@ public sealed class FilesMoveStepParameters
             return null;
         }
 
-        var sourceIsLocal = sourceFileStorage.IsFileSchema();
+        bool? sourceIsLocal = sourceFileStorage.IsFileSchema();
         if (sourceIsLocal is null)
         {
             StShared.WriteErrorLine("could not be determined source is File Schema or not", useConsole, logger);
             return null;
         }
 
-        var destinationIsLocal = destinationFileStorage.IsFileSchema();
+        bool? destinationIsLocal = destinationFileStorage.IsFileSchema();
         if (destinationIsLocal is null)
         {
             StShared.WriteErrorLine("could not be determined destination is File Schema or not", useConsole, logger);
@@ -144,7 +144,7 @@ public sealed class FilesMoveStepParameters
             deleteDestinationFilesSet = excludeSets.GetExcludeSetByKey(deleteDestinationFilesSetName);
         }
 
-        var fileStoragePath = sourceFileStorage.FileStoragePath;
+        string? fileStoragePath = sourceFileStorage.FileStoragePath;
         StShared.ConsoleWriteInformationLine(logger, useConsole, "Source is From {fileStoragePath}", fileStoragePath);
 
         FileManager? sourceFileManager = sourceIsLocal.Value
