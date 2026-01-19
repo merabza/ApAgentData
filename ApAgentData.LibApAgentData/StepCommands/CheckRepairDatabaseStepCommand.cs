@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ApAgentData.LibApAgentData.Domain;
 using ApAgentData.LibApAgentData.Steps;
 using ApAgentData.LibApAgentData.ToolActions;
+using LanguageExt;
 using Microsoft.Extensions.Logging;
 using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.DatabasesManagement;
@@ -23,7 +24,8 @@ public sealed class CheckRepairDatabaseStepCommand : MultiDatabaseProcessesToolA
     protected override async Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
         CancellationToken cancellationToken = default)
     {
-        var checkRepairDatabaseResult = await agentClient.CheckRepairDatabase(databaseName, cancellationToken);
+        Option<Err[]> checkRepairDatabaseResult =
+            await agentClient.CheckRepairDatabase(databaseName, cancellationToken);
         if (!checkRepairDatabaseResult.IsSome)
         {
             return true;

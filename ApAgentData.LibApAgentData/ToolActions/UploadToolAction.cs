@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,16 +27,16 @@ public sealed class UploadToolAction : ProcessesToolAction
 
     protected override ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
-        var filesForUpload = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
+        List<BuFileInfo> filesForUpload = _par.WorkFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
 
-        var filesAlreadyUploaded = _par.UploadFileManager.GetFilesByMask(_backupFileParameters.Prefix,
+        List<BuFileInfo> filesAlreadyUploaded = _par.UploadFileManager.GetFilesByMask(_backupFileParameters.Prefix,
             _backupFileParameters.DateMask, _backupFileParameters.Suffix);
 
         var allFiles = new List<BuFileInfo>();
         allFiles.AddRange(filesForUpload);
         allFiles.AddRange(filesAlreadyUploaded);
-        var preserveFileDates = _par.UploadSmartSchema.GetPreserveFileDates(allFiles);
+        List<DateTime> preserveFileDates = _par.UploadSmartSchema.GetPreserveFileDates(allFiles);
 
         if (filesForUpload
             .Where(fileInfo => !_par.UploadFileManager.ContainsFile(fileInfo.FileName) &&

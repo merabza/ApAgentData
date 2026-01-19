@@ -59,7 +59,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
+        FileManager? localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
 
         if (localWorkFileManager is null)
         {
@@ -67,7 +67,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var archiver = ArchiverFactory.CreateArchiver(logger, useConsole, archivers, archiverName);
+        Archiver? archiver = ArchiverFactory.CreateArchiver(logger, useConsole, archivers, archiverName);
 
         if (archiver is null)
         {
@@ -81,7 +81,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var excludeSet = excludeSets.GetExcludeSetByKey(excludeSetName);
+        ExcludeSet? excludeSet = excludeSets.GetExcludeSetByKey(excludeSetName);
 
         if (excludeSet is null)
         {
@@ -95,7 +95,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var uploadFileStorage = fileStorages.GetFileStorageDataByKey(uploadFileStorageName);
+        FileStorageData? uploadFileStorage = fileStorages.GetFileStorageDataByKey(uploadFileStorageName);
 
         if (uploadFileStorage is null)
         {
@@ -121,7 +121,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var localSmartSchema = smartSchemas.GetSmartSchemaByKey(localSmartSchemaName);
+        SmartSchema? localSmartSchema = smartSchemas.GetSmartSchemaByKey(localSmartSchemaName);
 
         if (localSmartSchema is null)
         {
@@ -135,7 +135,7 @@ public sealed class FilesBackupStepParameters
             return null;
         }
 
-        var uploadSmartSchema = smartSchemas.GetSmartSchemaByKey(uploadSmartSchemaName);
+        SmartSchema? uploadSmartSchema = smartSchemas.GetSmartSchemaByKey(uploadSmartSchemaName);
 
         if (uploadSmartSchema is null)
         {

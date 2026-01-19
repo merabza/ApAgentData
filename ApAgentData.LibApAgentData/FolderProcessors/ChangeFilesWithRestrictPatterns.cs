@@ -38,7 +38,7 @@ public sealed class ChangeFilesWithRestrictPatterns : FolderProcessor
         do
         {
             replaced = false;
-            foreach (var kvp in _replaceSet.Where(kvp => newFileName.Contains(kvp.Key)))
+            foreach (KeyValuePair<string, string> kvp in _replaceSet.Where(kvp => newFileName.Contains(kvp.Key)))
             {
                 newFileName = newFileName.Replace(kvp.Key, kvp.Value);
                 replaced = true;

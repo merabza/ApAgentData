@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ApAgentData.LibApAgentData.Models;
 using SystemTools.SystemToolsShared;
 
@@ -21,7 +22,7 @@ public sealed class MultiDuplicatesFinder
     {
         Console.WriteLine("Find Multi duplicate Files");
 
-        foreach (var kvp in FileList.DuplicateFilesStorage)
+        foreach (KeyValuePair<string, DuplicateFilesStorage> kvp in FileList.DuplicateFilesStorage)
         {
             kvp.Value.CountMultiDuplicates();
         }

@@ -68,25 +68,25 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     public Dictionary<string, ExcludeSet> ExcludeSets { get; set; } = [];
     public Dictionary<string, FileStorageData> FileStorages { get; set; } = [];
 
-    public Dictionary<string, SmartSchema> SmartSchemas { get; set; } = [];
-
     public bool CheckBeforeSave()
     {
-        var steps = GetSteps();
-        var jobStepNames = JobsBySchedules.Select(s => s.JobStepName).ToList();
+        Dictionary<string, JobStep> steps = GetSteps();
+        List<string> jobStepNames = JobsBySchedules.Select(s => s.JobStepName).ToList();
 
-        var missingJobStepNames = jobStepNames.Except(steps.Keys).ToList();
+        List<string> missingJobStepNames = jobStepNames.Except(steps.Keys).ToList();
 
-        var jb = missingJobStepNames
+        List<JobStepBySchedule> jb = missingJobStepNames
             .Select(missingJobStepName => JobsBySchedules.Where(x => x.JobStepName == missingJobStepName))
             .SelectMany(jbs => jbs).ToList();
-        foreach (var j in jb)
+        foreach (JobStepBySchedule j in jb)
         {
             JobsBySchedules.Remove(j);
         }
 
         return true;
     }
+
+    public Dictionary<string, SmartSchema> SmartSchemas { get; set; } = [];
 
     public string? CountLocalPath(string? currentPath, string? parametersFileName, string defaultFolderName)
     {
@@ -95,7 +95,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
             return currentPath;
         }
 
-        var pf = string.IsNullOrWhiteSpace(parametersFileName) ? null : new FileInfo(parametersFileName);
+        FileInfo? pf = string.IsNullOrWhiteSpace(parametersFileName) ? null : new FileInfo(parametersFileName);
         string? workFolder = WorkFolder ?? pf?.Directory?.FullName;
         string? workFolderCandidate = workFolder is null ? null : Path.Combine(workFolder, defaultFolderName);
         return workFolderCandidate;
@@ -118,41 +118,41 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
 
     private Dictionary<string, JobStep> GetSteps()
     {
-        var steps =
+        Dictionary<string, JobStep> steps =
             DatabaseBackupSteps.ToDictionary<KeyValuePair<string, DatabaseBackupStep>, string, JobStep>(kvp => kvp.Key,
                 kvp => kvp.Value);
 
-        foreach (var kvp in MultiDatabaseProcessSteps)
+        foreach (KeyValuePair<string, MultiDatabaseProcessStep> kvp in MultiDatabaseProcessSteps)
         {
             steps.Add(kvp.Key, kvp.Value);
         }
 
-        foreach (var kvp in RunProgramSteps)
+        foreach (KeyValuePair<string, RunProgramStep> kvp in RunProgramSteps)
         {
             steps.Add(kvp.Key, kvp.Value);
         }
 
-        foreach (var kvp in ExecuteSqlCommandSteps)
+        foreach (KeyValuePair<string, ExecuteSqlCommandStep> kvp in ExecuteSqlCommandSteps)
         {
             steps.Add(kvp.Key, kvp.Value);
         }
 
-        foreach (var kvp in FilesBackupSteps)
+        foreach (KeyValuePair<string, FilesBackupStep> kvp in FilesBackupSteps)
         {
             steps.Add(kvp.Key, kvp.Value);
         }
 
-        foreach (var kvp in FilesSyncSteps)
+        foreach (KeyValuePair<string, FilesSyncStep> kvp in FilesSyncSteps)
         {
             steps.Add(kvp.Key, kvp.Value);
         }
 
-        foreach (var kvp in FilesMoveSteps)
+        foreach (KeyValuePair<string, FilesMoveStep> kvp in FilesMoveSteps)
         {
             steps.Add(kvp.Key, kvp.Value);
         }
 
-        foreach (var kvp in UnZipOnPlaceSteps)
+        foreach (KeyValuePair<string, UnZipOnPlaceStep> kvp in UnZipOnPlaceSteps)
         {
             steps.Add(kvp.Key, kvp.Value);
         }
@@ -183,7 +183,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
 
     public Dictionary<string, JobSchedule> GetNotStartUpJobSchedules()
     {
-        var steps = GetSteps();
+        Dictionary<string, JobStep> steps = GetSteps();
 
         //&& s.jsFreqType != EFreqTypes.WhenCpuIdle 
         return JobSchedules
@@ -196,10 +196,10 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     public Dictionary<string, JobSchedule> GetStartUpJobSchedules(bool byTime,
         Dictionary<string, DateTime> nextRunDatesByScheduleNames)
     {
-        var nowDateTime = DateTime.Now;
+        DateTime nowDateTime = DateTime.Now;
         return JobSchedules.Where(delegate(KeyValuePair<string, JobSchedule> w)
         {
-            var nextRunDate = nextRunDatesByScheduleNames.GetValueOrDefault(w.Key);
+            DateTime nextRunDate = nextRunDatesByScheduleNames.GetValueOrDefault(w.Key);
             return (byTime
                 ? w.Value.ScheduleType != EScheduleType.AtStart && nextRunDate != default && nextRunDate <= nowDateTime
                 : w.Value.ScheduleType == EScheduleType.AtStart) && w.Value.Enabled;
@@ -216,19 +216,19 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
 
         //თუ აქ მოვედით შედულეს ბარიერი გავლილია, ან პირდაპირ არის მოთხოვნილი ამ შედულეს შესაბამისი ჯობების გაშევბა
         //შედულეს ბარიერის რეალიზება უნდა მოხდეს ბექპროცესის ტაიმერში
-        var steps = GetSteps();
-        var jobStepNames = JobsBySchedules.Where(s => s.ScheduleName == scheduleName).OrderBy(o => o.SequentialNumber)
-            .Select(s => s.JobStepName).ToList();
+        Dictionary<string, JobStep> steps = GetSteps();
+        List<string> jobStepNames = JobsBySchedules.Where(s => s.ScheduleName == scheduleName)
+            .OrderBy(o => o.SequentialNumber).Select(s => s.JobStepName).ToList();
 
-        var missingJobStepNames = jobStepNames.Except(steps.Keys).ToList();
+        List<string> missingJobStepNames = jobStepNames.Except(steps.Keys).ToList();
 
         if (missingJobStepNames.Count <= 0)
         {
             // ReSharper disable once using
-            using var processManager = processes.GetNewProcessManager();
+            using ProcessManager processManager = processes.GetNewProcessManager();
             try
             {
-                foreach (var stepToolAction in jobStepNames.Select(name =>
+                foreach (ProcessesToolAction? stepToolAction in jobStepNames.Select(name =>
                              steps[name].GetToolAction(logger, httpClientFactory, useConsole, processManager, this,
                                  procLogFilesFolder)))
                 {

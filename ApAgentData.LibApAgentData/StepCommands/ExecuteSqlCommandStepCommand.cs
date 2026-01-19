@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ApAgentData.LibApAgentData.Domain;
 using ApAgentData.LibApAgentData.Steps;
+using LanguageExt;
 using Microsoft.Extensions.Logging;
 using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.LibToolActions.BackgroundTasks;
@@ -25,7 +26,7 @@ public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
 
     protected override async ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
-        var executeCommandResult = await _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand,
+        Option<Err[]> executeCommandResult = await _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand,
             _executeSqlCommandStep.DatabaseName, cancellationToken);
         if (executeCommandResult.IsSome)
         {

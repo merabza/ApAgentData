@@ -67,7 +67,7 @@ public sealed class FilesMoveStepParameters
             return null;
         }
 
-        var sourceFileStorage = fileStorages.GetFileStorageDataByKey(sourceFileStorageName);
+        FileStorageData? sourceFileStorage = fileStorages.GetFileStorageDataByKey(sourceFileStorageName);
 
         if (sourceFileStorage == null)
         {
@@ -89,7 +89,7 @@ public sealed class FilesMoveStepParameters
             return null;
         }
 
-        var destinationFileStorage = fileStorages.GetFileStorageDataByKey(destinationFileStorageName);
+        FileStorageData? destinationFileStorage = fileStorages.GetFileStorageDataByKey(destinationFileStorageName);
 
         if (destinationFileStorage == null)
         {
@@ -130,7 +130,7 @@ public sealed class FilesMoveStepParameters
             return null;
         }
 
-        var excludeSet = excludeSets.GetExcludeSetByKey(excludeSetName);
+        ExcludeSet? excludeSet = excludeSets.GetExcludeSetByKey(excludeSetName);
 
         if (excludeSet == null)
         {
@@ -174,7 +174,7 @@ public sealed class FilesMoveStepParameters
             return null;
         }
 
-        var locOrUp = destinationIsLocal.Value ? EMoveMethod.Local : EMoveMethod.Upload;
+        EMoveMethod locOrUp = destinationIsLocal.Value ? EMoveMethod.Local : EMoveMethod.Upload;
         EMoveMethod useMethod = !sourceIsLocal.Value ? EMoveMethod.Download : locOrUp;
         //თუ წყარო მოშორებულია
 

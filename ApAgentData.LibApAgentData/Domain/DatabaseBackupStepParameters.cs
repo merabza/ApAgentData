@@ -4,6 +4,7 @@ using System.Threading;
 using ApAgentData.LibApAgentData.Models;
 using DatabaseTools.DbTools;
 using Microsoft.Extensions.Logging;
+using OneOf;
 using ParametersManagement.LibApiClientParameters;
 using ParametersManagement.LibDatabaseParameters;
 using ParametersManagement.LibFileParameters.Models;
@@ -75,7 +76,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
+        FileManager? localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
 
         if (localWorkFileManager is null)
         {
@@ -83,9 +84,9 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var createDatabaseManagerResult = DatabaseManagersFactory.CreateDatabaseManager(logger, useConsole,
-            databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
-            CancellationToken.None).Result;
+        OneOf<IDatabaseManager, Err[]> createDatabaseManagerResult = DatabaseManagersFactory
+            .CreateDatabaseManager(logger, useConsole, databaseServerConnectionName, databaseServerConnections,
+                apiClients, httpClientFactory, null, null, CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1)
         {
@@ -104,7 +105,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var downloadFileStorageData = fileStorages.GetFileStorageDataByKey(fileStorageName);
+        FileStorageData? downloadFileStorageData = fileStorages.GetFileStorageDataByKey(fileStorageName);
 
         if (downloadFileStorageData is null)
         {
@@ -118,7 +119,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var uploadFileStorageData = fileStorages.GetFileStorageDataByKey(uploadFileStorageName);
+        FileStorageData? uploadFileStorageData = fileStorages.GetFileStorageDataByKey(uploadFileStorageName);
 
         if (uploadFileStorageData is null)
         {
@@ -132,7 +133,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var downloadSideSmartSchema = smartSchemas.GetSmartSchemaByKey(smartSchemaName);
+        SmartSchema? downloadSideSmartSchema = smartSchemas.GetSmartSchemaByKey(smartSchemaName);
 
         if (downloadSideSmartSchema is null)
         {
@@ -146,7 +147,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var localSmartSchema = smartSchemas.GetSmartSchemaByKey(localSmartSchemaName);
+        SmartSchema? localSmartSchema = smartSchemas.GetSmartSchemaByKey(localSmartSchemaName);
 
         if (localSmartSchema is null)
         {
@@ -160,7 +161,7 @@ public sealed class DatabaseBackupStepParameters
             return null;
         }
 
-        var uploadSmartSchema = smartSchemas.GetSmartSchemaByKey(uploadSmartSchemaName);
+        SmartSchema? uploadSmartSchema = smartSchemas.GetSmartSchemaByKey(uploadSmartSchemaName);
 
         if (uploadSmartSchema is null)
         {
@@ -169,7 +170,7 @@ public sealed class DatabaseBackupStepParameters
         }
 
         //წავშალოთ ზედმეტი ფაილები მონაცემთა ბაზის მხარეს
-        var downloadFileManager =
+        FileManager? downloadFileManager =
             FileManagersFactoryExt.CreateFileManager(useConsole, logger, null, downloadFileStorageData, true);
 
         if (downloadFileManager is null)
@@ -185,7 +186,7 @@ public sealed class DatabaseBackupStepParameters
         }
         else
         {
-            var archiver = archivers.GetArchiverDataByKey(archiverName);
+            ArchiverData? archiver = archivers.GetArchiverDataByKey(archiverName);
 
             if (archiver is null)
             {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ApAgentData.LibApAgentData.Domain;
 using ApAgentData.LibApAgentData.Steps;
 using ApAgentData.LibApAgentData.ToolActions;
+using LanguageExt;
 using Microsoft.Extensions.Logging;
 using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.DatabasesManagement;
@@ -23,7 +24,7 @@ public sealed class UpdateStatisticsStepCommand : MultiDatabaseProcessesToolActi
     protected override async Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
         CancellationToken cancellationToken = default)
     {
-        var updateStatisticsResult = await agentClient.UpdateStatistics(databaseName, cancellationToken);
+        Option<Err[]> updateStatisticsResult = await agentClient.UpdateStatistics(databaseName, cancellationToken);
         if (!updateStatisticsResult.IsSome)
         {
             return true;

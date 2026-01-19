@@ -12,7 +12,7 @@ public sealed class DuplicateFilesStorage
 
     public ComparedFilesModel? GetComparedFiles(string fileFullName, string modelFileFullName)
     {
-        var fileNamesTuple = GetOrderedTuple(fileFullName, modelFileFullName);
+        Tuple<string, string> fileNamesTuple = GetOrderedTuple(fileFullName, modelFileFullName);
         return _comparedFiles.SingleOrDefault(s =>
             s.FirstFile.FileFullName == fileNamesTuple.Item1 && s.SecondFile.FileFullName == fileNamesTuple.Item2);
     }
@@ -33,17 +33,17 @@ public sealed class DuplicateFilesStorage
 
     public void AddComparedFiles(FileModel fileModel1, FileModel fileModel2, bool isEqual)
     {
-        var fileNamesTuple = GetOrderedTuple(fileModel1, fileModel2);
+        Tuple<FileModel, FileModel> fileNamesTuple = GetOrderedTuple(fileModel1, fileModel2);
         _comparedFiles.Add(new ComparedFilesModel(fileNamesTuple.Item1, fileNamesTuple.Item2, isEqual));
     }
 
     public void CountMultiDuplicates()
     {
-        foreach (var comparedFiles in _comparedFiles.Where(x => x.IsEqual))
+        foreach (ComparedFilesModel comparedFiles in _comparedFiles.Where(x => x.IsEqual))
         {
             FileModel? file1 = null;
             FileModel? file2 = null;
-            foreach (var duplicateFiles in _duplicateFiles)
+            foreach (DuplicateFilesModel duplicateFiles in _duplicateFiles)
             {
                 file1 =
                     duplicateFiles.Files.SingleOrDefault(s => s.FileFullName == comparedFiles.FirstFile.FileFullName);
@@ -76,7 +76,7 @@ public sealed class DuplicateFilesStorage
 
     public void RemoveDuplicates(List<string> priorityList)
     {
-        foreach (var duplicateFiles in _duplicateFiles)
+        foreach (DuplicateFilesModel duplicateFiles in _duplicateFiles)
         {
             if (duplicateFiles.Files.Count < 2)
             {
@@ -101,7 +101,7 @@ public sealed class DuplicateFilesStorage
 
             if (saveFile == null)
             {
-                var orderedAllFiles = duplicateFiles.Files.OrderBy(o => o.FileFullName.Length)
+                List<FileModel> orderedAllFiles = duplicateFiles.Files.OrderBy(o => o.FileFullName.Length)
                     .ThenBy(o => o.FileFullName).ToList();
                 saveFile = orderedAllFiles[0];
             }
@@ -109,7 +109,7 @@ public sealed class DuplicateFilesStorage
             //if (saveFile == null)
             //    continue;
 
-            foreach (var fileModel in duplicateFiles.Files.Where(w => w.FileFullName != saveFile.FileFullName))
+            foreach (FileModel fileModel in duplicateFiles.Files.Where(w => w.FileFullName != saveFile.FileFullName))
             {
                 File.Delete(fileModel.FileFullName);
             }

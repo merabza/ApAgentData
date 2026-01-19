@@ -37,7 +37,7 @@ public sealed class CompressParameters
             return null;
         }
 
-        var archiver = ArchiverFactory.CreateArchiverByType(useConsole, logger, archiverData.Type,
+        Archiver? archiver = ArchiverFactory.CreateArchiverByType(useConsole, logger, archiverData.Type,
             archiverData.CompressProgramPatch, archiverData.DecompressProgramPatch,
             archiverData.FileExtension.AddNeedLeadPart("."));
 
@@ -47,7 +47,7 @@ public sealed class CompressParameters
             return null;
         }
 
-        var workFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, workPath);
+        FileManager? workFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, workPath);
 
         if (workFileManager is null)
         {

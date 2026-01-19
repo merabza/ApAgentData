@@ -26,14 +26,14 @@ public sealed class CopyAndReplaceFiles : CopyMoveFiles
 
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
-        var dirNames = afterRootPath is null
+        List<string> dirNames = afterRootPath is null
             ? []
             : afterRootPath.PrepareAfterRootPath(FileManager.DirectorySeparatorChar);
         string? destinationAfterRootPath = CheckDestinationDirs(dirNames);
 
         string preparedFileName = file.FileName.PreparedFileNameConsideringLength(_fileMaxLength);
 
-        var myFileInfo = GetOneFileWithInfo(destinationAfterRootPath, preparedFileName);
+        MyFileInfo? myFileInfo = GetOneFileWithInfo(destinationAfterRootPath, preparedFileName);
 
         //თუ ფაილის სახელი და სიგრძე ემთხვევა, ვთვლით, რომ იგივე ფაილია
         if (myFileInfo != null && myFileInfo.FileLength == file.FileLength)

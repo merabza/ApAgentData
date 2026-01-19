@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ApAgentData.LibApAgentData.Domain;
 using ApAgentData.LibApAgentData.Steps;
 using ApAgentData.LibApAgentData.ToolActions;
+using LanguageExt;
 using Microsoft.Extensions.Logging;
 using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.DatabasesManagement;
@@ -23,7 +24,8 @@ public sealed class RecompileProceduresStepCommand : MultiDatabaseProcessesToolA
     protected override async Task<bool> RunOneDatabaseAction(IDatabaseManager agentClient, string databaseName,
         CancellationToken cancellationToken = default)
     {
-        var recompileProceduresResult = await agentClient.RecompileProcedures(databaseName, cancellationToken);
+        Option<Err[]> recompileProceduresResult =
+            await agentClient.RecompileProcedures(databaseName, cancellationToken);
         if (!recompileProceduresResult.IsSome)
         {
             return true;

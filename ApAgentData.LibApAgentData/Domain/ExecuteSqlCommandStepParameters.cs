@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using OneOf;
 using ParametersManagement.LibApiClientParameters;
 using ParametersManagement.LibDatabaseParameters;
 using SystemTools.SystemToolsShared;
@@ -25,9 +26,9 @@ public sealed class ExecuteSqlCommandStepParameters
         bool useConsole, string? executeQueryCommand, string? webAgentName, ApiClients apiClients,
         string? databaseServerConnectionName, DatabaseServerConnections databaseServerConnections)
     {
-        var createDatabaseManagerResult = DatabaseManagersFactory.CreateDatabaseManager(logger, useConsole,
-            databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
-            CancellationToken.None).Result;
+        OneOf<IDatabaseManager, Err[]> createDatabaseManagerResult = DatabaseManagersFactory
+            .CreateDatabaseManager(logger, useConsole, databaseServerConnectionName, databaseServerConnections,
+                apiClients, httpClientFactory, null, null, CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1)
         {

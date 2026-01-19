@@ -29,7 +29,7 @@ public sealed class UploadParameters
         FileStorageData uploadFileStorage, SmartSchema uploadSmartSchema, string? uploadTempExtension,
         int uploadProcLine)
     {
-        var uploadFileManager =
+        FileManager? uploadFileManager =
             FileManagersFactoryExt.CreateFileManager(useConsole, logger, localPath, uploadFileStorage);
 
         if (uploadFileManager is null)
@@ -38,7 +38,7 @@ public sealed class UploadParameters
             return null;
         }
 
-        var workFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
+        FileManager? workFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, localPath);
 
         if (workFileManager is null)
         {

@@ -25,7 +25,7 @@ public sealed class DuplicateFilesRemover
         Console.WriteLine("Delete duplicate Files");
 
         StShared.ConsoleWriteInformationLine(null, _useConsole, "Remove Duplicate Files");
-        foreach (var kvp in _fileList.DuplicateFilesStorage)
+        foreach (KeyValuePair<string, DuplicateFilesStorage> kvp in _fileList.DuplicateFilesStorage)
         {
             kvp.Value.RemoveDuplicates(_priorityList);
         }

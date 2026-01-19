@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -50,20 +51,20 @@ public sealed class DuplicateFilesFinder : FolderProcessor
         var fileModel = new FileModel(fileFullName, file.FileLength);
         FileList.Files.Add(fileModel);
 
-        var filesWithSameSize = FileList.Files.Where(w => w.Size == fileModel.Size).ToList();
+        List<FileModel> filesWithSameSize = FileList.Files.Where(w => w.Size == fileModel.Size).ToList();
 
         if (filesWithSameSize.Count <= 1)
         {
             return true;
         }
 
-        foreach (var currentFileModel in filesWithSameSize)
+        foreach (FileModel currentFileModel in filesWithSameSize)
         {
             currentFileModel.Sha256 ??= BytesToString(GetHashSha256(currentFileModel.FileFullName));
         }
 
         FileModel? lastFileModel = null;
-        foreach (var model in filesWithSameSize.OrderBy(o => o.Sha256))
+        foreach (FileModel model in filesWithSameSize.OrderBy(o => o.Sha256))
         {
             if (lastFileModel?.Sha256 is not null && lastFileModel.Sha256 == model.Sha256)
             {
@@ -80,7 +81,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
                 currentFilesStorage = value;
 
                 //დავადგინოთ ეს ფაილები უკვე შედარებული გვაქვს თუ არა
-                var comparedFiles =
+                ComparedFilesModel? comparedFiles =
                     currentFilesStorage.GetComparedFiles(lastFileModel.FileFullName, model.FileFullName);
 
                 if (comparedFiles == null)
@@ -108,7 +109,7 @@ public sealed class DuplicateFilesFinder : FolderProcessor
         //_consoleFormatter.WriteInSameLine($"Get Hash Sha256 for file {fileName}");
         Console.WriteLine($"Get Hash Sha256 for file {fileName}");
         // ReSharper disable once using
-        using var stream = File.OpenRead(fileName);
+        using FileStream stream = File.OpenRead(fileName);
         return _sha256.ComputeHash(stream);
     }
 }

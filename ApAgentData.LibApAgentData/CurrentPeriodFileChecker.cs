@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SystemTools.SystemToolsShared;
 using ToolsManagement.FileManagersMain;
@@ -32,18 +33,18 @@ public sealed class CurrentPeriodFileChecker
 
     public bool HaveCurrentPeriodFile()
     {
-        var nowDateTime = DateTime.Now;
-        var endTime = DateTime.Today + _holeEndTime;
+        DateTime nowDateTime = DateTime.Now;
+        DateTime endTime = DateTime.Today + _holeEndTime;
 
         if (endTime < nowDateTime)
         {
             return true;
         }
 
-        var start = _startAt + _holeStartTime;
-        var currentPeriodStart = start.DateAdd(_periodType, nowDateTime.DateDiff(_periodType, start));
-        var currentPeriodEnd = currentPeriodStart.DateAdd(_periodType, 1);
-        var files = _workFileManager.GetFilesByMask(_prefix, _dateMask, _suffix);
+        DateTime start = _startAt + _holeStartTime;
+        DateTime currentPeriodStart = start.DateAdd(_periodType, nowDateTime.DateDiff(_periodType, start));
+        DateTime currentPeriodEnd = currentPeriodStart.DateAdd(_periodType, 1);
+        List<BuFileInfo> files = _workFileManager.GetFilesByMask(_prefix, _dateMask, _suffix);
         return files.Any(s => s.FileDateTime >= currentPeriodStart && s.FileDateTime < currentPeriodEnd);
     }
 }

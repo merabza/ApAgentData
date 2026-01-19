@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using OneOf;
 using ParametersManagement.LibApiClientParameters;
 using ParametersManagement.LibDatabaseParameters;
 using SystemTools.SystemToolsShared.Errors;
@@ -25,16 +26,17 @@ public sealed class MultiDatabaseProcessStepParameters
         bool useConsole, ApiClients apiClients, string? databaseServerConnectionName,
         DatabaseServerConnections databaseServerConnections, string procLogFilesFolder)
     {
-        var createDatabaseManagerResult = DatabaseManagersFactory.CreateDatabaseManager(logger, useConsole,
-            databaseServerConnectionName, databaseServerConnections, apiClients, httpClientFactory, null, null,
-            CancellationToken.None).Result;
+        OneOf<IDatabaseManager, Err[]> createDatabaseManagerResult = DatabaseManagersFactory
+            .CreateDatabaseManager(logger, useConsole, databaseServerConnectionName, databaseServerConnections,
+                apiClients, httpClientFactory, null, null, CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1)
         {
             Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
         }
 
-        var localWorkFileManager = FileManagersFactory.CreateFileManager(useConsole, logger, procLogFilesFolder);
+        FileManager? localWorkFileManager =
+            FileManagersFactory.CreateFileManager(useConsole, logger, procLogFilesFolder);
 
         if (localWorkFileManager != null)
         {

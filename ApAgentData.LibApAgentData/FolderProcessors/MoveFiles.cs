@@ -27,7 +27,7 @@ public sealed class MoveFiles : CopyMoveFiles
 
     protected override bool ProcessOneFile(string? afterRootPath, MyFileInfo file)
     {
-        var dirNames = afterRootPath?.Split(FileManager.DirectorySeparatorChar).TakeLast(_maxFolderCount)
+        List<string> dirNames = afterRootPath?.Split(FileManager.DirectorySeparatorChar).TakeLast(_maxFolderCount)
             .Select(s => s.Trim()).ToList() ?? [];
         string? destinationAfterRootPath = CheckDestinationDirs(dirNames);
 

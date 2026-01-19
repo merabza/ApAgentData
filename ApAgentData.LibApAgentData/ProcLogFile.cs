@@ -97,7 +97,7 @@ public sealed class ProcLogFile
     public void DeleteOldFiles()
     {
         var wfd = new DirectoryInfo(_workFolder);
-        foreach (var file in wfd.GetFiles(_maskManager.GetFullMask(_extension)))
+        foreach (FileInfo file in wfd.GetFiles(_maskManager.GetFullMask(_extension)))
         {
             if (file.FullName == _justCreatedFileName)
             {

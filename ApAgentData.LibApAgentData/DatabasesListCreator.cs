@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using ApAgentData.LibApAgentData.Models;
 using DatabaseTools.DbTools;
 using DatabaseTools.DbTools.Models;
+using OneOf;
+using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.DatabasesManagement;
 
 namespace ApAgentData.LibApAgentData;
@@ -28,10 +30,11 @@ public sealed class DatabasesListCreator
 
     public async Task<List<DatabaseInfoModel>> LoadDatabaseNames(CancellationToken cancellationToken = default)
     {
-        var getDatabaseNamesResult = await _agentClient.GetDatabaseNames(cancellationToken);
-        var databaseInfos = getDatabaseNamesResult.AsT0;
+        OneOf<List<DatabaseInfoModel>, Err[]> getDatabaseNamesResult =
+            await _agentClient.GetDatabaseNames(cancellationToken);
+        List<DatabaseInfoModel>? databaseInfos = getDatabaseNamesResult.AsT0;
 
-        var (sysBaseDoesMatter, checkSysBase) = GetDbSetParams(_databaseSet);
+        (bool sysBaseDoesMatter, bool checkSysBase) = GetDbSetParams(_databaseSet);
 
         return databaseInfos.Where(w =>
             (!sysBaseDoesMatter || w.IsSystemDatabase == checkSysBase) &&
