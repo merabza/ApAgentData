@@ -116,7 +116,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     //    return DateMask ?? DefaultDateMask;
     //}
 
-    private Dictionary<string, JobStep> GetSteps()
+    public Dictionary<string, JobStep> GetSteps()
     {
         Dictionary<string, JobStep> steps =
             DatabaseBackupSteps.ToDictionary<KeyValuePair<string, DatabaseBackupStep>, string, JobStep>(kvp => kvp.Key,
@@ -171,7 +171,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
         DatabaseServerConnections.Clear();
     }
 
-    private void ClearSteps()
+    public void ClearSteps()
     {
         JobsBySchedules.Clear();
         FilesBackupSteps.Clear();
