@@ -49,7 +49,16 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
         if (!Directory.Exists(localPath))
         {
-            _logger.LogInformation("Creating local folder {LocalPath}", localPath);
+            if (_logger.IsEnabled(LogLevel.Warning))
+            {
+                _logger.LogWarning("Local folder {LocalPath} does not exist", localPath);
+            }
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Creating local folder {LocalPath}", localPath);
+            }
+
             Directory.CreateDirectory(localPath);
         }
 
@@ -105,7 +114,10 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
                 continue;
             }
 
-            _logger.LogInformation("Backup database {DatabaseName}...", databaseName);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Backup database {DatabaseName}...", databaseName);
+            }
 
             OneOf<BackupFileParameters, Err[]> createBackupResult =
                 await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, _par.DbServerFoldersSetName,
