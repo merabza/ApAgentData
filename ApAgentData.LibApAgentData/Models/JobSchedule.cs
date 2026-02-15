@@ -1,5 +1,4 @@
 ﻿using System;
-using ParametersManagement.LibParameters;
 using SystemTools.SystemToolsShared;
 
 namespace ApAgentData.LibApAgentData.Models;

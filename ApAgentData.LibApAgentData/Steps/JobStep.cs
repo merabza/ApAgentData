@@ -2,7 +2,6 @@
 using System.Net.Http;
 using ApAgentData.LibApAgentData.Models;
 using Microsoft.Extensions.Logging;
-using ParametersManagement.LibParameters;
 using SystemTools.SystemToolsShared;
 using ToolsManagement.LibToolActions.BackgroundTasks;
 
