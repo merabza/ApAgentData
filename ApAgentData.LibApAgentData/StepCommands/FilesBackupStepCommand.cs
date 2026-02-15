@@ -44,7 +44,11 @@ public sealed class FilesBackupStepCommand : ProcessesToolAction
         //1. თუ ლოკალური ფოლდერი არ არსებობს, შეიქმნას
         if (!Directory.Exists(localPath))
         {
-            _logger.LogInformation("Creating local folder {LocalPath}", localPath);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Creating local folder {LocalPath}", localPath);
+            }
+
             Directory.CreateDirectory(localPath);
         }
 

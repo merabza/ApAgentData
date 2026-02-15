@@ -71,12 +71,21 @@ public /*open*/ class MultiDatabaseProcessesToolAction : ProcessesToolAction
 
             if (procLogFile.HaveCurrentPeriodFile())
             {
-                _logger.LogInformation("{DatabaseName} {StepName} had executed in this period", databaseName,
-                    _stepName);
+                if (_logger.IsEnabled(LogLevel.Information))
+
+                {
+                    _logger.LogInformation("{DatabaseName} {StepName} had executed in this period", databaseName,
+                        _stepName);
+                }
+
                 continue;
             }
 
-            _logger.LogInformation("{StepName} for database {DatabaseName}", _stepName, databaseName);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("{StepName} for database {DatabaseName}", _stepName, databaseName);
+            }
+
             if (!await RunOneDatabaseAction(_par.AgentClient, databaseName, cancellationToken))
             {
                 all = false;
