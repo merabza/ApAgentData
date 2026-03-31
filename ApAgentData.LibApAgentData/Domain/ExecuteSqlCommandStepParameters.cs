@@ -26,13 +26,13 @@ public sealed class ExecuteSqlCommandStepParameters
         bool useConsole, string? executeQueryCommand, string? webAgentName, ApiClients apiClients,
         string? databaseServerConnectionName, DatabaseServerConnections databaseServerConnections)
     {
-        OneOf<IDatabaseManager, Err[]> createDatabaseManagerResult = DatabaseManagersFactory
+        OneOf<IDatabaseManager, Error[]> createDatabaseManagerResult = DatabaseManagersFactory
             .CreateDatabaseManager(logger, useConsole, databaseServerConnectionName, databaseServerConnections,
                 apiClients, httpClientFactory, null, null, CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1)
         {
-            Err.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
+            Error.PrintErrorsOnConsole(createDatabaseManagerResult.AsT1);
         }
 
         if (!string.IsNullOrWhiteSpace(executeQueryCommand))

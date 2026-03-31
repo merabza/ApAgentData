@@ -63,11 +63,11 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
         }
 
         //დადგინდეს არსებული ბაზების სია
-        OneOf<List<DatabaseInfoModel>, Err[]> getDatabaseNamesResult =
+        OneOf<List<DatabaseInfoModel>, Error[]> getDatabaseNamesResult =
             await _par.AgentClient.GetDatabaseNames(cancellationToken);
         if (getDatabaseNamesResult.IsT1)
         {
-            Err.PrintErrorsOnConsole(getDatabaseNamesResult.AsT1);
+            Error.PrintErrorsOnConsole(getDatabaseNamesResult.AsT1);
             return false;
         }
 
@@ -119,12 +119,12 @@ public sealed class DatabaseBackupStepCommand : ProcessesToolAction
                 _logger.LogInformation("Backup database {DatabaseName}...", databaseName);
             }
 
-            OneOf<BackupFileParameters, Err[]> createBackupResult =
+            OneOf<BackupFileParameters, Error[]> createBackupResult =
                 await _par.AgentClient.CreateBackup(_par.DbBackupParameters, databaseName, _par.DbServerFoldersSetName,
                     cancellationToken);
             if (createBackupResult.IsT1)
             {
-                Err.PrintErrorsOnConsole(createBackupResult.AsT1);
+                Error.PrintErrorsOnConsole(createBackupResult.AsT1);
                 continue;
             }
 

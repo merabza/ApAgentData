@@ -26,11 +26,11 @@ public sealed class ExecuteSqlCommandStepCommand : ProcessesToolAction
 
     protected override async ValueTask<bool> RunAction(CancellationToken cancellationToken = default)
     {
-        Option<Err[]> executeCommandResult = await _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand,
+        Option<Error[]> executeCommandResult = await _par.AgentClient.ExecuteCommand(_par.ExecuteQueryCommand,
             _executeSqlCommandStep.DatabaseName, cancellationToken);
         if (executeCommandResult.IsSome)
         {
-            Err.PrintErrorsOnConsole((Err[])executeCommandResult);
+            Error.PrintErrorsOnConsole((Error[])executeCommandResult);
         }
 
         return true;
