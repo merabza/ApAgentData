@@ -4,7 +4,6 @@ using ApAgentData.LibApAgentData.Domain;
 using ApAgentData.LibApAgentData.Models;
 using ApAgentData.LibApAgentData.StepCommands;
 using Microsoft.Extensions.Logging;
-using ParametersManagement.LibApiClientParameters;
 using ParametersManagement.LibDatabaseParameters;
 using ParametersManagement.LibFileParameters.Models;
 using SystemTools.SystemToolsShared;
@@ -80,13 +79,12 @@ public sealed class DatabaseBackupStep : JobStep
         bool useConsole, ProcessManager processManager, ApAgentParameters parameters, string procLogFilesFolder)
     {
         var par = DatabaseBackupStepParameters.Create(logger, httpClientFactory, useConsole,
-            new ApiClients(parameters.ApiClients), DatabaseServerConnectionName,
-            new DatabaseServerConnections(parameters.DatabaseServerConnections), LocalPath, DatabaseBackupParameters,
-            DatabaseSet, DatabaseNames, FileStorageName, UploadFileStorageName, SmartSchemaName, LocalSmartSchemaName,
-            UploadSmartSchemaName, ArchiverName, new FileStorages(parameters.FileStorages),
-            new SmartSchemas(parameters.SmartSchemas), new Archivers(parameters.Archivers), DownloadProcLineId,
-            CompressProcLineId, UploadProcLineId, parameters.ArchivingFileTempExtension,
-            parameters.UploadFileTempExtension, DbServerFoldersSetName);
+            DatabaseServerConnectionName, new DatabaseServerConnections(parameters.DatabaseServerConnections),
+            LocalPath, DatabaseBackupParameters, DatabaseSet, DatabaseNames, FileStorageName, UploadFileStorageName,
+            SmartSchemaName, LocalSmartSchemaName, UploadSmartSchemaName, ArchiverName,
+            new FileStorages(parameters.FileStorages), new SmartSchemas(parameters.SmartSchemas),
+            new Archivers(parameters.Archivers), DownloadProcLineId, CompressProcLineId, UploadProcLineId,
+            parameters.ArchivingFileTempExtension, parameters.UploadFileTempExtension, DbServerFoldersSetName);
 
         if (par is not null)
         {

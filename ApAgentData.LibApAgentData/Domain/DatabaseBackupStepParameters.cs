@@ -5,7 +5,6 @@ using ApAgentData.LibApAgentData.Models;
 using DatabaseTools.DbTools;
 using Microsoft.Extensions.Logging;
 using OneOf;
-using ParametersManagement.LibApiClientParameters;
 using ParametersManagement.LibDatabaseParameters;
 using ParametersManagement.LibFileParameters.Models;
 using SystemTools.SystemToolsShared;
@@ -62,13 +61,12 @@ public sealed class DatabaseBackupStepParameters
     public UploadParameters UploadParameters { get; }
 
     public static DatabaseBackupStepParameters? Create(ILogger logger, IHttpClientFactory httpClientFactory,
-        bool useConsole, ApiClients apiClients, string? databaseServerConnectionName,
-        DatabaseServerConnections databaseServerConnections, string? localPath,
-        DatabaseParameters? databaseBackupParameters, EDatabaseSet databaseSet, List<string> databaseNames,
-        string? fileStorageName, string? uploadFileStorageName, string? smartSchemaName, string? localSmartSchemaName,
-        string? uploadSmartSchemaName, string? archiverName, FileStorages fileStorages, SmartSchemas smartSchemas,
-        Archivers archivers, int downloadProcLineId, int compressProcLineId, int uploadProcLineId,
-        string? archiveTempExtension, string? uploadTempExtension, string? dbServerFoldersSetName)
+        bool useConsole, string? databaseServerConnectionName, DatabaseServerConnections databaseServerConnections,
+        string? localPath, DatabaseParameters? databaseBackupParameters, EDatabaseSet databaseSet,
+        List<string> databaseNames, string? fileStorageName, string? uploadFileStorageName, string? smartSchemaName,
+        string? localSmartSchemaName, string? uploadSmartSchemaName, string? archiverName, FileStorages fileStorages,
+        SmartSchemas smartSchemas, Archivers archivers, int downloadProcLineId, int compressProcLineId,
+        int uploadProcLineId, string? archiveTempExtension, string? uploadTempExtension, string? dbServerFoldersSetName)
     {
         if (string.IsNullOrWhiteSpace(localPath))
         {
@@ -85,8 +83,8 @@ public sealed class DatabaseBackupStepParameters
         }
 
         OneOf<IDatabaseManager, Error[]> createDatabaseManagerResult = DatabaseManagersFactory
-            .CreateDatabaseManager(logger, useConsole, databaseServerConnectionName, databaseServerConnections,
-                apiClients, httpClientFactory, null, null, CancellationToken.None).Result;
+            .CreateDatabaseManager(logger, useConsole, databaseServerConnectionName, databaseServerConnections, null,
+                httpClientFactory, null, null, CancellationToken.None).Result;
 
         if (createDatabaseManagerResult.IsT1)
         {
