@@ -207,7 +207,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     }
 
     public bool RunAllSteps(ILogger logger, IHttpClientFactory httpClientFactory, bool useConsole, string scheduleName,
-        Processes processes, string procLogFilesFolder)
+        IProcesses processes, string procLogFilesFolder)
     {
         if (!JobSchedules.ContainsKey(scheduleName))
         {
