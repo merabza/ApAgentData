@@ -9,8 +9,8 @@ using ParametersManagement.LibApiClientParameters;
 using ParametersManagement.LibDatabaseParameters;
 using ParametersManagement.LibFileParameters.Interfaces;
 using ParametersManagement.LibFileParameters.Models;
+using SystemTools.BackgroundTasks;
 using SystemTools.SystemToolsShared;
-using ToolsManagement.LibToolActions.BackgroundTasks;
 
 namespace ApAgentData.LibApAgentData.Models;
 
@@ -207,7 +207,7 @@ public sealed class ApAgentParameters : IParametersWithFileStorages, IParameters
     }
 
     public bool RunAllSteps(ILogger logger, IHttpClientFactory httpClientFactory, bool useConsole, string scheduleName,
-        IProcesses processes, string procLogFilesFolder)
+        Processes processes, string procLogFilesFolder)
     {
         if (!JobSchedules.ContainsKey(scheduleName))
         {
